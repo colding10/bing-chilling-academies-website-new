@@ -28,7 +28,7 @@ const teamMembers: TeamMember[] = [
       "Open-Source Goonage",
     ],
     image: "/images/team/rnv.jpg", // Add your images to public/images/team/
-    bio: "Security researcher with 5+ years of experience in reverse engineering and malware analysis. Previously worked at major tech companies and contributed to various open-source security tools.",
+    bio: "Professional gooner - I might even say that 'Throughout Heaven and Earth, I Alone Am The Sigma One'",
     socials: {
       twitter: "https://twitter.com/bytemaster",
       github: "https://github.com/bytemaster",
