@@ -1,103 +1,167 @@
-import Image from "next/image";
+"use client";
+
+import { motion } from "framer-motion";
+import { FiTarget, FiFlag, FiZap, FiServer } from "react-icons/fi";
+import TerminalText from "@/components/TerminalText";
+import HologramCard from "@/components/HologramCard";
+
+interface StatCardProps {
+  label: string;
+  value: string;
+  color: string;
+  icon: React.ElementType;
+}
+
+const StatCard = ({ label, value, color, icon: Icon }: StatCardProps) => (
+  <HologramCard className="hover:scale-[1.02] transition-all duration-300">
+    <div className="flex items-center justify-between mb-4">
+      <Icon className={`w-8 h-8 ${color}`} />
+      <span className={`text-2xl font-orbitron ${color}`}>{value}</span>
+    </div>
+    <p className="text-gray-400 font-play">{label}</p>
+  </HologramCard>
+);
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const stats = [
+    {
+      label: "CTFs Played",
+      value: "50+",
+      icon: FiTarget,
+      color: "text-custom-blue",
+    },
+    {
+      label: "Flags Captured",
+      value: "1000+",
+      icon: FiFlag,
+      color: "text-custom-pink",
+    },
+    {
+      label: "First Bloods",
+      value: "42",
+      icon: FiZap,
+      color: "text-custom-yellow",
+    },
+    {
+      label: "Global Ranking",
+      value: "Top 100",
+      icon: FiServer,
+      color: "text-green-500",
+    },
+  ];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  return (
+    <div className="min-h-[80vh] flex flex-col items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-center"
+      >
+        {/* Title with data corruption effect */}
+        <h1 className="text-6xl font-bold mb-6 relative">
+          <span className="data-corruption text-custom-blue" data-text="BING">
+            BING
+          </span>{" "}
+          <span
+            className="data-corruption text-custom-pink"
+            data-text="CHILLING"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            CHILLING
+          </span>{" "}
+          <span
+            className="data-corruption text-custom-yellow"
+            data-text="ACADEMIES"
           >
-            Read our docs
-          </a>
+            ACADEMIES
+          </span>
+        </h1>
+
+        {/* Terminal text effect */}
+        <div className="mb-12">
+          <TerminalText
+            text="Breaking boundaries in cybersecurity, one flag at a time..."
+            speed={70}
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Stats grid with hologram cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <StatCard
+                label={stat.label}
+                value={stat.value}
+                icon={stat.icon}
+                color={stat.color}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Featured section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mt-16"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <HologramCard className="max-w-2xl mx-auto">
+            <h2
+              className="text-2xl font-orbitron text-custom-blue mb-4 cyber-tooltip"
+              data-tooltip="Latest Achievement"
+            >
+              Recent Victory
+            </h2>
+            <div className="space-y-4">
+              <p className="text-gray-400 font-play">
+                🏆 Secured 3rd place in DEFCON CTF 2023
+              </p>
+              <div className="flex justify-center gap-4">
+                <span
+                  className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
+                      rounded-full text-sm text-custom-blue"
+                >
+                  28 Challenges Solved
+                </span>
+                <span
+                  className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
+                      rounded-full text-sm text-custom-pink"
+                >
+                  3 First Bloods
+                </span>
+                <span
+                  className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
+                      rounded-full text-sm text-custom-yellow"
+                >
+                  15,420 Points
+                </span>
+              </div>
+            </div>
+          </HologramCard>
+        </motion.div>
+
+        {/* Call to action */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-12"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <a
+            href="/writeups"
+            className="cyber-button-small cyber-tooltip"
+            data-tooltip="View our latest writeups"
+          >
+            Explore Writeups
+          </a>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

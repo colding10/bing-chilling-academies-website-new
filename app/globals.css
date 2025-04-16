@@ -1,26 +1,386 @@
-@import "tailwindcss";
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #00fff9;
+  --color-secondary: #ff00ff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  body {
+    @apply bg-custom-black text-white font-play;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-orbitron;
+  }
+
+  code,
+  pre {
+    @apply font-share-tech;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .cyber-card {
+    @apply relative bg-custom-black/50 backdrop-blur-sm border-2 border-custom-blue 
+    rounded-lg p-6 transition-all duration-300 hover:scale-[1.02] 
+    overflow-hidden;
+  }
+
+  .cyber-button {
+    @apply px-6 py-2 bg-transparent border-2 border-custom-blue text-custom-blue
+    hover:bg-custom-blue hover:text-custom-black transition-all duration-300
+    focus:ring-4 focus:ring-custom-blue/50 relative overflow-hidden;
+  }
+
+  .cyber-input {
+    @apply w-full px-4 py-2 bg-custom-black/50 border-2 border-custom-blue 
+    text-white placeholder-custom-blue/50 focus:outline-none transition-all duration-300;
+  }
+}
+.cyber-cursor {
+  cursor: none;
+}
+
+.cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  mix-blend-mode: difference;
+  transition: transform 0.2s;
+}
+
+.cursor-dot {
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  mix-blend-mode: difference;
+  transition: transform 0.1s;
+}
+
+/* Animated Grid Background */
+.cyber-grid {
+  background-size: 50px 50px;
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 255, 249, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(0, 255, 249, 0.1) 1px, transparent 1px);
+  animation: grid-animation 20s linear infinite;
+}
+
+@keyframes grid-animation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* Glowing effect for hover states */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 10px rgba(0, 255, 249, 0.3), 0 0 20px rgba(0, 255, 249, 0.2),
+    0 0 30px rgba(0, 255, 249, 0.1);
+  transform: translateY(-2px);
+}
+/* Glitch Effect */
+.glitch-text {
+  position: relative;
+  animation: glitch 1s linear infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  text-shadow: 1px 0 blue;
+  width: 100%;
+  clip: rect(0, 900px, 0, 0);
+  animation: noise-anim 2s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  text-shadow: -1px 0 red;
+  animation: noise-anim-2 1s infinite linear alternate-reverse;
+}
+
+/* Scanlines */
+.scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 249, 0.05) 0.5%,
+    transparent 1%
+  );
+  animation: scanlines 8s linear infinite;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Cyber Loading Animation */
+.cyber-loading {
+  position: relative;
+}
+
+.cyber-loading::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  animation: loading-line 2s infinite;
+}
+
+/* Animated Grid Background */
+.cyber-grid {
+  background-size: 50px 50px;
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 255, 249, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(0, 255, 249, 0.1) 1px, transparent 1px);
+  animation: grid-animation 20s linear infinite;
+}
+
+/* Animations */
+@keyframes glitch {
+  2%,
+  64% {
+    transform: translate(2px, 0) skew(0deg);
+  }
+  4%,
+  60% {
+    transform: translate(-2px, 0) skew(0deg);
+  }
+  62% {
+    transform: translate(0, 0) skew(5deg);
+  }
+}
+
+@keyframes noise-anim {
+  0% {
+    clip: rect(51px, 9999px, 28px, 0);
+  }
+  5% {
+    clip: rect(70px, 9999px, 19px, 0);
+  }
+  100% {
+    clip: rect(91px, 9999px, 43px, 0);
+  }
+}
+
+@keyframes noise-anim-2 {
+  0% {
+    clip: rect(33px, 9999px, 144px, 0);
+  }
+  5% {
+    clip: rect(138px, 9999px, 32px, 0);
+  }
+  100% {
+    clip: rect(65px, 9999px, 91px, 0);
+  }
+}
+
+@keyframes scanlines {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+
+@keyframes loading-line {
+  0% {
+    width: 0;
+    opacity: 1;
+  }
+  50% {
+    width: 100%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes grid-animation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* Global hover effects */
+.cyber-hover {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.cyber-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 255, 249, 0.5);
+}
+
+/* Add glitch effect to headings */
+h1:hover,
+h2:hover,
+h3:hover {
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+/* Add these new styles */
+
+.cyber-button-small {
+  position: relative;
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  padding: 8px 16px;
+  color: var(--color-primary);
+  font-family: var(--font-share-tech-mono);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.2s ease;
+}
+
+.cyber-button-small::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.2s ease;
+  z-index: -1;
+}
+
+.cyber-button-small:hover {
+  color: black;
+}
+
+.cyber-button-small:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Add glowing text effect */
+.text-glow-hover {
+  transition: text-shadow 0.3s ease;
+}
+
+.text-glow-hover:hover {
+  text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary),
+    0 0 30px var(--color-primary);
+}
+
+/* Hologram effect */
+.hologram-lines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    rgba(0, 255, 249, 0.1) 1px,
+    transparent 2px
+  );
+  background-size: 100% 4px;
+  animation: scan 10s linear infinite;
+  opacity: 0.5;
+}
+
+/* Data corruption effect */
+.data-corruption {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-corruption::before {
+  content: attr(data-text);
+  position: absolute;
+  left: -2px;
+  text-shadow: 1px 0 #00fff9;
+  background: black;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+  animation: data-corruption 3s infinite linear alternate-reverse;
+}
+
+@keyframes data-corruption {
+  0% {
+    clip: rect(31px, 900px, 94px, 0);
+  }
+  20% {
+    clip: rect(55px, 900px, 66px, 0);
+  }
+  40% {
+    clip: rect(15px, 900px, 78px, 0);
+  }
+  60% {
+    clip: rect(82px, 900px, 31px, 0);
+  }
+  80% {
+    clip: rect(44px, 900px, 96px, 0);
+  }
+  100% {
+    clip: rect(27px, 900px, 59px, 0);
+  }
+}
+
+/* Cyber tooltip */
+.cyber-tooltip {
+  position: relative;
+}
+
+.cyber-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.cyber-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
