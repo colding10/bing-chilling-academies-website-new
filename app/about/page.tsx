@@ -19,15 +19,15 @@ interface TeamMember {
 
 const teamMembers: TeamMember[] = [
   {
-    name: "Alex Chen",
-    handle: "ByteMaster",
-    role: "Team Leader",
+    name: "Arnav Adepu",
+    handle: "tien",
+    role: "Professional Gooner",
     specialties: [
-      "Reverse Engineering",
-      "Binary Exploitation",
-      "Malware Analysis",
+      "Reverse Gooning",
+      "Sigma Exploitation",
+      "Open-Source Goonage",
     ],
-    image: "/images/team/alex.jpg", // Add your images to public/images/team/
+    image: "/images/team/rnv.jpg", // Add your images to public/images/team/
     bio: "Security researcher with 5+ years of experience in reverse engineering and malware analysis. Previously worked at major tech companies and contributed to various open-source security tools.",
     socials: {
       twitter: "https://twitter.com/bytemaster",
