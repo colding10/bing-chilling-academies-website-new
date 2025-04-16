@@ -12,21 +12,22 @@ export default function MatrixRain() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    // Set initial canvas size
+    const updateCanvasSize = () => {
+      if (!canvas) return
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    updateCanvasSize()
 
     const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン'
     const charArray = chars.split('')
     const fontSize = 14
-    const columns = canvas.width / fontSize
-    const drops: number[] = []
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1
-    }
+    const columns = Math.floor(window.innerWidth / fontSize)
+    const drops: number[] = new Array(columns).fill(1)
 
     function draw() {
-      if (!ctx) return // Add this check
+      if (!ctx || !canvas) return
 
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -48,17 +49,11 @@ export default function MatrixRain() {
 
     const interval = setInterval(draw, 33)
 
-    const handleResize = () => {
-      if (!canvas) return // Add this check
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', updateCanvasSize)
 
     return () => {
       clearInterval(interval)
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', updateCanvasSize)
     }
   }, [])
 
