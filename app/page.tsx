@@ -80,7 +80,7 @@ export default function Home() {
         {/* Terminal text effect */}
         <div className="mb-12">
           <TerminalText
-            text="Breaking boundaries in cybersecurity, one flag at a time..."
+            text="Arnav adepu cant stop yapping about this so here you go"
             speed={70}
           />
         </div>

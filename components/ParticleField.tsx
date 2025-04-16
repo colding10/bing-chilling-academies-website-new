@@ -2,6 +2,16 @@
 
 import { useEffect, useRef } from "react";
 
+interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speedX: number;
+  speedY: number;
+  update: (width: number, height: number) => void;
+  draw: (ctx: CanvasRenderingContext2D) => void;
+}
+
 export default function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -12,39 +22,39 @@ export default function ParticleField() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const updateCanvasSize = () => {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    updateCanvasSize();
 
-    const particles: Particle[] = [];
-    const particleCount = 50;
-
-    class Particle {
+    class ParticleClass implements Particle {
       x: number;
       y: number;
       size: number;
       speedX: number;
       speedY: number;
 
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+      constructor(width: number, height: number) {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
         this.size = Math.random() * 2 + 0.1;
         this.speedX = Math.random() * 2 - 1;
         this.speedY = Math.random() * 2 - 1;
       }
 
-      update() {
+      update(width: number, height: number) {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        if (this.y < 0) this.y = canvas.height;
+        if (this.x > width) this.x = 0;
+        if (this.x < 0) this.x = width;
+        if (this.y > height) this.y = 0;
+        if (this.y < 0) this.y = height;
       }
 
-      draw() {
-        if (!ctx) return;
+      draw(ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = "#00fff9";
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -52,19 +62,24 @@ export default function ParticleField() {
       }
     }
 
-    function init() {
+    const particles: Particle[] = [];
+    const particleCount = 50;
+
+    function initParticles() {
+      if (!ctx || !canvas) return;
       for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+        particles.push(new ParticleClass(canvas.width, canvas.height));
       }
     }
 
     function animate() {
       if (!ctx || !canvas) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((particle) => {
-        particle.update();
-        particle.draw();
+        particle.update(canvas.width, canvas.height);
+        particle.draw(ctx);
       });
 
       particles.forEach((particleA) => {
@@ -87,18 +102,13 @@ export default function ParticleField() {
       requestAnimationFrame(animate);
     }
 
-    init();
+    initParticles();
     animate();
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", updateCanvasSize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", updateCanvasSize);
     };
   }, []);
 
