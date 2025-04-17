@@ -298,7 +298,7 @@ export default function Achievements() {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-col items-center space-y-6 mb-12">
-          <h1 className="text-4xl font-orbitron text-center">
+          <h1 className="text-4xl font-orbitron text-center font-bold">
             <span className="text-custom-blue">Team</span>{" "}
             <span className="text-custom-pink">Achievements</span>
           </h1>

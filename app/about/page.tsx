@@ -53,23 +53,22 @@ export default function About() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="max-w-7xl mx-auto px-4 py-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-5xl font-bold text-center mb-4">
-          <span className="text-primary">Meet</span>{" "}
-          <span className="text-secondary">The</span>{" "}
-          <span className="text-accent">Team</span>
+        <h1 className="text-4xl font-bold font-orbitron text-center">
+          <span className="text-custom-blue h1">Meet</span>{" "}
+          <span className="text-custom-pink">The</span>
+          <span className="text-custom-yellow"> Team</span>
         </h1>
-        <p className="text-xl text-center text-gray-600 dark:text-gray-300 mb-12">
-          A diverse group of security enthusiasts pushing the boundaries of
-          cybersecurity
+        <p className="text-center text-gray-500 mt-6">
+          We are a group of high schoolers from the Bing Chilling Academies who
+          like ice cream.
         </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
           {teamMembers.map((member) => (
             <motion.div
               key={member.handle}
@@ -129,7 +128,9 @@ export default function About() {
                 className="w-32 h-32 rounded-lg object-cover"
               />
               <div>
-                <h2 className="text-2xl font-bold text-primary">{selectedMember.handle}</h2>
+                <h2 className="text-2xl font-bold text-primary">
+                  {selectedMember.handle}
+                </h2>
               </div>
             </div>
             <div className="mt-6">
