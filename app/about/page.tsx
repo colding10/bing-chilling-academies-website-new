@@ -128,8 +128,7 @@ export default function About() {
           </h1>
 
           <p className="text-gray-400 font-play max-w-xl mx-auto mt-4 relative z-10">
-            We are a group of high schoolers from the Bing Chilling Academies
-            who like ice cream.
+            a group of high schoolers from the Bing Chilling Academies who like ice cream.
           </p>
         </div>
 
