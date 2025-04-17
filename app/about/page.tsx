@@ -2,156 +2,171 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import {
+  FiCode,
+  FiShield,
+  FiCpu,
+  FiLock,
+  FiSearch,
+  FiDatabase,
+} from "react-icons/fi";
+import TerminalText from "@/components/TerminalText";
 
 interface TeamMember {
   handle: string;
   specialties: string[];
-  image: string;
   bio: string;
 }
+
+// Map specialties to icons
+const specialtyIcons = {
+  "Web Exploitation": FiCode,
+  Cryptography: FiLock,
+  "Binary Exploitation": FiShield,
+  Miscellaneous: FiDatabase,
+  "Reverse Engineering": FiCpu,
+  "Digital Forensics": FiDatabase,
+  OSINT: FiSearch,
+};
 
 const teamMembers: TeamMember[] = [
   {
     handle: "appllo",
     specialties: ["Web Exploitation", "Cryptography"],
-    image: "/images/team/appllo.jpg", // Add team member images to this directory
     bio: "very orz at web exploitation and crypto",
   },
   {
     handle: "bo421",
     specialties: ["Binary Exploitation", "Miscellaneous"],
-    image: "/images/team/bo421.jpg",
     bio: "THE pwner of Bing Chilling",
   },
   {
     handle: "cold",
     specialties: ["Reverse Engineering", "Binary Exploitation"],
-    image: "/images/team/cold.jpg",
     bio: "rev and bad at pwn",
   },
   {
     handle: "Snippet",
     specialties: ["Cryptography", "Digital Forensics"],
-    image: "/images/team/snippet.jpg",
     bio: "crypto goat and foren god",
   },
   {
     handle: "tien",
     specialties: ["OSINT", "Miscellaneous", "Digital Forensics"],
-    image: "/images/team/tien.jpg",
     bio: "chatgpt goat - uses it for osint and everything else",
   },
   {
     handle: "UncleEddie",
     specialties: ["OSINT", "Miscellaneous"],
-    image: "/images/team/uncleeddie.jpg",
     bio: "does this guy even do ctf?? pro stalker/osinter ig",
   },
 ];
 
-export default function About() {
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-
+const MemberCard = ({ member }: { member: TeamMember }) => {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-4">
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      className="relative cyber-card overflow-hidden group"
+    >
+      {/* Member handle with glitch effect */}
+      <div className="mb-4">
+        <h3
+          className="text-xl font-orbitron text-custom-blue data-corruption"
+          data-text={member.handle}
+        >
+          {member.handle}
+        </h3>
+      </div>
+
+      {/* Specialties with icons */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {member.specialties.map((specialty) => {
+          const Icon =
+            specialtyIcons[specialty as keyof typeof specialtyIcons] ||
+            FiDatabase;
+          return (
+            <span
+              key={specialty}
+              className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
+                rounded-full text-sm text-custom-blue flex items-center gap-1"
+            >
+              <Icon className="w-3 h-3" />
+              {specialty}
+            </span>
+          );
+        })}
+      </div>
+
+      {/* Bio with terminal text effect */}
+      <div className="text-gray-300 text-sm font-share-tech bg-black/20 p-3 rounded">
+        <TerminalText text={member.bio} speed={30} />
+      </div>
+
+      {/* Background effects */}
+      <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    </motion.div>
+  );
+};
+
+export default function About() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="space-y-12"
       >
-        <h1 className="text-4xl font-bold font-orbitron text-center">
-          <span className="text-custom-blue h1">Meet</span>{" "}
-          <span className="text-custom-pink">The</span>
-          <span className="text-custom-yellow"> Team</span>
-        </h1>
-        <p className="text-center text-gray-500 mt-6">
-          We are a group of high schoolers from the Bing Chilling Academies who
-          like ice cream.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+        {/* Section header with hologram effect */}
+        <div className="text-center relative">
+          <div className="hologram-lines absolute inset-0 rounded-lg opacity-30"></div>
+          <h1 className="text-5xl font-orbitron relative z-10 py-6">
+            <span className="text-custom-blue text-glow-blue">Meet</span>{" "}
+            <span className="text-custom-pink text-glow-pink">The</span>{" "}
+            <span className="text-custom-yellow text-glow-yellow">Team</span>
+          </h1>
+
+          <p className="text-gray-400 font-play max-w-xl mx-auto mt-4 relative z-10">
+            We are a group of high schoolers from the Bing Chilling Academies
+            who like ice cream.
+          </p>
+        </div>
+
+        {/* Team grid with terminal-like cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member) => (
-            <motion.div
-              key={member.handle}
-              whileHover={{ scale: 1.02 }}
-              className="bg-black/50 backdrop-blur-sm border-2 border-primary 
-            rounded-xl overflow-hidden relative group"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={member.image}
-                  alt={member.handle}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <h3 className="absolute bottom-4 left-4 text-white font-bold text-xl text-glow">
-                  <span className="text-primary">{member.handle}</span>
-                </h3>
-              </div>
-              <div className="p-6 relative z-10">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {member.specialties.map((specialty) => (
-                    <span
-                      key={specialty}
-                      className="px-3 py-1 bg-primary/10 border border-primary/30 
-                    rounded-full text-sm text-primary"
-                    >
-                      {specialty}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-gray-300 text-sm">
-                  {member.bio.substring(0, 150)}...
-                </p>
-              </div>
-              <div className="absolute inset-0 scanline opacity-30" />
-            </motion.div>
+            <MemberCard key={member.handle} member={member} />
           ))}
         </div>
-      </motion.div>
 
-      {/* Modal for detailed member view */}
-      {selectedMember && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-          onClick={() => setSelectedMember(null)}
+        {/* Team stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-custom-black/30 border border-custom-blue/20 rounded-lg p-6"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-start gap-6">
-              <img
-                src={selectedMember.image}
-                alt={selectedMember.handle}
-                className="w-32 h-32 rounded-lg object-cover"
-              />
-              <div>
-                <h2 className="text-2xl font-bold text-primary">
-                  {selectedMember.handle}
-                </h2>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <p className="text-custom-blue text-4xl font-orbitron">6</p>
+              <p className="text-gray-400 font-play">Members</p>
             </div>
-            <div className="mt-6">
-              <h3 className="font-semibold mb-2">Specialties</h3>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {selectedMember.specialties.map((specialty) => (
-                  <span
-                    key={specialty}
-                    className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-sm"
-                  >
-                    {specialty}
-                  </span>
-                ))}
-              </div>
-              <p className="text-gray-600 dark:text-gray-300">
-                {selectedMember.bio}
-              </p>
+            <div>
+              <p className="text-custom-pink text-4xl font-orbitron">7</p>
+              <p className="text-gray-400 font-play">Specialties</p>
             </div>
-          </motion.div>
-        </div>
-      )}
+            <div>
+              <p className="text-custom-yellow text-4xl font-orbitron">19</p>
+              <p className="text-gray-400 font-play">CTFs</p>
+            </div>
+            <div>
+              <p className="text-green-500 text-4xl font-orbitron">#172</p>
+              <p className="text-gray-400 font-play">Global Ranking</p>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
