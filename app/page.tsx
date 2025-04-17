@@ -114,8 +114,7 @@ export default function Home() {
         >
           <HologramCard className="max-w-2xl mx-auto">
             <h2
-              className="text-2xl font-orbitron text-custom-blue mb-4 cyber-tooltip"
-              data-tooltip="Latest Achievement"
+              className="text-2xl font-orbitron text-custom-blue mb-4"
             >
               Recent Victory
             </h2>
