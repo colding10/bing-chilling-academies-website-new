@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-2xl font-orbitron text-custom-blue">
-            BING CHILLING CTF TEAM
+          🍦🍦🍦
           </Link>
 
           <div className="flex items-center space-x-8">

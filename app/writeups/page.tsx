@@ -53,12 +53,12 @@ export default function WriteupsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl font-bold mb-8 text-center">
-          <span className="text-primary text-glow-blue">CTF</span>{" "}
-          <span className="text-secondary text-glow-pink">Writeups</span>
+        <h1 className="text-4xl font-bold font-orbitron text-center">
+          <span className="text-custom-blue h1">CTF</span>{" "}
+          <span className="text-custom-pink">Writeups</span>
         </h1>
 
-        <div className="mb-8 space-y-4">
+        <div className="mb-8 space-y-4 py-6">
           <div className="relative">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-primary" />
             <input
@@ -102,7 +102,7 @@ export default function WriteupsPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h2
-                      className="text-2xl font-bold text-primary hover:text-secondary 
+                      className="text-2xl text-primary hover:text-secondary 
                     transition-colors duration-300"
                     >
                       {writeup.title}
