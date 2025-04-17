@@ -7,6 +7,7 @@ import {
   FiAward,
   FiTrendingUp,
   FiExternalLink,
+  FiSearch,
 } from "react-icons/fi";
 import { useState, useMemo } from "react";
 
@@ -202,7 +203,7 @@ const achievements: Achievement[] = [
     ratingPoints: 34.026,
     year: 2023,
     eventUrl: "https://ctftime.org/event/2023",
-  }
+  },
 ];
 
 type YearFilter = number | "all";
