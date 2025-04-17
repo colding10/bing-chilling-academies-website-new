@@ -81,7 +81,7 @@ export default function Home() {
         {/* Terminal text effect */}
         <div className="mb-12">
           <TerminalText
-            text="Arnav adepu cant stop yapping about this so here you go"
+            text="a group of high schoolers from the bing chilling academies who like ice cream"
             speed={70}
           />
         </div>
