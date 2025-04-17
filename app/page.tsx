@@ -1,7 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiTarget, FiFlag, FiZap, FiServer, FiExternalLink } from "react-icons/fi";
+import {
+  FiTarget,
+  FiFlag,
+  FiZap,
+  FiServer,
+  FiExternalLink,
+} from "react-icons/fi";
 
 import TerminalText from "@/components/TerminalText";
 import HologramCard from "@/components/HologramCard";
@@ -113,9 +119,7 @@ export default function Home() {
           className="mt-16"
         >
           <HologramCard className="max-w-2xl mx-auto">
-            <h2
-              className="text-2xl font-orbitron text-custom-blue mb-4"
-            >
+            <h2 className="text-2xl font-orbitron text-custom-blue mb-4">
               Recent Victory
             </h2>
             <div className="space-y-4">
@@ -146,6 +150,7 @@ export default function Home() {
           </HologramCard>
         </motion.div>
 
+        {/* CTFTime link */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
