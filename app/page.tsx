@@ -121,26 +121,26 @@ export default function Home() {
             </h2>
             <div className="space-y-4">
               <p className="text-gray-400 font-play">
-                🏆 Secured 3rd place in DEFCON CTF 2023
+                🏆 Secured 3rd place in TexSAW CTF 2025
               </p>
               <div className="flex justify-center gap-4">
                 <span
                   className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
                       rounded-full text-sm text-custom-blue"
                 >
-                  28 Challenges Solved
+                  29 Challenges Solved
                 </span>
                 <span
                   className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
                       rounded-full text-sm text-custom-pink"
                 >
-                  3 First Bloods
+                  8 First Bloods
                 </span>
                 <span
                   className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
                       rounded-full text-sm text-custom-yellow"
                 >
-                  15,420 Points
+                  7835 Points
                 </span>
               </div>
             </div>
