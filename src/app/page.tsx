@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 import {
   FiTarget,
   FiFlag,
@@ -133,7 +135,7 @@ export default function Home() {
                     className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
               rounded-full text-sm text-custom-blue"
                   >
-                    29 Challenges Solved
+                    29 Challs Solved
                   </span>
                   <span
                     className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
@@ -168,9 +170,11 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group flex items-center justify-center space-x-3 hover:scale-105 transition-transform"
               >
-                <img
+                <Image
                   src="/ctftime-logo.svg"
                   alt="CTFtime"
+                  width={150}
+                  height={70} // idk if this does anything lol
                   className="w-15 h-14"
                 />
                 <span className="text-custom-blue group-hover:text-custom-pink transition-colors">
@@ -189,13 +193,13 @@ export default function Home() {
           transition={{ delay: 0.8 }}
           className="mt-12"
         >
-          <a
+          <Link
             href="/writeups"
             className="cyber-button-small cyber-tooltip"
             data-tooltip="View our latest writeups"
           >
             Explore Writeups
-          </a>
+          </Link>
         </motion.div>
       </motion.div>
     </div>

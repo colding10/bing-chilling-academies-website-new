@@ -204,10 +204,14 @@ export default function WriteupsPage() {
                     <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                       <div>
                         <h2
-                          className="text-2xl font-orbitron text-custom-blue group-hover:text-glow-blue 
-                          transition-colors duration-300"
+                          className="text-2xl font-orbitron transition-colors duration-300"
                         >
+                          <span className="text-custom-blue group-hover:text-glow-blue">
+                          {writeup.ctfName}
+                          </span>{" "}
+                          <span className="text-custom-pink group-hover:text-glow-purple">
                           {writeup.title}
+                          </span>
                         </h2>
                         <p className="text-gray-400 mt-2 font-share-tech">
                           {writeup.description}

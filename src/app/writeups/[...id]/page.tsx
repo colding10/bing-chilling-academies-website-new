@@ -1,70 +1,77 @@
 // File: page.tsx (Writeup Detail)
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { FiCalendar, FiUser, FiTag, FiArrowLeft } from 'react-icons/fi'
-import LoadingSpinner from '@/components/LoadingSpinner'
-import { Writeup } from '@/lib/writeups'
-import TerminalText from '@/components/TerminalText'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { FiCalendar, FiUser, FiTag, FiArrowLeft } from "react-icons/fi";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { Writeup } from "@/lib/writeups";
+import TerminalText from "@/components/TerminalText";
 
-export default function WriteupPage({ params }: { params: { id: string } }) {
-  const [writeup, setWriteup] = useState<Writeup | null>(null)
-  const [loading, setLoading] = useState(true)
+export default function WriteupPage({ params }: { params: { id: string[] } }) {
+  const [writeup, setWriteup] = useState<Writeup | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchWriteup = async () => {
       try {
-        const response = await fetch(`/api/writeups/${params.id}`)
-        const data = await response.json()
-        setWriteup(data)
-        setLoading(false)
+        // Convert params.id to the proper path format
+        const path = Array.isArray(params.id) ? params.id.join("/") : params.id;
+
+        const response = await fetch(`/api/writeups/${path}`);
+        const data = await response.json();
+        setWriteup(data);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching writeup:', error)
-        setLoading(false)
+        console.error("Error fetching writeup:", error);
+        setLoading(false);
       }
-    }
+    };
 
-    fetchWriteup()
-  }, [params.id])
+    fetchWriteup();
+  }, []); // Empty dependency array as we're accessing params in the component body
 
-  if (loading) return (
-    <div className="flex items-center justify-center h-96">
-      <LoadingSpinner />
-      <motion.div 
-        className="ml-4 text-custom-blue font-orbitron"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 0] }}
-        transition={{ repeat: Infinity, duration: 1.5 }}
-      >
-        Decrypting writeup data...
-      </motion.div>
-    </div>
-  )
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-96">
+        <LoadingSpinner />
+        <motion.div
+          className="ml-4 text-custom-blue font-orbitron"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        >
+          Decrypting writeup data...
+        </motion.div>
+      </div>
+    );
 
   if (!writeup) {
     return (
-      <motion.div 
+      <motion.div
         className="max-w-4xl mx-auto px-4 py-8 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold text-custom-pink text-glow-pink font-orbitron data-corruption" data-text="Writeup not found">
+        <h1
+          className="text-3xl font-bold text-custom-pink text-glow-pink font-orbitron data-corruption"
+          data-text="Writeup not found"
+        >
           Writeup not found
         </h1>
         <div className="mt-6 relative">
           <div className="hologram-lines absolute inset-0 rounded-lg opacity-30"></div>
-          <Link 
-            href="/writeups" 
+          <Link
+            href="/writeups"
             className="cyber-button inline-flex items-center gap-2 relative z-10"
           >
             <FiArrowLeft className="animate-pulse" /> Back to writeups
           </Link>
         </div>
       </motion.div>
-    )
+    );
   }
 
   return (
@@ -83,24 +90,35 @@ export default function WriteupPage({ params }: { params: { id: string } }) {
           href="/writeups"
           className="cyber-button-small inline-flex items-center gap-2 mb-8 group"
         >
-          <FiArrowLeft className="group-hover:animate-pulse" /> 
+          <FiArrowLeft className="group-hover:animate-pulse" />
           <span>Back to writeups</span>
         </Link>
       </motion.div>
 
       <article className="cyber-card relative overflow-hidden">
         <div className="absolute scanline opacity-20 pointer-events-none"></div>
-        
-        <motion.div 
+
+        <motion.div
           className="mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          <h1 className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue mb-4 data-corruption" data-text={writeup.title}>
-            {writeup.title}
-          </h1>
-          
+          <div className="flex items-center gap-4">
+            <h1
+              className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue data-corruption"
+              data-text={writeup.ctfName}
+            >
+              <span className="text-custom-blue">{writeup.ctfName}</span>
+            </h1>
+            <h1
+              className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink data-corruption"
+              data-text={writeup.title}
+            >
+              <span className="text-custom-pink">{writeup.title}</span>
+            </h1>
+          </div>
+
           <div className="flex flex-wrap gap-4 text-sm text-gray-400">
             <div className="flex items-center gap-2">
               <FiCalendar className="text-custom-yellow" />
@@ -129,16 +147,16 @@ export default function WriteupPage({ params }: { params: { id: string } }) {
           </div>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="prose dark:prose-invert max-w-none relative z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
           dangerouslySetInnerHTML={{ __html: writeup.content }}
         />
-        
+
         {/* Bottom highlight effect */}
-        <motion.div 
+        <motion.div
           className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
@@ -146,5 +164,5 @@ export default function WriteupPage({ params }: { params: { id: string } }) {
         />
       </article>
     </motion.div>
-  )
+  );
 }

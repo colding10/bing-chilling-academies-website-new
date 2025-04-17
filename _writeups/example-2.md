@@ -1,5 +1,6 @@
 ---
 title: "Web Exploitation Challenge Walkthrough"
+ctfName: "exapmle ctf 2023"
 date: "2023-07-20"
 tags: ["web", "javascript", "xss"]
 description: "A detailed walkthrough of solving the XSS challenge in Example CTF 2023"

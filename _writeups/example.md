@@ -1,5 +1,6 @@
 ---
 title: "Example CTF Writeup"
+ctfName: "exapmle ctf 2023"
 date: "2023-07-20"
 tags: ["web", "exploitation", "javascript"]
 description: "A detailed walkthrough of solving the Example CTF challenge"
