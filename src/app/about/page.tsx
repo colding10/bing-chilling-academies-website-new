@@ -70,7 +70,7 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
       {/* Member handle with glitch effect */}
       <div className="mb-4">
         <h3
-          className="text-xl font-orbitron text-custom-blue data-corruption"
+          className="text-xl font-orbitron text-custom-pink data-corruption"
           data-text={member.handle}
         >
           {member.handle}

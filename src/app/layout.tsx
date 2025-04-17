@@ -29,6 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${orbitron.variable} ${shareTechMono.variable} ${play.variable}`}
+        suppressHydrationWarning
       >
         <Layout>{children}</Layout>
       </body>
