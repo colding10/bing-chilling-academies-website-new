@@ -9,9 +9,9 @@ module.exports = {
     extend: {
       colors: {
         'custom-black': '#000000',
-        'custom-blue': '#00fff9',
-        'custom-pink': '#ff00ff',
-        'custom-yellow': '#ffff00',
+        'custom-blue': '#208dd6',
+        'custom-pink': '#bd1aa2',
+        'custom-yellow': '#bfc41d',
       },
       fontFamily: {
         orbitron: ['var(--font-orbitron)'],
