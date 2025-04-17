@@ -4,50 +4,49 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 interface TeamMember {
-  name: string;
   handle: string;
-  role: string;
   specialties: string[];
   image: string;
   bio: string;
-  socials: {
-    twitter?: string;
-    github?: string;
-    linkedin?: string;
-  };
 }
 
 const teamMembers: TeamMember[] = [
   {
-    name: "Arnav Adepu",
-    handle: "tien",
-    role: "Professional Gooner",
-    specialties: [
-      "Reverse Gooning",
-      "Sigma Exploitation",
-      "Open-Source Goonage",
-    ],
-    image: "/images/team/rnv.jpg", // Add your images to public/images/team/
-    bio: "Professional gooner - I might even say that 'Throughout Heaven and Earth, I Alone Am The Sigma One'",
-    socials: {
-      twitter: "https://twitter.com/bytemaster",
-      github: "https://github.com/bytemaster",
-      linkedin: "https://linkedin.com/in/bytemaster",
-    },
+    handle: "appllo",
+    specialties: ["Web Exploitation", "Cryptography"],
+    image: "/images/team/appllo.jpg", // Add team member images to this directory
+    bio: "very orz at web exploitation and crypto",
   },
   {
-    name: "Sarah Williams",
-    handle: "WebWizard",
-    role: "Web Security Specialist",
-    specialties: ["Web Exploitation", "API Security", "OSINT"],
-    image: "/images/team/sarah.jpg",
-    bio: "Full-stack developer turned security specialist. Expert in modern web technologies and their vulnerabilities. Regular speaker at security conferences.",
-    socials: {
-      twitter: "https://twitter.com/webwizard",
-      github: "https://github.com/webwizard",
-    },
+    handle: "bo421",
+    specialties: ["Binary Exploitation", "Miscellaneous"],
+    image: "/images/team/bo421.jpg",
+    bio: "THE pwner of Bing Chilling",
   },
-  // Add more team members here
+  {
+    handle: "cold",
+    specialties: ["Reverse Engineering", "Binary Exploitation"],
+    image: "/images/team/cold.jpg",
+    bio: "rev and bad at pwn",
+  },
+  {
+    handle: "Snippet",
+    specialties: ["Cryptography", "Digital Forensics"],
+    image: "/images/team/snippet.jpg",
+    bio: "crypto goat and foren god",
+  },
+  {
+    handle: "tien",
+    specialties: ["OSINT", "Miscellaneous", "Digital Forensics"],
+    image: "/images/team/tien.jpg",
+    bio: "chatgpt goat - uses it for osint and everything else",
+  },
+  {
+    handle: "UncleEddie",
+    specialties: ["OSINT", "Miscellaneous"],
+    image: "/images/team/uncleeddie.jpg",
+    bio: "does this guy even do ctf?? pro stalker/osinter ig",
+  },
 ];
 
 export default function About() {
@@ -81,21 +80,15 @@ export default function About() {
               <div className="relative h-48 overflow-hidden">
                 <img
                   src={member.image}
-                  alt={member.name}
+                  alt={member.handle}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <h3 className="absolute bottom-4 left-4 text-white font-bold text-xl text-glow">
-                  {member.name}
-                  <span className="block text-sm text-primary">
-                    @{member.handle}
-                  </span>
+                  <span className="text-primary">{member.handle}</span>
                 </h3>
               </div>
               <div className="p-6 relative z-10">
-                <p className="text-secondary font-semibold mb-2">
-                  {member.role}
-                </p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {member.specialties.map((specialty) => (
                     <span
@@ -132,13 +125,11 @@ export default function About() {
             <div className="flex items-start gap-6">
               <img
                 src={selectedMember.image}
-                alt={selectedMember.name}
+                alt={selectedMember.handle}
                 className="w-32 h-32 rounded-lg object-cover"
               />
               <div>
-                <h2 className="text-2xl font-bold">{selectedMember.name}</h2>
-                <p className="text-primary">@{selectedMember.handle}</p>
-                <p className="text-secondary mt-2">{selectedMember.role}</p>
+                <h2 className="text-2xl font-bold text-primary">{selectedMember.handle}</h2>
               </div>
             </div>
             <div className="mt-6">
@@ -156,38 +147,6 @@ export default function About() {
               <p className="text-gray-600 dark:text-gray-300">
                 {selectedMember.bio}
               </p>
-              <div className="flex gap-4 mt-6">
-                {selectedMember.socials.twitter && (
-                  <a
-                    href={selectedMember.socials.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:text-secondary"
-                  >
-                    Twitter
-                  </a>
-                )}
-                {selectedMember.socials.github && (
-                  <a
-                    href={selectedMember.socials.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:text-secondary"
-                  >
-                    GitHub
-                  </a>
-                )}
-                {selectedMember.socials.linkedin && (
-                  <a
-                    href={selectedMember.socials.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:text-secondary"
-                  >
-                    LinkedIn
-                  </a>
-                )}
-              </div>
             </div>
           </motion.div>
         </div>
