@@ -210,19 +210,24 @@ type YearFilter = number | "all";
 
 export default function Achievements() {
   const [selectedYear, setSelectedYear] = useState<YearFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Achievement;
     direction: "asc" | "desc";
   }>({ key: "year", direction: "desc" });
 
-  // Define years array with proper typing
   const years: YearFilter[] = ["all", 2025, 2024, 2023];
 
-  // Filter and sort achievements
   const filteredAchievements = useMemo(() => {
     let filtered = [...achievements];
+
     if (selectedYear !== "all") {
       filtered = filtered.filter((a) => a.year === selectedYear);
+    }
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((a) => a.event.toLowerCase().includes(query));
     }
 
     return filtered.sort((a, b) => {
@@ -231,19 +236,16 @@ export default function Achievements() {
       }
       return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1;
     });
-  }, [selectedYear, sortConfig]);
+  }, [selectedYear, sortConfig, searchQuery]);
 
-  // Calculate dynamic stats
   const stats = useMemo(() => {
     const yearStats = filteredAchievements.reduce(
-      (acc, curr) => {
-        return {
-          totalCtfPoints: acc.totalCtfPoints + curr.ctfPoints,
-          totalRatingPoints: acc.totalRatingPoints + curr.ratingPoints,
-          bestPlacement: Math.min(acc.bestPlacement, curr.placement),
-          eventCount: acc.eventCount + 1,
-        };
-      },
+      (acc, curr) => ({
+        totalCtfPoints: acc.totalCtfPoints + curr.ctfPoints,
+        totalRatingPoints: acc.totalRatingPoints + curr.ratingPoints,
+        bestPlacement: Math.min(acc.bestPlacement, curr.placement),
+        eventCount: acc.eventCount + 1,
+      }),
       {
         totalCtfPoints: 0,
         totalRatingPoints: 0,
@@ -295,8 +297,8 @@ export default function Achievements() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-col items-center mb-12">
-          <h1 className="text-4xl font-orbitron text-center mb-4">
+        <div className="flex flex-col items-center space-y-6 mb-12">
+          <h1 className="text-4xl font-orbitron text-center">
             <span className="text-custom-blue">Team</span>{" "}
             <span className="text-custom-pink">Achievements</span>
           </h1>
@@ -310,23 +312,39 @@ export default function Achievements() {
             <span className="font-play">View on CTFtime</span>
             <FiExternalLink className="w-4 h-4" />
           </a>
-        </div>
 
-        {/* Year Filter */}
-        <div className="flex justify-center mb-8 space-x-4">
-          {years.map((year) => (
-            <button
-              key={year}
-              onClick={() => setSelectedYear(year)}
-              className={`px-4 py-2 rounded-lg transition-all ${
-                selectedYear === year
-                  ? "bg-custom-blue text-black"
-                  : "border border-custom-blue/50 text-custom-blue hover:border-custom-blue"
-              }`}
-            >
-              {year === "all" ? "All Years" : year}
-            </button>
-          ))}
+          {/* Search Bar */}
+          <div className="w-full max-w-md">
+            <div className="relative">
+              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-custom-blue/50" />
+              <input
+                type="text"
+                placeholder="Search events..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-black/20 border border-custom-blue/30 
+                rounded-lg focus:border-custom-blue/60 focus:outline-none text-white
+                placeholder:text-custom-blue/50 transition-colors font-play"
+              />
+            </div>
+          </div>
+
+          {/* Year Filter */}
+          <div className="flex justify-center space-x-4">
+            {years.map((year) => (
+              <button
+                key={year}
+                onClick={() => setSelectedYear(year)}
+                className={`px-4 py-2 rounded-lg transition-all ${
+                  selectedYear === year
+                    ? "bg-custom-blue text-black font-medium"
+                    : "border border-custom-blue/50 text-custom-blue hover:border-custom-blue"
+                }`}
+              >
+                {year === "all" ? "All Years" : year}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -342,81 +360,87 @@ export default function Achievements() {
           ))}
         </div>
 
-        {/* Achievements Table */}
-        <div className="overflow-x-auto rounded-lg border border-custom-blue/20">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="text-left border-b-2 border-custom-blue/30 bg-custom-black/30">
-                <th
-                  onClick={() => handleSort("event")}
-                  className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink"
-                >
-                  Event
-                </th>
-                <th
-                  onClick={() => handleSort("year")}
-                  className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink"
-                >
-                  Year
-                </th>
-                <th
-                  onClick={() => handleSort("placement")}
-                  className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink"
-                >
-                  Placement
-                </th>
-                <th
-                  onClick={() => handleSort("ctfPoints")}
-                  className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink"
-                >
-                  CTF Points
-                </th>
-                <th
-                  onClick={() => handleSort("ratingPoints")}
-                  className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink"
-                >
-                  Rating Points
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAchievements.map((achievement, index) => (
-                <motion.tr
-                  key={achievement.event}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="border-b border-custom-blue/10 hover:bg-custom-blue/5 transition-colors"
-                >
-                  <td className="py-4 px-6 font-play">
-                    <a
-                      href={achievement.eventUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-2 hover:text-custom-pink transition-colors"
-                    >
-                      <FiAward className="text-custom-yellow" />
-                      <span>{achievement.event}</span>
-                      <FiExternalLink className="w-4 h-4 opacity-50" />
-                    </a>
-                  </td>
-                  <td className="py-4 px-6 font-share-tech text-gray-400">
-                    {achievement.year}
-                  </td>
-                  <td className="py-4 px-6 font-orbitron text-custom-pink">
-                    #{achievement.placement}
-                  </td>
-                  <td className="py-4 px-6 font-share-tech">
-                    {achievement.ctfPoints.toLocaleString()}
-                  </td>
-                  <td className="py-4 px-6 font-share-tech text-green-500">
-                    {achievement.ratingPoints.toFixed(3)}
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {filteredAchievements.length === 0 ? (
+          <div className="text-center py-12 text-gray-400 font-play">
+            No events found matching your search.
+          </div>
+        ) : (
+          /* Achievements Table */
+          <div className="overflow-x-auto rounded-lg border border-custom-blue/20">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="text-left border-b-2 border-custom-blue/30 bg-custom-black/30">
+                  <th
+                    onClick={() => handleSort("event")}
+                    className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink transition-colors"
+                  >
+                    Event
+                  </th>
+                  <th
+                    onClick={() => handleSort("year")}
+                    className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink transition-colors"
+                  >
+                    Year
+                  </th>
+                  <th
+                    onClick={() => handleSort("placement")}
+                    className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink transition-colors"
+                  >
+                    Placement
+                  </th>
+                  <th
+                    onClick={() => handleSort("ctfPoints")}
+                    className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink transition-colors"
+                  >
+                    CTF Points
+                  </th>
+                  <th
+                    onClick={() => handleSort("ratingPoints")}
+                    className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink transition-colors"
+                  >
+                    Rating Points
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAchievements.map((achievement, index) => (
+                  <motion.tr
+                    key={achievement.event}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="border-b border-custom-blue/10 hover:bg-custom-blue/5 transition-colors"
+                  >
+                    <td className="py-4 px-6 font-play">
+                      <a
+                        href={achievement.eventUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-2 hover:text-custom-pink transition-colors"
+                      >
+                        <FiAward className="text-custom-yellow" />
+                        <span>{achievement.event}</span>
+                        <FiExternalLink className="w-4 h-4 opacity-50" />
+                      </a>
+                    </td>
+                    <td className="py-4 px-6 font-share-tech text-gray-400">
+                      {achievement.year}
+                    </td>
+                    <td className="py-4 px-6 font-orbitron text-custom-pink">
+                      #{achievement.placement}
+                    </td>
+                    <td className="py-4 px-6 font-share-tech">
+                      {achievement.ctfPoints.toLocaleString()}
+                    </td>
+                    <td className="py-4 px-6 font-share-tech text-green-500">
+                      {achievement.ratingPoints.toFixed(3)}
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </motion.div>
     </div>
   );
