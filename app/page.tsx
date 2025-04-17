@@ -111,71 +111,76 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Featured section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mt-16"
-        >
-          <HologramCard className="max-w-2xl mx-auto">
-            <h2 className="text-2xl font-orbitron text-custom-blue mb-4">
-              Recent Victory
-            </h2>
-            <div className="space-y-4">
-              <p className="text-gray-400 font-play">
-                🏆 Secured 3rd place in TexSAW CTF 2025
-              </p>
-              <div className="flex justify-center gap-4">
-                <span
-                  className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
-                      rounded-full text-sm text-custom-blue"
-                >
-                  29 Challenges Solved
-                </span>
-                <span
-                  className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
-                      rounded-full text-sm text-custom-pink"
-                >
-                  8 First Bloods
-                </span>
-                <span
-                  className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
-                      rounded-full text-sm text-custom-yellow"
-                >
-                  7835 Points
-                </span>
+        {/* Featured sections container */}
+        <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch mt-16">
+          {/* Recent Victory section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="flex-1 max-w-xl"
+          >
+            <HologramCard className="h-full">
+              <h2 className="text-2xl font-orbitron text-custom-blue mb-4">
+                Recent Victory
+              </h2>
+              <div className="space-y-4">
+                <p className="text-gray-400 font-play">
+                  🏆 Secured 3rd place in TexSAW CTF 2025
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <span
+                    className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
+              rounded-full text-sm text-custom-blue"
+                  >
+                    29 Challenges Solved
+                  </span>
+                  <span
+                    className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
+              rounded-full text-sm text-custom-pink"
+                  >
+                    8 First Bloods
+                  </span>
+                  <span
+                    className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
+              rounded-full text-sm text-custom-yellow"
+                  >
+                    7835 Points
+                  </span>
+                </div>
               </div>
-            </div>
-          </HologramCard>
-        </motion.div>
+            </HologramCard>
+          </motion.div>
 
-        {/* CTFTime link */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="mt-12"
-        >
-          <HologramCard className="max-w-md mx-auto">
-            <a
-              href="https://ctftime.org/team/283028"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center justify-center space-x-3 p-4 hover:scale-105 transition-transform"
-            >
-              <img
-                src="/ctftime-logo.svg"
-                alt="CTFtime"
-                className="w-15 h-14"
-              />
-              <span className="text-custom-blue group-hover:text-custom-pink transition-colors">
-                Check us out on CTFtime
-              </span>
-              <FiExternalLink className="w-5 h-5 text-custom-blue group-hover:text-custom-pink transition-colors" />
-            </a>
-          </HologramCard>
-        </motion.div>
+          {/* CTFTime link section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="flex-1 max-w-md"
+          >
+            <HologramCard className="h-full flex items-center justify-center">
+              {" "}
+              {/* Added flex and centering */}
+              <a
+                href="https://ctftime.org/team/283028"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center space-x-3 hover:scale-105 transition-transform"
+              >
+                <img
+                  src="/ctftime-logo.svg"
+                  alt="CTFtime"
+                  className="w-15 h-14"
+                />
+                <span className="text-custom-blue group-hover:text-custom-pink transition-colors">
+                  Check us out on CTFtime
+                </span>
+                <FiExternalLink className="w-5 h-5 text-custom-blue group-hover:text-custom-pink transition-colors" />
+              </a>
+            </HologramCard>
+          </motion.div>
+        </div>
 
         {/* Call to action */}
         <motion.div
