@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiTarget, FiFlag, FiZap, FiServer } from "react-icons/fi";
+import { FiTarget, FiFlag, FiZap, FiServer, FiExternalLink } from "react-icons/fi";
+
 import TerminalText from "@/components/TerminalText";
 import HologramCard from "@/components/HologramCard";
 
@@ -143,6 +144,32 @@ export default function Home() {
                 </span>
               </div>
             </div>
+          </HologramCard>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="mt-12"
+        >
+          <HologramCard className="max-w-md mx-auto">
+            <a
+              href="https://ctftime.org/team/283028"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-center space-x-3 p-4 hover:scale-105 transition-transform"
+            >
+              <img
+                src="/ctftime-logo.svg"
+                alt="CTFtime"
+                className="w-15 h-14"
+              />
+              <span className="text-custom-blue group-hover:text-custom-pink transition-colors">
+                Check us out on CTFtime
+              </span>
+              <FiExternalLink className="w-5 h-5 text-custom-blue group-hover:text-custom-pink transition-colors" />
+            </a>
           </HologramCard>
         </motion.div>
 
