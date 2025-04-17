@@ -215,7 +215,7 @@ export default function Achievements() {
   }>({ key: "year", direction: "desc" });
 
   // Define years array with proper typing
-  const years: YearFilter[] = ["all", 2025, 2024];
+  const years: YearFilter[] = ["all", 2025, 2024, 2023];
 
   // Filter and sort achievements
   const filteredAchievements = useMemo(() => {
