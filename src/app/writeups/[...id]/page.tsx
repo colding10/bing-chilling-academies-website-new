@@ -4,30 +4,45 @@ import { Writeup } from "@/lib/writeups";
 import WriteupContent from "./WriteupContent";
 
 // Server Component with params type
-// Using 'any' type to bypass Next.js PageProps constraint issues
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function Page({ params }: { params: any }) {
+// Properly type the params for [...id] route
+interface WriteupPageParams {
+  id: string[];
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<WriteupPageParams> | WriteupPageParams;
+}) {
   // Server-side data fetching
-  const path = Array.isArray(params.id) ? params.id.join("/") : params.id;
-  
+  // In Next.js 15, we need to await params before accessing its properties
+  const resolvedParams = await params;
+  const path = resolvedParams.id.join("/");
+
   let writeup: Writeup | null = null;
   const isLoading = false;
-  
+
   try {
-    // Perform server-side data fetching
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/writeups/${path}`, { 
-      cache: 'no-store' 
+    // Create a proper absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const url = new URL(`/api/writeups/${path}`, baseUrl);
+
+    // Use the absolute URL for the fetch request
+    const response = await fetch(url.toString(), {
+      cache: "no-store", // Disable caching for the request
     });
-    
+
     if (!response.ok) {
-      console.error(`Error fetching writeup: ${response.status} ${response.statusText}`);
+      console.error(
+        `Error fetching writeup: ${response.status} ${response.statusText}`
+      );
     } else {
-      writeup = await response.json() as Writeup;
+      writeup = (await response.json()) as Writeup;
     }
   } catch (error) {
     console.error("Error fetching writeup:", error);
   }
-  
+
   // Render the client component with the fetched data
   return <WriteupContent writeup={writeup} isLoading={isLoading} />;
 }
