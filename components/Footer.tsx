@@ -7,7 +7,8 @@ export default function Footer() {
             BING CHILLING ACADEMIES
           </div>
           <div className="font-play text-gray-400 text-sm">
-            a group of high schoolers from the bing chilling academies who like ice cream{" "}
+            a group of high schoolers from the bing chilling academies who like
+            ice cream{" "}
           </div>
           <div className="font-share-tech text-gray-500 text-xs">
             © {new Date().getFullYear()} Bing Chilling Academies. All rights
@@ -16,5 +17,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }

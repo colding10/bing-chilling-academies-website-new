@@ -1,8 +1,8 @@
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 
 interface CyberCardProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export default function CyberCard({
@@ -18,5 +18,5 @@ export default function CyberCard({
     >
       {children}
     </motion.div>
-  );
+  )
 }

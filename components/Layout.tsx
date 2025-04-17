@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import { ThemeProvider } from "next-themes";
-import { motion, AnimatePresence } from "framer-motion";
-import MatrixRain from "./MatrixRain";
-import ParticleField from "./ParticleField";
+import Navbar from "./Navbar"
+import Footer from "./Footer"
+import { ThemeProvider } from "next-themes"
+import { motion, AnimatePresence } from "framer-motion"
+import MatrixRain from "./MatrixRain"
+import ParticleField from "./ParticleField"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,5 +27,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Footer />
       </div>
     </ThemeProvider>
-  );
+  )
 }

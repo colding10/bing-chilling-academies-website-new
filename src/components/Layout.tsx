@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import { ThemeProvider } from "next-themes";
-import { motion, AnimatePresence } from "framer-motion";
-import MatrixRain from "./MatrixRain";
-import ParticleField from "./ParticleField";
+import { useState, useEffect } from "react"
+import Navbar from "./Navbar"
+import Footer from "./Footer"
+import { ThemeProvider } from "next-themes"
+import { motion, AnimatePresence } from "framer-motion"
+import MatrixRain from "./MatrixRain"
+import ParticleField from "./ParticleField"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   // Use state to track if the component is mounted (client-side)
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false)
 
   // After first render (client-side), set mounted to true
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
   return (
     <ThemeProvider attribute="class">
@@ -36,5 +36,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Footer />
       </div>
     </ThemeProvider>
-  );
+  )
 }

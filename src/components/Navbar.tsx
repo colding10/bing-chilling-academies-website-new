@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
-import { SunIcon, MoonIcon } from "@heroicons/react/24/solid";
+import Link from "next/link"
+import { useState, useEffect } from "react"
+import { useTheme } from "next-themes"
+import { SunIcon, MoonIcon } from "@heroicons/react/24/solid"
 
 export default function Navbar() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme()
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), [])
 
-  if (!mounted) return null;
+  if (!mounted) return null
 
   return (
     <nav className="border-b-2 border-custom-blue/30 bg-custom-black/80 backdrop-blur-md">
@@ -60,5 +60,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

@@ -19,5 +19,5 @@ export default function CyberDivider() {
       </div>
       <div className="h-px bg-custom-blue flex-grow animate-pulse" />
     </div>
-  );
+  )
 }

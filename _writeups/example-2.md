@@ -19,5 +19,6 @@ When examining the application, we noticed that the comment system was not prope
 
 ```javascript
 // Vulnerable code
-const comment = req.body.comment;
-document.getElementById('comments').innerHTML += comment;
+const comment = req.body.comment
+document.getElementById("comments").innerHTML += comment
+```

@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion"
+import { useState } from "react"
 
 interface HologramCardProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export default function HologramCard({
   children,
   className = "",
 }: HologramCardProps) {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect()
     setMousePosition({
       x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
       y: ((e.clientY - rect.top) / rect.height) * 2 - 1,
-    });
-  };
+    })
+  }
 
   return (
     <motion.div
@@ -38,5 +38,5 @@ export default function HologramCard({
       <div className="relative z-10 p-6">{children}</div>
       <div className="absolute inset-0 hologram-lines" />
     </motion.div>
-  );
+  )
 }

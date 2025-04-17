@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
 interface TerminalTextProps {
-  text: string;
-  speed?: number;
+  text: string
+  speed?: number
 }
 
 export default function TerminalText({ text, speed = 50 }: TerminalTextProps) {
-  const [displayedText, setDisplayedText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState("")
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
     if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + text[currentIndex]);
-        setCurrentIndex((prev) => prev + 1);
-      }, speed);
+        setDisplayedText((prev) => prev + text[currentIndex])
+        setCurrentIndex((prev) => prev + 1)
+      }, speed)
 
-      return () => clearTimeout(timeout);
+      return () => clearTimeout(timeout)
     }
-  }, [currentIndex, text, speed]);
+  }, [currentIndex, text, speed])
 
   return (
     <div className="font-share-tech">
@@ -28,5 +28,5 @@ export default function TerminalText({ text, speed = 50 }: TerminalTextProps) {
       <span>{displayedText}</span>
       <span className="animate-pulse">_</span>
     </div>
-  );
+  )
 }

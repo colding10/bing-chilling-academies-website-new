@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 import {
   FiCode,
   FiShield,
@@ -8,13 +8,13 @@ import {
   FiLock,
   FiSearch,
   FiDatabase,
-} from "react-icons/fi";
-import TerminalText from "@/components/TerminalText";
+} from "react-icons/fi"
+import TerminalText from "@/components/TerminalText"
 
 interface TeamMember {
-  handle: string;
-  specialties: string[];
-  bio: string;
+  handle: string
+  specialties: string[]
+  bio: string
 }
 
 // Map specialties to icons
@@ -26,7 +26,7 @@ const specialtyIcons = {
   "Reverse Engineering": FiCpu,
   "Digital Forensics": FiDatabase,
   OSINT: FiSearch,
-};
+}
 
 const teamMembers: TeamMember[] = [
   {
@@ -59,7 +59,7 @@ const teamMembers: TeamMember[] = [
     specialties: ["OSINT", "Miscellaneous"],
     bio: "does this guy even do ctf?? pro stalker/osinter ig",
   },
-];
+]
 
 const MemberCard = ({ member }: { member: TeamMember }) => {
   return (
@@ -82,7 +82,7 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
         {member.specialties.map((specialty) => {
           const Icon =
             specialtyIcons[specialty as keyof typeof specialtyIcons] ||
-            FiDatabase;
+            FiDatabase
           return (
             <span
               key={specialty}
@@ -92,7 +92,7 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
               <Icon className="w-3 h-3" />
               {specialty}
             </span>
-          );
+          )
         })}
       </div>
 
@@ -105,8 +105,8 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
       <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow opacity-0 group-hover:opacity-100 transition-opacity"></div>
     </motion.div>
-  );
-};
+  )
+}
 
 export default function About() {
   return (
@@ -167,5 +167,5 @@ export default function About() {
         </motion.div>
       </motion.div>
     </div>
-  );
+  )
 }

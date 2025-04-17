@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react"
 
 export default function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -9,7 +9,7 @@ export default function MatrixRain() {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext("2d")
     if (!ctx) return
 
     // Set initial canvas size
@@ -20,8 +20,9 @@ export default function MatrixRain() {
     }
     updateCanvasSize()
 
-    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン'
-    const charArray = chars.split('')
+    const chars =
+      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
+    const charArray = chars.split("")
     const fontSize = 14
     const columns = Math.floor(window.innerWidth / fontSize)
     const drops: number[] = new Array(columns).fill(1)
@@ -29,10 +30,10 @@ export default function MatrixRain() {
     function draw() {
       if (!ctx || !canvas) return
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      ctx.fillStyle = '#0ff'
+      ctx.fillStyle = "#0ff"
       ctx.font = `${fontSize}px monospace`
 
       for (let i = 0; i < drops.length; i++) {
@@ -49,11 +50,11 @@ export default function MatrixRain() {
 
     const interval = setInterval(draw, 33)
 
-    window.addEventListener('resize', updateCanvasSize)
+    window.addEventListener("resize", updateCanvasSize)
 
     return () => {
       clearInterval(interval)
-      window.removeEventListener('resize', updateCanvasSize)
+      window.removeEventListener("resize", updateCanvasSize)
     }
   }, [])
 

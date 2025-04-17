@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 import {
   FiTarget,
   FiFlag,
@@ -8,14 +8,14 @@ import {
   FiTrendingUp,
   FiExternalLink,
   FiSearch,
-} from "react-icons/fi";
-import { useState, useMemo } from "react";
+} from "react-icons/fi"
+import { useState, useMemo } from "react"
 
 interface StatCardProps {
-  label: string;
-  value: string;
-  color: string;
-  icon: React.ElementType;
+  label: string
+  value: string
+  color: string
+  icon: React.ElementType
 }
 
 const StatCard = ({ label, value, color, icon: Icon }: StatCardProps) => (
@@ -30,15 +30,15 @@ const StatCard = ({ label, value, color, icon: Icon }: StatCardProps) => (
     </div>
     <p className="text-gray-400 font-play">{label}</p>
   </motion.div>
-);
+)
 
 interface Achievement {
-  event: string;
-  placement: number;
-  ctfPoints: number;
-  ratingPoints: number;
-  year: number;
-  eventUrl: string;
+  event: string
+  placement: number
+  ctfPoints: number
+  ratingPoints: number
+  year: number
+  eventUrl: string
 }
 
 const achievements: Achievement[] = [
@@ -204,39 +204,39 @@ const achievements: Achievement[] = [
     year: 2023,
     eventUrl: "https://ctftime.org/event/2023",
   },
-];
+]
 
-type YearFilter = number | "all";
+type YearFilter = number | "all"
 
 export default function Achievements() {
-  const [selectedYear, setSelectedYear] = useState<YearFilter>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedYear, setSelectedYear] = useState<YearFilter>("all")
+  const [searchQuery, setSearchQuery] = useState("")
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof Achievement;
-    direction: "asc" | "desc";
-  }>({ key: "year", direction: "desc" });
+    key: keyof Achievement
+    direction: "asc" | "desc"
+  }>({ key: "year", direction: "desc" })
 
-  const years: YearFilter[] = ["all", 2025, 2024, 2023];
+  const years: YearFilter[] = ["all", 2025, 2024, 2023]
 
   const filteredAchievements = useMemo(() => {
-    let filtered = [...achievements];
+    let filtered = [...achievements]
 
     if (selectedYear !== "all") {
-      filtered = filtered.filter((a) => a.year === selectedYear);
+      filtered = filtered.filter((a) => a.year === selectedYear)
     }
 
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((a) => a.event.toLowerCase().includes(query));
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter((a) => a.event.toLowerCase().includes(query))
     }
 
     return filtered.sort((a, b) => {
       if (sortConfig.direction === "asc") {
-        return a[sortConfig.key] > b[sortConfig.key] ? 1 : -1;
+        return a[sortConfig.key] > b[sortConfig.key] ? 1 : -1
       }
-      return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1;
-    });
-  }, [selectedYear, sortConfig, searchQuery]);
+      return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1
+    })
+  }, [selectedYear, sortConfig, searchQuery])
 
   const stats = useMemo(() => {
     const yearStats = filteredAchievements.reduce(
@@ -252,7 +252,7 @@ export default function Achievements() {
         bestPlacement: Infinity,
         eventCount: 0,
       }
-    );
+    )
 
     return [
       {
@@ -279,16 +279,16 @@ export default function Achievements() {
         icon: FiFlag,
         color: "text-green-500",
       },
-    ];
-  }, [filteredAchievements]);
+    ]
+  }, [filteredAchievements])
 
   const handleSort = (key: keyof Achievement) => {
     setSortConfig((current) => ({
       key,
       direction:
         current.key === key && current.direction === "desc" ? "asc" : "desc",
-    }));
-  };
+    }))
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -443,5 +443,5 @@ export default function Achievements() {
         )}
       </motion.div>
     </div>
-  );
+  )
 }

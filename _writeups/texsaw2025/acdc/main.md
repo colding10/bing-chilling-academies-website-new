@@ -8,9 +8,11 @@ author: "cold"
 ---
 
 ## Challenge description
+
 My friend is flying a spaceship, and is having a problem, he is getting the attached differences in telemetry. Your flag is texsaw{the instructions on what he should do to fix the problem} the instructions are less than 6 words and might not be words in the english dictionary neccesarily. Put them all in lower case with spaces between them.
 
 ## Solvepath
+
 Right away we see the mention of AC/DC - but seeing as it mentions spaceships, the band is unlikely.
 Instead we start thinking about electrical systems. Opening the attached csv, [download here](/api/writeup-assets/texsaw2025/acdc/Telemetry.csv), we see an electrical issue at T=52 seconds.
 

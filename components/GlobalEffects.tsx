@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { usePathname } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect } from "react"
 
 export default function GlobalEffects() {
   const pathname = usePathname()
@@ -29,7 +29,10 @@ export default function GlobalEffects() {
             className="fixed inset-0 bg-custom-black z-50 flex items-center justify-center"
           >
             <div className="cyber-loading">
-              <span className="text-custom-blue font-orbitron text-2xl glitch-text" data-text="LOADING">
+              <span
+                className="text-custom-blue font-orbitron text-2xl glitch-text"
+                data-text="LOADING"
+              >
                 LOADING
               </span>
             </div>

@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+import { motion } from "framer-motion"
+import Image from "next/image"
+import Link from "next/link"
 import {
   FiTarget,
   FiFlag,
   FiZap,
   FiServer,
   FiExternalLink,
-} from "react-icons/fi";
+} from "react-icons/fi"
 
-import TerminalText from "@/components/TerminalText";
-import HologramCard from "@/components/HologramCard";
+import TerminalText from "@/components/TerminalText"
+import HologramCard from "@/components/HologramCard"
 
 interface StatCardProps {
-  label: string;
-  value: string;
-  color: string;
-  icon: React.ElementType;
+  label: string
+  value: string
+  color: string
+  icon: React.ElementType
 }
 
 const StatCard = ({ label, value, color, icon: Icon }: StatCardProps) => (
@@ -29,7 +29,7 @@ const StatCard = ({ label, value, color, icon: Icon }: StatCardProps) => (
     </div>
     <p className="text-gray-400 font-play">{label}</p>
   </HologramCard>
-);
+)
 
 export default function Home() {
   const stats = [
@@ -57,7 +57,7 @@ export default function Home() {
       icon: FiServer,
       color: "text-green-500",
     },
-  ];
+  ]
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center">
@@ -203,5 +203,5 @@ export default function Home() {
         </motion.div>
       </motion.div>
     </div>
-  );
+  )
 }

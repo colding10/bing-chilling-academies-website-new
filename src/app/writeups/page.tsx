@@ -1,50 +1,50 @@
 // File: page.tsx (Writeups List)
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { FiSearch, FiTag, FiCalendar, FiFilter, FiX } from "react-icons/fi";
-import CyberCard from "@/components/CyberCard";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import { WriteupMetadata } from "@/lib/writeups";
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { FiSearch, FiTag, FiCalendar, FiFilter, FiX } from "react-icons/fi"
+import CyberCard from "@/components/CyberCard"
+import LoadingSpinner from "@/components/LoadingSpinner"
+import { WriteupMetadata } from "@/lib/writeups"
 
 export default function WriteupsPage() {
-  const [writeups, setWriteups] = useState<WriteupMetadata[]>([]);
-  const [search, setSearch] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [allTags, setAllTags] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [writeups, setWriteups] = useState<WriteupMetadata[]>([])
+  const [search, setSearch] = useState("")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [allTags, setAllTags] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const [filterOpen, setFilterOpen] = useState(false)
 
   useEffect(() => {
     const fetchWriteups = async () => {
       try {
-        const response = await fetch("/api/writeups");
-        const data = await response.json();
-        setWriteups(data);
+        const response = await fetch("/api/writeups")
+        const data = await response.json()
+        setWriteups(data)
         setAllTags(
           Array.from(new Set(data.flatMap((w: WriteupMetadata) => w.tags)))
-        );
-        setLoading(false);
+        )
+        setLoading(false)
       } catch (error) {
-        console.error("Error fetching writeups:", error);
-        setLoading(false);
+        console.error("Error fetching writeups:", error)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchWriteups();
-  }, []);
+    fetchWriteups()
+  }, [])
 
   const filteredWriteups = writeups.filter((writeup) => {
     const matchesSearch =
       writeup.title.toLowerCase().includes(search.toLowerCase()) ||
-      writeup.description.toLowerCase().includes(search.toLowerCase());
+      writeup.description.toLowerCase().includes(search.toLowerCase())
     const matchesTags =
       selectedTags.length === 0 ||
-      selectedTags.every((tag) => writeup.tags.includes(tag));
-    return matchesSearch && matchesTags;
-  });
+      selectedTags.every((tag) => writeup.tags.includes(tag))
+    return matchesSearch && matchesTags
+  })
 
   if (loading)
     return (
@@ -59,7 +59,7 @@ export default function WriteupsPage() {
           Loading CTF writeups...
         </motion.div>
       </div>
-    );
+    )
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -203,14 +203,12 @@ export default function WriteupsPage() {
                     <div className="absolute scanline opacity-10 pointer-events-none"></div>
                     <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                       <div>
-                        <h2
-                          className="text-2xl font-orbitron transition-colors duration-300"
-                        >
+                        <h2 className="text-2xl font-orbitron transition-colors duration-300">
                           <span className="text-custom-blue group-hover:text-glow-blue">
-                          {writeup.ctfName}
+                            {writeup.ctfName}
                           </span>{" "}
                           <span className="text-custom-pink group-hover:text-glow-purple">
-                          {writeup.title}
+                            {writeup.title}
                           </span>
                         </h2>
                         <p className="text-gray-400 mt-2 font-share-tech">
@@ -274,5 +272,5 @@ export default function WriteupsPage() {
         )}
       </motion.div>
     </div>
-  );
+  )
 }

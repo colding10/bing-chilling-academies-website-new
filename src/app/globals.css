@@ -75,11 +75,8 @@
 /* Animated Grid Background */
 .cyber-grid {
   background-size: 50px 50px;
-  background-image: linear-gradient(
-      to right,
-      rgba(0, 255, 249, 0.1) 1px,
-      transparent 1px
-    ),
+  background-image:
+    linear-gradient(to right, rgba(0, 255, 249, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 255, 249, 0.1) 1px, transparent 1px);
   animation: grid-animation 20s linear infinite;
 }
@@ -99,7 +96,9 @@
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 10px rgba(0, 255, 249, 0.3), 0 0 20px rgba(0, 255, 249, 0.2),
+  box-shadow:
+    0 0 10px rgba(0, 255, 249, 0.3),
+    0 0 20px rgba(0, 255, 249, 0.2),
     0 0 30px rgba(0, 255, 249, 0.1);
   transform: translateY(-2px);
 }
@@ -161,11 +160,8 @@
 /* Animated Grid Background */
 .cyber-grid {
   background-size: 50px 50px;
-  background-image: linear-gradient(
-      to right,
-      rgba(0, 255, 249, 0.1) 1px,
-      transparent 1px
-    ),
+  background-image:
+    linear-gradient(to right, rgba(0, 255, 249, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 255, 249, 0.1) 1px, transparent 1px);
   animation: grid-animation 20s linear infinite;
 }
@@ -302,7 +298,9 @@ h3:hover {
 }
 
 .text-glow-hover:hover {
-  text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary),
+  text-shadow:
+    0 0 10px var(--color-primary),
+    0 0 20px var(--color-primary),
     0 0 30px var(--color-primary);
 }
 

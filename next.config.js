@@ -4,7 +4,7 @@ const nextConfig = {
     mdxRs: true,
   },
   eslint: {
-    dirs: ['.'], // Specify the directories to lint
+    dirs: ["."], // Specify the directories to lint
     ignoreDuringBuilds: false,
   },
 }

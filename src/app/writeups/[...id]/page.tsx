@@ -1,22 +1,22 @@
 // File: page.tsx (Writeup Detail)
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { FiCalendar, FiUser, FiTag, FiArrowLeft } from "react-icons/fi";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import { Writeup } from "@/lib/writeups";
-import { use } from "react";
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { motion } from "framer-motion"
+import { FiCalendar, FiUser, FiTag, FiArrowLeft } from "react-icons/fi"
+import LoadingSpinner from "@/components/LoadingSpinner"
+import { Writeup } from "@/lib/writeups"
+import { use } from "react"
 
 export default function WriteupPage({
   params,
 }: {
-  params: Promise<{ id: string[] }>;
+  params: Promise<{ id: string[] }>
 }) {
-  const [writeup, setWriteup] = useState<Writeup | null>(null);
-  const [loading, setLoading] = useState(true);
-  const resolvedParams = use(params);
+  const [writeup, setWriteup] = useState<Writeup | null>(null)
+  const [loading, setLoading] = useState(true)
+  const resolvedParams = use(params)
 
   useEffect(() => {
     const fetchWriteup = async () => {
@@ -24,20 +24,20 @@ export default function WriteupPage({
         // Convert resolvedParams.id to the proper path format
         const path = Array.isArray(resolvedParams.id)
           ? resolvedParams.id.join("/")
-          : resolvedParams.id;
+          : resolvedParams.id
 
-        const response = await fetch(`/api/writeups/${path}`);
-        const data = await response.json();
-        setWriteup(data);
-        setLoading(false);
+        const response = await fetch(`/api/writeups/${path}`)
+        const data = await response.json()
+        setWriteup(data)
+        setLoading(false)
       } catch (error) {
-        console.error("Error fetching writeup:", error);
-        setLoading(false);
+        console.error("Error fetching writeup:", error)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchWriteup();
-  }, [resolvedParams]); // Add resolvedParams as a dependency to avoid stale closures
+    fetchWriteup()
+  }, [resolvedParams]) // Add resolvedParams as a dependency to avoid stale closures
 
   if (loading)
     return (
@@ -52,7 +52,7 @@ export default function WriteupPage({
           Decrypting writeup data...
         </motion.div>
       </div>
-    );
+    )
 
   if (!writeup) {
     return (
@@ -78,7 +78,7 @@ export default function WriteupPage({
           </Link>
         </div>
       </motion.div>
-    );
+    )
   }
 
   return (
@@ -171,5 +171,5 @@ export default function WriteupPage({
         />
       </article>
     </motion.div>
-  );
+  )
 }
