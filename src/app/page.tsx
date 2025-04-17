@@ -35,13 +35,13 @@ export default function Home() {
   const stats = [
     {
       label: "CTFs Played",
-      value: "50+",
+      value: "20+",
       icon: FiTarget,
       color: "text-custom-blue",
     },
     {
       label: "Flags Captured",
-      value: "1000+",
+      value: "500+",
       icon: FiFlag,
       color: "text-custom-pink",
     },
@@ -53,7 +53,7 @@ export default function Home() {
     },
     {
       label: "Global Ranking",
-      value: "Top 100",
+      value: "Top 200",
       icon: FiServer,
       color: "text-green-500",
     },
