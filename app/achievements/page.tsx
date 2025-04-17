@@ -195,6 +195,14 @@ const achievements: Achievement[] = [
     year: 2024,
     eventUrl: "https://ctftime.org/event/2230",
   },
+  {
+    event: "NahamCon CTF 2023",
+    placement: 8,
+    ctfPoints: 17268,
+    ratingPoints: 34.026,
+    year: 2023,
+    eventUrl: "https://ctftime.org/event/2023",
+  }
 ];
 
 type YearFilter = number | "all";
