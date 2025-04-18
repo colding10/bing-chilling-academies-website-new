@@ -1,5 +1,5 @@
 ---
-title: "OSINT: Reinventing the Wheel"
+title: "Reinventing the Wheel"
 ctfName: "TexSAW CTF 2025"
 date: "2025-04-13"
 tags: ["osint"]

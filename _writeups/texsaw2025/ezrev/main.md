@@ -1,5 +1,5 @@
 ---
-title: "REV: ez_rev"
+title: "ez_rev"
 ctfName: "TexSAW CTF 2025"
 date: "2025-04-13"
 tags: ["reverse"]

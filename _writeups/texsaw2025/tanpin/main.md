@@ -1,5 +1,5 @@
 ---
-title: "OSINT: Tanpin"
+title: "Tanpin"
 ctfName: "TexSAW CTF 2025"
 date: "2025-04-13"
 tags: ["osint"]
