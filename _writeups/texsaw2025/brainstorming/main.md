@@ -3,7 +3,7 @@ title: "Brainstorming"
 ctfName: "TexSAW CTF 2025"
 date: "2025-04-13"
 tags: ["crypto"]
-description: "ocaml binaries are cancerous - gdb carries"
+description: "cryptography + balatro challenge"
 author: "cold"
 ---
 
@@ -36,7 +36,7 @@ trivially, we can see that its referencing elliptic curve cryptography, but we'r
 since we never played this game before, we enlisted the help of someone from the Balatro discord, and they helped us to construct the score using this website: [https://efhiii.github.io/balatro-calculator/](https://efhiii.github.io/balatro-calculator/).
 
 after a couple of tries (shout out to my boy Juan) we got this:
-![score.png](/api/writeup-assets/texsaw2025/score.png)
+![score.png](/api/writeup-assets/texsaw2025/brainstorming/score.png)
 
 so we have the number `483662483600` to use as a private key.
 
