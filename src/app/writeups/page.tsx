@@ -42,7 +42,7 @@ export default function WriteupsPage() {
       writeup.description.toLowerCase().includes(search.toLowerCase())
     const matchesTags =
       selectedTags.length === 0 ||
-      selectedTags.every((tag) => writeup.tags.includes(tag))
+      selectedTags.some((tag) => writeup.tags.includes(tag))
     return matchesSearch && matchesTags
   })
 
