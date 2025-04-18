@@ -29,7 +29,7 @@ If the image was example.png, then the flag would be: texsaw{dQw4w9WgXcQ,never g
 
 ## Solvepath
 
-tbh it was js **appllo* and I looking thru youtube for hours until we found
+tbh it was js **appllo** and I looking thru youtube for hours until we found
 [https://www.youtube.com/watch?v=pxyONEf8ZGE&t=3395s](https://www.youtube.com/watch?v=pxyONEf8ZGE&t=3395s)
 
 which matched exactly, and the original clip was [https://www.youtube.com/watch?v=3SbPQDxlHcA](https://www.youtube.com/watch?v=3SbPQDxlHcA)
