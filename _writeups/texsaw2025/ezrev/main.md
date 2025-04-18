@@ -11,7 +11,7 @@ author: "cold"
 
 easy-rev: functional edition (with all new (old) list module!)
 
-*wow so helpful*
+_wow so helpful_
 [download binary here](/api/writeup-assets/texsaw2025/ezrev/easy_rev)
 
 ## Solvepath

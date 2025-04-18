@@ -29,17 +29,17 @@ Bolded answers with parts are below:
 
 The first proper noun in the book's title **Voynich**
 
-* Language of book text **Voynichese**
-* The earliest year it was likely written in **1404**
-* The country it was likely written in **Italy**
-* Its current location (one word) **Yale**
-* The page number of the large drawing on the right **56v**
-* The page number of the ram drawing  **71r**
-* The page number of the scales drawing **72v**
-* The page number of the fish drawing **70v**
-* The page number of the first inscription not in the text's primary language that was written by its author (not some later owner) **f1r**
-* The page number of the text in the top left (hint: in the second half of the book) **75r**
-* First known owner's first name **Rudolf**
+- Language of book text **Voynichese**
+- The earliest year it was likely written in **1404**
+- The country it was likely written in **Italy**
+- Its current location (one word) **Yale**
+- The page number of the large drawing on the right **56v**
+- The page number of the ram drawing **71r**
+- The page number of the scales drawing **72v**
+- The page number of the fish drawing **70v**
+- The page number of the first inscription not in the text's primary language that was written by its author (not some later owner) **f1r**
+- The page number of the text in the top left (hint: in the second half of the book) **75r**
+- First known owner's first name **Rudolf**
 
 ![image2](/api/writeup-assets/texsaw2025/cryptolinguistics/image2.png "figure 1 trolling")
 
