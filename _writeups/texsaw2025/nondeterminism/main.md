@@ -1,22 +1,19 @@
 ---
-title: "Determinism"
+title: "Nondeterminism"
 ctfName: "TexSAW CTF 2025"
 date: "2025-04-13"
 tags: ["misc", "math"]
-description: "a formal proof that the small-step operational semantics for simply-typed lambda calculus (STLC) is deterministic"
+description: "the polyadic pi calculus is non-deterministic"
 author: "tien"
 ---
 
 ## Challenge description
 
-Write a formal proof that the small-step operational semantics for simply-typed lambda calculus (STLC) is deterministic.
+Write a formal proof that the [polyadic pi-calculus [Milner, 1991]](https://era.ed.ac.uk/handle/1842/6050) is non-deterministic.
 
-* Assume call-by-value semantics
-* "Deterministic" means that if a program at state `X` can step into state `Y1`, and it can step into state Y2, then it must be that `Y1 = Y2`. For example,
-    `X = (lambda x:Nat. x + 3) 5`
-     It is clear that `X` can only step to the state `5 + 3` after beta-reduction. If you had assumed that `X` stepped to some arbitrary state `Y1`, or to another arbitrary state `Y2`, it is necessary that `Y1 = Y2 = 5 + 3`.
+A semantics is non-deterministic if a state X can step to at least two distinct states Y1 and Y2.
 
-* Submissions deemed to be the output of a large language model will result in all further submissions for this challenge being ignored
+Submissions deemed to be the output of a large language model will result in all further submissions for this challenge being ignored.
 
 ## solution
 

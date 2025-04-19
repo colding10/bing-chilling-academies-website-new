@@ -4,7 +4,7 @@ ctfName: "TexSAW CTF 2025"
 date: "2025-04-13"
 tags: ["osint"]
 description: "japanese culture immersion to solve osint chall"
-author: "cold"
+author: "appllo & cold"
 ---
 
 ## Challenge Description
