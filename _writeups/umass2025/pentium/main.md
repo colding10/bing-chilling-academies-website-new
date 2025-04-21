@@ -102,6 +102,7 @@ I got sidetracked.
 It wasn’t anyone on this, NOW WHAT.
 
 Well, the website has something called use cases.
+Where is it located? Well, if you scroll down to the absolute bottom of the website, it is located on the bottom right.
 
 [https://pc-zeus.com/example.html](https://pc-zeus.com/example.html)
 
