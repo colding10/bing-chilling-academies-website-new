@@ -29,7 +29,9 @@ export default memo(function TerminalText({
     // Use a more efficient recursive approach instead of creating a new timeout for each character
     const typeNextChar = () => {
       if (i < text.length) {
-        setDisplayedText((prev) => prev + text[i])
+        // Ensure we're getting a character from the text string and handle spaces correctly
+        const nextChar = text.charAt(i);
+        setDisplayedText((prev) => prev + nextChar);
         i++
         timeoutRef.current = setTimeout(typeNextChar, speed)
       } else {
