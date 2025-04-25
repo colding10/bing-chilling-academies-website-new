@@ -134,4 +134,4 @@ I did not enjoy Japanese OSINT. I found it painstakingly not fun. However, it wa
 
 -txn
 
-*typeset by cold, yell at me if it looks ass*
+_typeset by cold, yell at me if it looks ass_
