@@ -133,5 +133,3 @@ Flag: `UMASS{Otogi 2: Immortal Warriors}`
 I did not enjoy Japanese OSINT. I found it painstakingly not fun. However, it was rather interesting from your conventional OSINT.
 
 -txn
-
-_typeset by cold, yell at me if it looks ass_
