@@ -137,29 +137,29 @@ export default function Home() {
                 </h2>
                 <div className="flex-grow">
                   <h3 className="font-share-tech text-custom-blue text-xl">
-                    Texas Security Awareness Week 2025
+                    UMass CTF 2025
                   </h3>
                   <p className="text-gray-400 my-2 font-play">
-                    3rd place finish at TexSAW CTF
+                    37th place finish at TexSAW CTF
                   </p>
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
                     <span
                       className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
                       rounded-full text-sm text-custom-yellow"
                     >
-                      7835 Points
+                      2411 Points
                     </span>
                     <span
                       className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
                       rounded-full text-sm text-custom-pink"
                     >
-                      #3 Placement
+                      #37 Placement
                     </span>
                     <span
                       className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
                       rounded-full text-sm text-custom-blue"
                     >
-                      38.025 Rating
+                      10.688 Rating
                     </span>
                   </div>
                 </div>
