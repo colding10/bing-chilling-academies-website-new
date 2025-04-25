@@ -25,7 +25,7 @@ So, **the solvepath we visualized is cleaning up the audio to extract the minimo
 
 If you just try to use `minimodem`, we get a lot of junk. This is because there's some music playing over the minimodem sounds.
 
-But at least during initial testing I figured out to use `minimodem`, you just do this: `minimodem --rx 100 -f freq2_1a.wa`. And, it's important to note that **the baud rate** must be adjusted to match the baud rate of the transmission. *it's 100 in the example command*
+But at least during initial testing I figured out to use `minimodem`, you just do this: `minimodem --rx 100 -f freq2_1a.wa`. And, it's important to note that **the baud rate** must be adjusted to match the baud rate of the transmission. _it's 100 in the example command_
 
 ### Processing the audio
 
@@ -38,8 +38,8 @@ after a bit of trial and error, he actually fed me the cleaned up audio from the
 
 after fiddling with baud rate, we extracted this
 
-* `XzA0ID0gWDNSdmR3bz0KVEFHXzAxID0gVTN0bWJBbz0KVEFHXzA2ID0gWlhKMGVnbz0KVEFHXzAz` *baud rate 50*
-* `VEFHXzA1ID0gWlhKZmFBbz0KVEFHXzAyID0gWV=�3bz0KVEFHXzAwID0gVlUxQlV3bz0KVEFH` *baud rate 100*
+- `XzA0ID0gWDNSdmR3bz0KVEFHXzAxID0gVTN0bWJBbz0KVEFHXzA2ID0gWlhKMGVnbz0KVEFHXzAz` _baud rate 50_
+- `VEFHXzA1ID0gWlhKZmFBbz0KVEFHXzAyID0gWV=�3bz0KVEFHXzAwID0gVlUxQlV3bz0KVEFH` _baud rate 100_
 
 these are cleary **base64**, but the second one is slightly corrupted (due to unclean filtering), but ChatGPT or AI can help to guess what it should have been, and we get these snippets:
 
@@ -49,7 +49,7 @@ TAG_01 = U3tmbAo=        S{fl
 TAG_04 = X3Rvdwo=           _tow
 TAG_05 = ZXJfaAo= er_h
 TAG_06 = ZXJ0ego=         ertz
-TAG_03 
+TAG_03
 ```
 
 we honestly could probably try harder to clean it up, but we can begin flagguess:

@@ -19,44 +19,44 @@ interface TeamMember {
 
 // Map specialties to icons
 const specialtyIcons = {
-  "Web Exploitation": FiCode,
-  Cryptography: FiLock,
-  "Binary Exploitation": FiShield,
-  Miscellaneous: FiDatabase,
-  "Reverse Engineering": FiCpu,
-  "Digital Forensics": FiDatabase,
+  web: FiCode,
+  crypto: FiLock,
+  pwn: FiShield,
+  misc: FiDatabase,
+  rev: FiCpu,
+  forensics: FiDatabase,
   OSINT: FiSearch,
 }
 
 const teamMembers: TeamMember[] = [
   {
     handle: "appllo",
-    specialties: ["Web Exploitation", "Cryptography"],
-    bio: "very orz at web exploitation and crypto",
+    specialties: ["web", "crypto", "misc"],
+    bio: "very orz at Web and crypto",
   },
   {
     handle: "bo421",
-    specialties: ["Binary Exploitation", "Miscellaneous"],
+    specialties: ["pwn", "forensics", "misc"],
     bio: "THE pwner of Bing Chilling",
   },
   {
     handle: "cold",
-    specialties: ["Reverse Engineering", "Binary Exploitation"],
+    specialties: ["rev", "forensics", "pwn"],
     bio: "rev and bad at pwn",
   },
   {
     handle: "Snippet",
-    specialties: ["Cryptography", "Digital Forensics"],
+    specialties: ["crypto", "forensics"],
     bio: "crypto goat and foren god",
   },
   {
     handle: "tien",
-    specialties: ["OSINT", "Miscellaneous", "Digital Forensics"],
+    specialties: ["OSINT", "misc", "forensics"],
     bio: "chatgpt goat - uses it for osint and everything else",
   },
   {
     handle: "UncleEddie",
-    specialties: ["OSINT", "Miscellaneous"],
+    specialties: ["OSINT", "misc"],
     bio: "does this guy even do ctf?? pro stalker/osinter ig",
   },
 ]

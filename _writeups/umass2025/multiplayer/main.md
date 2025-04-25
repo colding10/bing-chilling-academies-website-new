@@ -13,8 +13,8 @@ author: "tien"
 
 download files here:
 
-* [multiplayer1.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer1.jpeg)
-* [multiplayer2.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer2.jpeg)
+- [multiplayer1.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer1.jpeg)
+- [multiplayer2.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer2.jpeg)
 
 ### Part 0
 
@@ -36,7 +36,7 @@ Now, I’m ready to win the game.
 
 ### Part 2: ChatGPT
 
-Well, you’re seeing these writeups like these right now, but in a few hours they will be on our website [https://bingchillingacademies.vercel.app/](https://bingchillingacademies.vercel.app/) *like it is right now, thanks to cold typesetting into markdown*
+Well, you’re seeing these writeups like these right now, but in a few hours they will be on our website [https://bingchillingacademies.vercel.app/](https://bingchillingacademies.vercel.app/) _like it is right now, thanks to cold typesetting into markdown_
 
 Please check out! Anyways, as the website suggests, I am quite good with ChatGPT.
 
@@ -51,4 +51,4 @@ ChatGPT is pretty cracked ngl.
 ### Part 4: Sad
 
 GG to Citrik. Should have been a FB tho. :( -txn
-*typeset by cold, yell at me if it looks ass*
+_typeset by cold, yell at me if it looks ass_

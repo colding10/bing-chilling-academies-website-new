@@ -19,15 +19,15 @@ I had this million-dollar app idea the other day, but I can't get my routing to 
 
 looking at the source, we do see that there is a `Flag.tsx` file, but clicking or going to the `/flag` route in the website doesn't render, we get a **404 error**.
 
-This is a **React Routing issue**, where the page exists, and is bundled in the client application, but we can't view it due to the hosting service (Github Pages) not being set up properly. But the *flag is still there*.
+This is a **React Routing issue**, where the page exists, and is bundled in the client application, but we can't view it due to the hosting service (Github Pages) not being set up properly. But the _flag is still there_.
 
 ## Key commands
 
 All we need to do is run
 
 ```js
-window.history.pushState({}, '', '/flag')
-window.dispatchEvent(new PopStateEvent('popstate'));
+window.history.pushState({}, "", "/flag")
+window.dispatchEvent(new PopStateEvent("popstate"))
 ```
 
 which basically just "changes the page to the `/flag` and then refreshes".

@@ -63,7 +63,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <meta name="google-site-verification" content="uU0GU3gPz6MyAeCJvSB0JhEMYNd8ayZVoZ6wvu1yU5w" />
+        <meta
+          name="google-site-verification"
+          content="uU0GU3gPz6MyAeCJvSB0JhEMYNd8ayZVoZ6wvu1yU5w"
+        />
       </Head>
       <div className="min-h-[80vh] flex flex-col items-center justify-center">
         <motion.div
