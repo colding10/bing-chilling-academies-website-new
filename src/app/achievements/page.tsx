@@ -9,7 +9,7 @@ import {
   FiExternalLink,
   FiSearch,
 } from "react-icons/fi"
-import { useState, useMemo } from "react"
+import { useState, useMemo, memo } from "react"
 
 interface StatCardProps {
   label: string
@@ -18,7 +18,8 @@ interface StatCardProps {
   icon: React.ElementType
 }
 
-const StatCard = ({ label, value, color, icon: Icon }: StatCardProps) => (
+// Memoize StatCard to prevent unnecessary re-renders
+const StatCard = memo(({ label, value, color, icon: Icon }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -30,7 +31,9 @@ const StatCard = ({ label, value, color, icon: Icon }: StatCardProps) => (
     </div>
     <p className="text-gray-400 font-play">{label}</p>
   </motion.div>
-)
+))
+
+StatCard.displayName = "StatCard"
 
 interface Achievement {
   event: string
@@ -43,6 +46,22 @@ interface Achievement {
 
 const achievements: Achievement[] = [
   // 2025
+  {
+    event: "b01lers CTF 2025",
+    placement: 115,
+    ctfPoints: 824,
+    ratingPoints: 2.651,
+    year: 2025,
+    eventUrl: "https://ctftime.org/event/2652",
+  },
+  {
+    event: "UMassCTF 2025",
+    placement: 37,
+    ctfPoints: 2411,
+    ratingPoints: 10.688,
+    year: 2025,
+    eventUrl: "https://ctftime.org/event/2653",
+  },
   {
     event: "Texas Security Awareness Week 2025",
     placement: 3,
@@ -230,12 +249,25 @@ export default function Achievements() {
       filtered = filtered.filter((a) => a.event.toLowerCase().includes(query))
     }
 
-    return filtered.sort((a, b) => {
+    // Always sort by year first (descending) to keep most recent at top
+    filtered.sort((a, b) => b.year - a.year)
+
+    // Then apply the user's selected sort criteria as a secondary sort
+    if (sortConfig.key !== "year") {
+      filtered.sort((a, b) => {
+        if (sortConfig.direction === "asc") {
+          return a[sortConfig.key] > b[sortConfig.key] ? 1 : -1
+        }
+        return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1
+      })
+    } else {
+      // If sorting by year, apply the direction directly
       if (sortConfig.direction === "asc") {
-        return a[sortConfig.key] > b[sortConfig.key] ? 1 : -1
+        filtered.reverse() // Reverse the previous desc sort
       }
-      return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1
-    })
+    }
+
+    return filtered
   }, [selectedYear, sortConfig, searchQuery])
 
   const stats = useMemo(() => {

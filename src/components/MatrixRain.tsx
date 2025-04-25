@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, memo } from "react"
 
-export default function MatrixRain() {
+export default memo(function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -30,6 +30,7 @@ export default function MatrixRain() {
     function draw() {
       if (!ctx || !canvas) return
 
+      // Use a more efficient opacity approach
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -48,13 +49,31 @@ export default function MatrixRain() {
       }
     }
 
-    const interval = setInterval(draw, 33)
+    // Use requestAnimationFrame instead of setInterval for smoother animations
+    let animationFrameId: number
 
-    window.addEventListener("resize", updateCanvasSize)
+    function animate() {
+      draw()
+      animationFrameId = requestAnimationFrame(animate)
+    }
+
+    animate()
+
+    const handleResize = () => {
+      updateCanvasSize()
+      // Recalculate columns and drops on resize
+      const newColumns = Math.floor(window.innerWidth / fontSize)
+      drops.length = newColumns
+      for (let i = columns; i < newColumns; i++) {
+        drops[i] = 1
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
 
     return () => {
-      clearInterval(interval)
-      window.removeEventListener("resize", updateCanvasSize)
+      cancelAnimationFrame(animationFrameId)
+      window.removeEventListener("resize", handleResize)
     }
   }, [])
 
@@ -65,4 +84,4 @@ export default function MatrixRain() {
       style={{ zIndex: -1 }}
     />
   )
-}
+})

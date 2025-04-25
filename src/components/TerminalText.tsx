@@ -1,32 +1,57 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, memo } from "react"
 
 interface TerminalTextProps {
   text: string
   speed?: number
 }
 
-export default function TerminalText({ text, speed = 50 }: TerminalTextProps) {
+export default memo(function TerminalText({
+  text,
+  speed = 50,
+}: TerminalTextProps) {
   const [displayedText, setDisplayedText] = useState("")
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + text[currentIndex])
-        setCurrentIndex((prev) => prev + 1)
-      }, speed)
+    // Reset state when text changes
+    setDisplayedText("")
+    setIsComplete(false)
 
-      return () => clearTimeout(timeout)
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
     }
-  }, [currentIndex, text, speed])
+
+    let i = 0
+
+    // Use a more efficient recursive approach instead of creating a new timeout for each character
+    const typeNextChar = () => {
+      if (i < text.length) {
+        setDisplayedText((prev) => prev + text[i])
+        i++
+        timeoutRef.current = setTimeout(typeNextChar, speed)
+      } else {
+        setIsComplete(true)
+      }
+    }
+
+    // Start typing
+    timeoutRef.current = setTimeout(typeNextChar, speed)
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [text, speed])
 
   return (
     <div className="font-share-tech">
       <span className="text-custom-blue">&gt; </span>
       <span>{displayedText}</span>
-      <span className="animate-pulse">_</span>
+      {!isComplete && <span className="animate-pulse">_</span>}
     </div>
   )
-}
+})

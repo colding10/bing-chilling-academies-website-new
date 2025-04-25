@@ -1,13 +1,76 @@
 // File: page.tsx (Writeups List)
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo, memo } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { FiSearch, FiTag, FiCalendar, FiFilter, FiX } from "react-icons/fi"
 import CyberCard from "@/components/CyberCard"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { WriteupMetadata } from "@/lib/writeups"
+
+// Memoize the CyberCard wrapper for writeup items
+const WriteupCard = memo(
+  ({
+    writeup,
+    selectedTags,
+  }: {
+    writeup: WriteupMetadata
+    selectedTags: string[]
+  }) => (
+    <Link href={`/writeups/${writeup.id}`}>
+      <CyberCard className="hover:scale-[1.01] transition-all duration-300 group relative overflow-hidden">
+        <div className="absolute scanline opacity-10 pointer-events-none"></div>
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+          <div>
+            <h2 className="text-2xl font-orbitron transition-colors duration-300">
+              <span className="text-custom-blue group-hover:text-glow-blue">
+                {writeup.ctfName}
+              </span>{" "}
+              <span className="text-custom-pink group-hover:text-glow-purple">
+                {writeup.title}
+              </span>
+            </h2>
+            <p className="text-gray-400 mt-2 font-share-tech">
+              {writeup.description}
+            </p>
+          </div>
+          <div className="flex items-center text-sm text-gray-400 whitespace-nowrap">
+            <FiCalendar className="mr-2 text-custom-yellow" />
+            {new Date(writeup.date).toLocaleDateString()}
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2 mt-4">
+          {writeup.tags.map((tag) => (
+            <span
+              key={tag}
+              className={`px-3 py-1 bg-cyber-overlay border rounded-full 
+              text-sm flex items-center gap-1 transition-colors duration-300
+              ${
+                selectedTags.includes(tag)
+                  ? "border-custom-blue text-custom-blue"
+                  : "border-primary/30 text-primary"
+              }`}
+            >
+              <FiTag className="inline" />
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Animated bottom border */}
+        <motion.div
+          className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow"
+          initial={{ width: "0%" }}
+          whileHover={{ width: "100%" }}
+          transition={{ duration: 0.4 }}
+        />
+      </CyberCard>
+    </Link>
+  )
+)
+
+WriteupCard.displayName = "WriteupCard"
 
 export default function WriteupsPage() {
   const [writeups, setWriteups] = useState<WriteupMetadata[]>([])
@@ -17,15 +80,46 @@ export default function WriteupsPage() {
   const [loading, setLoading] = useState(true)
   const [filterOpen, setFilterOpen] = useState(false)
 
+  // Use a cache key to avoid refetching when the component remounts
+  const CACHE_KEY = "writeups-data"
+
   useEffect(() => {
     const fetchWriteups = async () => {
+      // Try to get from sessionStorage first
+      const cachedData = sessionStorage.getItem(CACHE_KEY)
+
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData)
+        setWriteups(parsedData.writeups)
+        setAllTags(parsedData.tags)
+        setLoading(false)
+        return
+      }
+
       try {
         const response = await fetch("/api/writeups")
         const data = await response.json()
-        setWriteups(data)
-        setAllTags(
-          Array.from(new Set(data.flatMap((w: WriteupMetadata) => w.tags)))
+
+        // Extract all unique tags in one pass
+        const uniqueTags = new Set<string>()
+        data.forEach((w: WriteupMetadata) => {
+          w.tags.forEach((tag) => uniqueTags.add(tag))
+        })
+
+        const tags = Array.from(uniqueTags)
+
+        // Cache the data
+        sessionStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            writeups: data,
+            tags: tags,
+            timestamp: Date.now(),
+          })
         )
+
+        setWriteups(data)
+        setAllTags(tags)
         setLoading(false)
       } catch (error) {
         console.error("Error fetching writeups:", error)
@@ -36,15 +130,26 @@ export default function WriteupsPage() {
     fetchWriteups()
   }, [])
 
-  const filteredWriteups = writeups.filter((writeup) => {
-    const matchesSearch =
-      writeup.title.toLowerCase().includes(search.toLowerCase()) ||
-      writeup.description.toLowerCase().includes(search.toLowerCase())
-    const matchesTags =
-      selectedTags.length === 0 ||
-      selectedTags.some((tag) => writeup.tags.includes(tag))
-    return matchesSearch && matchesTags
-  })
+  // Memoize filtered writeups to avoid unnecessary recalculations
+  const filteredWriteups = useMemo(() => {
+    return writeups.filter((writeup) => {
+      const matchesSearch =
+        writeup.title.toLowerCase().includes(search.toLowerCase()) ||
+        writeup.ctfName.toLowerCase().includes(search.toLowerCase()) ||
+        writeup.description.toLowerCase().includes(search.toLowerCase())
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.some((tag) => writeup.tags.includes(tag))
+      return matchesSearch && matchesTags
+    })
+  }, [writeups, search, selectedTags])
+
+  // Use callback for tag toggle handler to prevent recreating on every render
+  const handleTagToggle = useCallback((tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    )
+  }, [])
 
   if (loading)
     return (
@@ -140,13 +245,7 @@ export default function WriteupsPage() {
                   {allTags.map((tag, index) => (
                     <motion.button
                       key={tag}
-                      onClick={() =>
-                        setSelectedTags((prev) =>
-                          prev.includes(tag)
-                            ? prev.filter((t) => t !== tag)
-                            : [...prev, tag]
-                        )
-                      }
+                      onClick={() => handleTagToggle(tag)}
                       className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 
                       transition-all duration-300 ${
                         selectedTags.includes(tag)
@@ -198,55 +297,7 @@ export default function WriteupsPage() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
               >
-                <Link href={`/writeups/${writeup.id}`}>
-                  <CyberCard className="hover:scale-[1.01] transition-all duration-300 group relative overflow-hidden">
-                    <div className="absolute scanline opacity-10 pointer-events-none"></div>
-                    <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                      <div>
-                        <h2 className="text-2xl font-orbitron transition-colors duration-300">
-                          <span className="text-custom-blue group-hover:text-glow-blue">
-                            {writeup.ctfName}
-                          </span>{" "}
-                          <span className="text-custom-pink group-hover:text-glow-purple">
-                            {writeup.title}
-                          </span>
-                        </h2>
-                        <p className="text-gray-400 mt-2 font-share-tech">
-                          {writeup.description}
-                        </p>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-400 whitespace-nowrap">
-                        <FiCalendar className="mr-2 text-custom-yellow" />
-                        {new Date(writeup.date).toLocaleDateString()}
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {writeup.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className={`px-3 py-1 bg-cyber-overlay border rounded-full 
-                            text-sm flex items-center gap-1 transition-colors duration-300
-                            ${
-                              selectedTags.includes(tag)
-                                ? "border-custom-blue text-custom-blue"
-                                : "border-primary/30 text-primary"
-                            }`}
-                        >
-                          <FiTag className="inline" />
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Animated bottom border */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow"
-                      initial={{ width: "0%" }}
-                      whileHover={{ width: "100%" }}
-                      transition={{ duration: 0.4 }}
-                    />
-                  </CyberCard>
-                </Link>
+                <WriteupCard writeup={writeup} selectedTags={selectedTags} />
               </motion.div>
             ))}
           </AnimatePresence>

@@ -1,13 +1,30 @@
 // File: page.tsx (Writeup Detail)
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, memo } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { FiCalendar, FiUser, FiTag, FiArrowLeft } from "react-icons/fi"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { Writeup } from "@/lib/writeups"
 import { use } from "react"
+
+// Memoize tag components for better performance
+const WriteupTag = memo(({ tag, index }: { tag: string; index: number }) => (
+  <motion.span
+    key={tag}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.2 + index * 0.1 }}
+    className="px-3 py-1 bg-cyber-overlay border border-custom-blue/30 
+    rounded-full text-sm text-custom-blue flex items-center gap-1 hover:border-custom-blue hover:text-glow-blue transition-all duration-300"
+  >
+    <FiTag className="inline" />
+    {tag}
+  </motion.span>
+))
+
+WriteupTag.displayName = "WriteupTag"
 
 export default function WriteupPage({
   params,
@@ -18,26 +35,50 @@ export default function WriteupPage({
   const [loading, setLoading] = useState(true)
   const resolvedParams = use(params)
 
-  useEffect(() => {
-    const fetchWriteup = async () => {
-      try {
-        // Convert resolvedParams.id to the proper path format
-        const path = Array.isArray(resolvedParams.id)
-          ? resolvedParams.id.join("/")
-          : resolvedParams.id
+  // Use a memo cache for writeups to avoid refetching
+  const CACHE_PREFIX = "writeup-data-"
 
-        const response = await fetch(`/api/writeups/${path}`)
-        const data = await response.json()
-        setWriteup(data)
+  // Use useCallback to prevent recreation of fetch function on each render
+  const fetchWriteup = useCallback(async (path: string) => {
+    // Check cache first
+    const cacheKey = `${CACHE_PREFIX}${path}`
+    const cachedData = sessionStorage.getItem(cacheKey)
+
+    if (cachedData) {
+      try {
+        const parsedData = JSON.parse(cachedData)
+        setWriteup(parsedData)
         setLoading(false)
-      } catch (error) {
-        console.error("Error fetching writeup:", error)
-        setLoading(false)
+        return
+      } catch (e) {
+        // Cache parsing failed, proceed with fetch
+        console.error("Error parsing cached writeup:", e)
       }
     }
 
-    fetchWriteup()
-  }, [resolvedParams]) // Add resolvedParams as a dependency to avoid stale closures
+    try {
+      const response = await fetch(`/api/writeups/${path}`)
+      const data = await response.json()
+
+      // Cache the result
+      sessionStorage.setItem(cacheKey, JSON.stringify(data))
+
+      setWriteup(data)
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching writeup:", error)
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    // Convert resolvedParams.id to the proper path format
+    const path = Array.isArray(resolvedParams.id)
+      ? resolvedParams.id.join("/")
+      : resolvedParams.id
+
+    fetchWriteup(path)
+  }, [resolvedParams, fetchWriteup])
 
   if (loading)
     return (
@@ -139,17 +180,7 @@ export default function WriteupPage({
 
           <div className="flex flex-wrap gap-2 mt-4">
             {writeup.tags.map((tag, index) => (
-              <motion.span
-                key={tag}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + index * 0.1 }}
-                className="px-3 py-1 bg-cyber-overlay border border-custom-blue/30 
-                rounded-full text-sm text-custom-blue flex items-center gap-1 hover:border-custom-blue hover:text-glow-blue transition-all duration-300"
-              >
-                <FiTag className="inline" />
-                {tag}
-              </motion.span>
+              <WriteupTag key={tag} tag={tag} index={index} />
             ))}
           </div>
         </motion.div>

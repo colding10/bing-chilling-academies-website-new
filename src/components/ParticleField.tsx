@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, memo } from "react"
 
 interface Particle {
   x: number
@@ -12,7 +12,7 @@ interface Particle {
   draw: (ctx: CanvasRenderingContext2D) => void
 }
 
-export default function ParticleField() {
+export default memo(function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -46,10 +46,10 @@ export default function ParticleField() {
 
       update(width: number, height: number) {
         this.x += this.speedX
-        this.y += this.speedY
-
         if (this.x > width) this.x = 0
         if (this.x < 0) this.x = width
+
+        this.y += this.speedY
         if (this.y > height) this.y = 0
         if (this.y < 0) this.y = height
       }
@@ -67,48 +67,65 @@ export default function ParticleField() {
 
     function initParticles() {
       if (!ctx || !canvas) return
+      particles.length = 0 // Clear existing particles
       for (let i = 0; i < particleCount; i++) {
         particles.push(new ParticleClass(canvas.width, canvas.height))
       }
     }
+
+    // Pre-calculate distances less frequently to improve performance
+    const connectionDistance = 100
+    const connectionDistanceSquared = connectionDistance * connectionDistance
 
     function animate() {
       if (!ctx || !canvas) return
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+      // Update and draw each particle
       particles.forEach((particle) => {
         particle.update(canvas.width, canvas.height)
         particle.draw(ctx)
       })
 
-      particles.forEach((particleA) => {
-        particles.forEach((particleB) => {
+      // Optimize connection drawing with distance squared comparison
+      // to avoid expensive square root calculations
+      for (let i = 0; i < particles.length; i++) {
+        const particleA = particles[i]
+        for (let j = i + 1; j < particles.length; j++) {
+          const particleB = particles[j]
           const dx = particleA.x - particleB.x
           const dy = particleA.y - particleB.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+          const distanceSquared = dx * dx + dy * dy
 
-          if (distance < 100) {
+          if (distanceSquared < connectionDistanceSquared) {
+            const opacity = 1 - Math.sqrt(distanceSquared) / connectionDistance
             ctx.beginPath()
-            ctx.strokeStyle = `rgba(0, 255, 249, ${1 - distance / 100})`
+            ctx.strokeStyle = `rgba(0, 255, 249, ${opacity})`
             ctx.lineWidth = 0.5
             ctx.moveTo(particleA.x, particleA.y)
             ctx.lineTo(particleB.x, particleB.y)
             ctx.stroke()
           }
-        })
-      })
+        }
+      }
 
       requestAnimationFrame(animate)
     }
 
     initParticles()
-    animate()
+    const animationFrameId = requestAnimationFrame(animate)
 
-    window.addEventListener("resize", updateCanvasSize)
+    const handleResize = () => {
+      updateCanvasSize()
+      initParticles() // Reinitialize particles on resize
+    }
+
+    window.addEventListener("resize", handleResize)
 
     return () => {
-      window.removeEventListener("resize", updateCanvasSize)
+      cancelAnimationFrame(animationFrameId)
+      window.removeEventListener("resize", handleResize)
     }
   }, [])
 
@@ -119,4 +136,4 @@ export default function ParticleField() {
       style={{ zIndex: -1 }}
     />
   )
-}
+})
