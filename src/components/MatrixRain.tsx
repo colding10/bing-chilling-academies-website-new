@@ -27,6 +27,11 @@ export default memo(function MatrixRain() {
     const columns = Math.floor(window.innerWidth / fontSize)
     const drops: number[] = new Array(columns).fill(1)
 
+    // Add speed control variables
+    const frameDelay = 80 // Milliseconds between frames (higher = slower)
+    const dropSpeed = 0.8 // How fast characters drop (lower = slower)
+    let lastFrameTime = 0 // For frame rate control
+
     function draw() {
       if (!ctx || !canvas) return
 
@@ -41,23 +46,30 @@ export default memo(function MatrixRain() {
         const text = charArray[Math.floor(Math.random() * charArray.length)]
         ctx.fillText(text, i * fontSize, drops[i] * fontSize)
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.99) {
+          // Reduced probability of resetting
           drops[i] = 0
         }
 
-        drops[i]++
+        // Slow down the drop speed
+        drops[i] += dropSpeed
       }
     }
 
-    // Use requestAnimationFrame instead of setInterval for smoother animations
+    // Use requestAnimationFrame with frame rate limiting
     let animationFrameId: number
 
-    function animate() {
-      draw()
+    function animate(currentTime: number) {
       animationFrameId = requestAnimationFrame(animate)
+
+      // Only draw if enough time has passed since the last frame
+      if (currentTime - lastFrameTime >= frameDelay) {
+        draw()
+        lastFrameTime = currentTime
+      }
     }
 
-    animate()
+    animationFrameId = requestAnimationFrame(animate)
 
     const handleResize = () => {
       updateCanvasSize()
