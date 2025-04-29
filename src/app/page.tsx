@@ -159,7 +159,7 @@ export default function Home() {
                       className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
                       rounded-full text-sm text-custom-blue"
                     >
-                      	24.692 Rating
+                      24.692 Rating
                     </span>
                   </div>
                 </div>
