@@ -1,7 +1,7 @@
 ---
 title: "Weird Disk Image"
 ctfName: "Incognito 6.0 CTF"
-date: "2025-04-20"
+date: "2025-04-28"
 tags: ["forensics"]
 description: "linux attributes, strings best command"
 author: "cold"
