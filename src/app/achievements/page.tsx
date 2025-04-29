@@ -47,6 +47,14 @@ interface Achievement {
 const achievements: Achievement[] = [
   // 2025
   {
+    event: "UMDCTF 2025",
+    placement: 72,
+    ctfPoints: 5576.000,
+    ratingPoints: 24.692,
+    year: 2025,
+    eventUrl: "https://ctftime.org/event/2563",
+  },
+  {
     event: "b01lers CTF 2025",
     placement: 115,
     ctfPoints: 824,
