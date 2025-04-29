@@ -16,7 +16,7 @@ const WriteupTag = memo(({ tag, index }: { tag: string; index: number }) => (
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.2 + index * 0.1 }}
-    className="px-3 py-1 bg-cyber-overlay border border-custom-blue/30 
+    className="px-3 py-1 bg-cyber-overlay border border-custom-blue/30
     rounded-full text-sm text-custom-blue flex items-center gap-1 hover:border-custom-blue hover:text-glow-blue transition-all duration-300"
   >
     <FiTag className="inline" />

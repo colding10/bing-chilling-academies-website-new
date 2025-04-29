@@ -49,7 +49,7 @@ const achievements: Achievement[] = [
   {
     event: "UMDCTF 2025",
     placement: 72,
-    ctfPoints: 5576.000,
+    ctfPoints: 5576.0,
     ratingPoints: 24.692,
     year: 2025,
     eventUrl: "https://ctftime.org/event/2563",
