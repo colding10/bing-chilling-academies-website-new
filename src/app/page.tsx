@@ -140,26 +140,26 @@ export default function Home() {
                     UMass CTF 2025
                   </h3>
                   <p className="text-gray-400 my-2 font-play">
-                    37th place finish at TexSAW CTF
+                    72th place finish at UMass CTF 2025
                   </p>
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
                     <span
                       className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
                       rounded-full text-sm text-custom-yellow"
                     >
-                      2411 Points
+                      5576 Points
                     </span>
                     <span
                       className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
                       rounded-full text-sm text-custom-pink"
                     >
-                      #37 Placement
+                      #72 Placement
                     </span>
                     <span
                       className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
                       rounded-full text-sm text-custom-blue"
                     >
-                      10.688 Rating
+                      	24.692 Rating
                     </span>
                   </div>
                 </div>
