@@ -47,6 +47,14 @@ interface Achievement {
 const achievements: Achievement[] = [
   // 2025
   {
+    event: "Incognito 6.0",
+    placement: 6,
+    ctfPoints: 1000.0,
+    ratingPoints: 31.533    ,
+    year: 2025,
+    eventUrl: "https://ctftime.org/event/2761",
+  },
+  {
     event: "UMDCTF 2025",
     placement: 72,
     ctfPoints: 5576.0,

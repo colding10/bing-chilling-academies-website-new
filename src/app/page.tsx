@@ -137,29 +137,29 @@ export default function Home() {
                 </h2>
                 <div className="flex-grow">
                   <h3 className="font-share-tech text-custom-blue text-xl">
-                    UMass CTF 2025
+                  Incognito 6.0
                   </h3>
                   <p className="text-gray-400 my-2 font-play">
-                    72th place finish at UMass CTF 2025
+                    6th finish at Incognito 6.0
                   </p>
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
                     <span
                       className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
                       rounded-full text-sm text-custom-yellow"
                     >
-                      5576 Points
+                      1000 Points
                     </span>
                     <span
                       className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
                       rounded-full text-sm text-custom-pink"
                     >
-                      #72 Placement
+                      #6 Placement
                     </span>
                     <span
                       className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
                       rounded-full text-sm text-custom-blue"
                     >
-                      24.692 Rating
+                      31.533 Rating
                     </span>
                   </div>
                 </div>
