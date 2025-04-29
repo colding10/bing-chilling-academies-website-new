@@ -41,19 +41,19 @@ export default function Home() {
     () => [
       {
         label: "Global Ranking",
-        value: "#172",
+        value: "#144",
         icon: FiTarget,
         color: "text-custom-blue",
       },
       {
         label: "CTFs Participated",
-        value: "19",
+        value: "23",
         icon: FiFlag,
         color: "text-custom-pink",
       },
       {
         label: "Challenges Solved",
-        value: "156",
+        value: "214",
         icon: FiZap,
         color: "text-custom-yellow",
       },
