@@ -50,7 +50,7 @@ const achievements: Achievement[] = [
     event: "Incognito 6.0",
     placement: 6,
     ctfPoints: 1000.0,
-    ratingPoints: 31.533    ,
+    ratingPoints: 31.533,
     year: 2025,
     eventUrl: "https://ctftime.org/event/2761",
   },

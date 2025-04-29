@@ -137,7 +137,7 @@ export default function Home() {
                 </h2>
                 <div className="flex-grow">
                   <h3 className="font-share-tech text-custom-blue text-xl">
-                  Incognito 6.0
+                    Incognito 6.0
                   </h3>
                   <p className="text-gray-400 my-2 font-play">
                     6th finish at Incognito 6.0
