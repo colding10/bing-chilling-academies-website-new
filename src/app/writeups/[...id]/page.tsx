@@ -33,14 +33,14 @@ WriteupTag.displayName = "WriteupTag"
 
 // Table of Contents component - memoized for performance
 const TableOfContents = memo(
-  ({ 
-    items, 
-    activeId, 
-    onHeadingClick 
-  }: { 
-    items: TOCItem[]; 
-    activeId: string; 
-    onHeadingClick: (id: string) => void;
+  ({
+    items,
+    activeId,
+    onHeadingClick,
+  }: {
+    items: TOCItem[]
+    activeId: string
+    onHeadingClick: (id: string) => void
   }) => (
     <div className="cyber-card p-4 sticky top-8 max-h-[80vh] overflow-y-auto table-of-contents">
       <div className="font-orbitron text-custom-pink mb-4 flex items-center gap-2">
@@ -62,30 +62,30 @@ const TableOfContents = memo(
               }`}
               onClick={() => {
                 // Simple approach: use the native browser scrollIntoView with options
-                const element = document.getElementById(item.id);
+                const element = document.getElementById(item.id)
                 if (element) {
                   // Prevent default anchor link behavior
                   element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                  });
-                  
+                    behavior: "smooth",
+                    block: "start",
+                  })
+
                   // Apply offset by scrolling back up a bit (accounting for fixed header)
                   setTimeout(() => {
                     window.scrollBy({
                       top: -120, // Header offset
-                      behavior: 'smooth'
-                    });
-                    
+                      behavior: "smooth",
+                    })
+
                     // Update URL hash without jumping (using history API)
-                    history.pushState(null, "", `#${item.id}`);
-                    
+                    history.pushState(null, "", `#${item.id}`)
+
                     // Update active heading state
-                    onHeadingClick(item.id);
-                    
+                    onHeadingClick(item.id)
+
                     // Log for debugging
-                    console.log(`Scrolled to ${item.id}`);
-                  }, 100);
+                    console.log(`Scrolled to ${item.id}`)
+                  }, 100)
                 }
               }}
             >
@@ -124,7 +124,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
 
       headingElements.forEach((element, index) => {
         const headingEl = element as HTMLElement
-        
+
         // Ensure each heading has a unique ID
         if (!headingEl.id) {
           // Generate an ID based on heading text or index position
@@ -136,17 +136,17 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
               .replace(/\s+/g, "-")
               .replace(/[^\w-]/g, "")
           }
-          
+
           // If no text or empty after sanitization, use index-based ID
           if (!id) {
             id = `heading-${index}`
           }
-          
+
           // Ensure ID uniqueness
           if (document.getElementById(id)) {
             id = `${id}-${index}`
           }
-          
+
           headingEl.id = id
         }
 
@@ -214,16 +214,16 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   // Initialize and enhance headings when the content is loaded
   const enhanceHeadings = useCallback(() => {
     if (!contentRef.current) return
-    
+
     try {
       // This function ensures all headings have proper IDs and click handling
       const headingElements = contentRef.current.querySelectorAll(
         "h1, h2, h3, h4, h5, h6"
       )
-      
+
       headingElements.forEach((element, index) => {
         const headingEl = element as HTMLElement
-        
+
         // Ensure each heading has a unique ID
         if (!headingEl.id) {
           // Generate an ID based on heading text or index position
@@ -235,32 +235,33 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
               .replace(/\s+/g, "-")
               .replace(/[^\w-]/g, "")
           }
-          
+
           // If no text or empty after sanitization, use index-based ID
           if (!id) {
             id = `heading-${index}`
           }
-          
+
           // Ensure ID uniqueness
           if (document.getElementById(id)) {
             id = `${id}-${index}`
           }
-          
+
           headingEl.id = id
         }
-        
+
         // Add a class to help with styling and selection
         headingEl.classList.add("writeup-heading")
-        
+
         // Add click handling for easy copy link
         headingEl.addEventListener("click", (e) => {
           if (headingEl.id) {
             // Update URL hash when heading is clicked
             history.pushState(null, "", `#${headingEl.id}`)
-            
+
             // Show "link copied" feedback (optional)
-            const wasAlreadyActive = headingEl.classList.contains("active-heading")
-            
+            const wasAlreadyActive =
+              headingEl.classList.contains("active-heading")
+
             if (!wasAlreadyActive) {
               headingEl.classList.add("active-heading")
               setTimeout(() => {
@@ -321,23 +322,23 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       const headingsWithPositions = tocItems.map((item) => {
         const element = document.getElementById(item.id)
         if (!element) return { id: item.id, top: 0, element: null }
-        
+
         // Get position relative to the viewport
         const rect = element.getBoundingClientRect()
-        return { 
-          id: item.id, 
+        return {
+          id: item.id,
           top: rect.top,
           element,
-          level: item.level // Include heading level for better sorting
+          level: item.level, // Include heading level for better sorting
         }
       })
 
       // Calculate header offset - use a smaller offset for lower level headings
       const baseHeaderOffset = 150
-      
+
       // Filter headings that are above or close to the top of the viewport
       const visibleHeadings = headingsWithPositions
-        .filter(h => h.element && h.top <= baseHeaderOffset)
+        .filter((h) => h.element && h.top <= baseHeaderOffset)
         // Sort by position (closest to the top but still visible gets priority)
         .sort((a, b) => b.top - a.top)
 
@@ -345,15 +346,15 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       if (visibleHeadings.length > 0) {
         // If there are multiple visible headings at similar positions, prefer the higher level heading
         setActiveHeading(visibleHeadings[0].id)
-        
+
         // Log the active heading for debugging
         console.log("Active heading:", visibleHeadings[0].id)
       } else if (headingsWithPositions.length > 0) {
         // If no headings are visible, find the one closest to becoming visible
         const sortedByProximity = [...headingsWithPositions]
-          .filter(h => h.element)
+          .filter((h) => h.element)
           .sort((a, b) => a.top - b.top)
-          
+
         if (sortedByProximity.length > 0) {
           setActiveHeading(sortedByProximity[0].id)
         }
@@ -379,28 +380,29 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
     window.addEventListener("scroll", scrollListener, { passive: true })
     window.addEventListener("resize", handleScroll, { passive: true })
     window.addEventListener("hashchange", handleScroll, { passive: true })
-    
+
     // Check if there's a hash in the URL on load and scroll to it
     if (window.location.hash) {
-      const id = window.location.hash.substring(1);
-      const element = document.getElementById(id);
+      const id = window.location.hash.substring(1)
+      const element = document.getElementById(id)
       if (element) {
         setTimeout(() => {
-          const headerOffset = 120;
-          const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+          const headerOffset = 120
+          const elementPosition =
+            element.getBoundingClientRect().top + window.pageYOffset
           window.scrollTo({
             top: elementPosition - headerOffset,
-            behavior: "smooth"
-          });
-          setActiveHeading(id);
-        }, 300);
+            behavior: "smooth",
+          })
+          setActiveHeading(id)
+        }, 300)
       }
     }
-    
+
     return () => {
-      window.removeEventListener("scroll", scrollListener);
-      window.removeEventListener("resize", handleScroll);
-      window.removeEventListener("hashchange", handleScroll);
+      window.removeEventListener("scroll", scrollListener)
+      window.removeEventListener("resize", handleScroll)
+      window.removeEventListener("hashchange", handleScroll)
     }
   }, [tocItems])
 
@@ -510,10 +512,10 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
               transition={{ delay: 0.5 }}
               className="sticky top-20"
             >
-              <TableOfContents 
-                items={tocItems} 
-                activeId={activeHeading} 
-                onHeadingClick={setActiveHeading} 
+              <TableOfContents
+                items={tocItems}
+                activeId={activeHeading}
+                onHeadingClick={setActiveHeading}
               />
             </motion.div>
           )}
