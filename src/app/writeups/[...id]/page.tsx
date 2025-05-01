@@ -253,7 +253,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         headingEl.classList.add("writeup-heading")
 
         // Add click handling for easy copy link
-        headingEl.addEventListener("click", (e) => {
+        headingEl.addEventListener("click", () => {
           if (headingEl.id) {
             // Update URL hash when heading is clicked
             history.pushState(null, "", `#${headingEl.id}`)
