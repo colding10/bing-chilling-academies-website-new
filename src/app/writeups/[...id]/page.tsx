@@ -33,7 +33,15 @@ WriteupTag.displayName = "WriteupTag"
 
 // Table of Contents component - memoized for performance
 const TableOfContents = memo(
-  ({ items, activeId }: { items: TOCItem[]; activeId: string }) => (
+  ({ 
+    items, 
+    activeId, 
+    onHeadingClick 
+  }: { 
+    items: TOCItem[]; 
+    activeId: string; 
+    onHeadingClick: (id: string) => void;
+  }) => (
     <div className="cyber-card p-4 sticky top-8 max-h-[80vh] overflow-y-auto table-of-contents">
       <div className="font-orbitron text-custom-pink mb-4 flex items-center gap-2">
         <FiList />
@@ -43,35 +51,46 @@ const TableOfContents = memo(
         {items.map((item) => (
           <li
             key={item.id}
-            style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
+            style={{ paddingLeft: `${(item.level - 1) * 16}px` }}
             className="transition-all duration-200"
           >
-            <a
-              href={`#${item.id}`}
-              className={`block py-1 px-2 rounded hover:bg-custom-blue/10 border-l-2 transition-all duration-200 ${
+            <button
+              className={`block py-1 px-2 rounded hover:bg-custom-blue/10 border-l-2 transition-all duration-200 w-full text-left ${
                 activeId === item.id
                   ? "border-custom-blue text-custom-blue font-medium"
                   : "border-transparent"
               }`}
-              onClick={(e) => {
-                e.preventDefault()
-                const element = document.getElementById(item.id)
+              onClick={() => {
+                // Simple approach: use the native browser scrollIntoView with options
+                const element = document.getElementById(item.id);
                 if (element) {
-                  // Smooth scroll with offset for fixed header
-                  const offset = 100
-                  const elementPosition = element.getBoundingClientRect().top
-                  const offsetPosition =
-                    elementPosition + window.pageYOffset - offset
-
-                  window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth",
-                  })
+                  // Prevent default anchor link behavior
+                  element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                  });
+                  
+                  // Apply offset by scrolling back up a bit (accounting for fixed header)
+                  setTimeout(() => {
+                    window.scrollBy({
+                      top: -120, // Header offset
+                      behavior: 'smooth'
+                    });
+                    
+                    // Update URL hash without jumping (using history API)
+                    history.pushState(null, "", `#${item.id}`);
+                    
+                    // Update active heading state
+                    onHeadingClick(item.id);
+                    
+                    // Log for debugging
+                    console.log(`Scrolled to ${item.id}`);
+                  }, 100);
                 }
               }}
             >
               {item.text}
-            </a>
+            </button>
           </li>
         ))}
       </ul>
@@ -96,30 +115,49 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
     try {
       // Find all heading elements in the content
       const headingElements = contentRef.current.querySelectorAll(
-        ".prose h2, .prose h3, .prose h4"
+        "h1, h2, h3, h4, h5, h6"
       )
 
       if (headingElements.length === 0) return
 
       const items: TOCItem[] = []
 
-      headingElements.forEach((element) => {
+      headingElements.forEach((element, index) => {
         const headingEl = element as HTMLElement
+        
+        // Ensure each heading has a unique ID
         if (!headingEl.id) {
-          // Generate an ID if it doesn't exist
-          const id =
-            headingEl.textContent
-              ?.toLowerCase()
+          // Generate an ID based on heading text or index position
+          let id = ""
+          if (headingEl.textContent?.trim()) {
+            id = headingEl.textContent
+              .trim()
+              .toLowerCase()
               .replace(/\s+/g, "-")
-              .replace(/[^\w-]/g, "") || ""
+              .replace(/[^\w-]/g, "")
+          }
+          
+          // If no text or empty after sanitization, use index-based ID
+          if (!id) {
+            id = `heading-${index}`
+          }
+          
+          // Ensure ID uniqueness
+          if (document.getElementById(id)) {
+            id = `${id}-${index}`
+          }
+          
           headingEl.id = id
         }
 
-        items.push({
-          id: headingEl.id,
-          text: headingEl.textContent || "",
-          level: parseInt(headingEl.tagName.substring(1), 10),
-        })
+        // Only add if we have a valid ID
+        if (headingEl.id) {
+          items.push({
+            id: headingEl.id,
+            text: headingEl.textContent?.trim() || `Heading ${index + 1}`,
+            level: parseInt(headingEl.tagName.substring(1), 10),
+          })
+        }
       })
 
       setTocItems(items)
@@ -173,6 +211,70 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
     }
   }, [])
 
+  // Initialize and enhance headings when the content is loaded
+  const enhanceHeadings = useCallback(() => {
+    if (!contentRef.current) return
+    
+    try {
+      // This function ensures all headings have proper IDs and click handling
+      const headingElements = contentRef.current.querySelectorAll(
+        "h1, h2, h3, h4, h5, h6"
+      )
+      
+      headingElements.forEach((element, index) => {
+        const headingEl = element as HTMLElement
+        
+        // Ensure each heading has a unique ID
+        if (!headingEl.id) {
+          // Generate an ID based on heading text or index position
+          let id = ""
+          if (headingEl.textContent?.trim()) {
+            id = headingEl.textContent
+              .trim()
+              .toLowerCase()
+              .replace(/\s+/g, "-")
+              .replace(/[^\w-]/g, "")
+          }
+          
+          // If no text or empty after sanitization, use index-based ID
+          if (!id) {
+            id = `heading-${index}`
+          }
+          
+          // Ensure ID uniqueness
+          if (document.getElementById(id)) {
+            id = `${id}-${index}`
+          }
+          
+          headingEl.id = id
+        }
+        
+        // Add a class to help with styling and selection
+        headingEl.classList.add("writeup-heading")
+        
+        // Add click handling for easy copy link
+        headingEl.addEventListener("click", (e) => {
+          if (headingEl.id) {
+            // Update URL hash when heading is clicked
+            history.pushState(null, "", `#${headingEl.id}`)
+            
+            // Show "link copied" feedback (optional)
+            const wasAlreadyActive = headingEl.classList.contains("active-heading")
+            
+            if (!wasAlreadyActive) {
+              headingEl.classList.add("active-heading")
+              setTimeout(() => {
+                headingEl.classList.remove("active-heading")
+              }, 500)
+            }
+          }
+        })
+      })
+    } catch (e) {
+      console.error("Error enhancing headings:", e)
+    }
+  }, [])
+
   // Fetch writeup data
   useEffect(() => {
     const fetchWriteup = async () => {
@@ -205,39 +307,100 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       setTimeout(() => {
         generateTOC()
         enhanceCodeBlocks()
+        enhanceHeadings()
       }, 200)
     }
-  }, [writeup, generateTOC, enhanceCodeBlocks])
+  }, [writeup, generateTOC, enhanceCodeBlocks, enhanceHeadings])
 
   // Update active heading on scroll
   useEffect(() => {
     const handleScroll = () => {
       if (!contentRef.current || tocItems.length === 0) return
 
-      // Find the current visible heading
-      const headings = tocItems.map((item) => {
+      // Find all heading elements that have IDs matching our TOC items
+      const headingsWithPositions = tocItems.map((item) => {
         const element = document.getElementById(item.id)
         if (!element) return { id: item.id, top: 0, element: null }
+        
+        // Get position relative to the viewport
         const rect = element.getBoundingClientRect()
-        return { id: item.id, top: rect.top, element }
+        return { 
+          id: item.id, 
+          top: rect.top,
+          element,
+          level: item.level // Include heading level for better sorting
+        }
       })
 
-      // Find the first heading that's in view or above the viewport
-      const visibleHeadings = headings
-        .filter((h) => h.element && h.top <= 120)
+      // Calculate header offset - use a smaller offset for lower level headings
+      const baseHeaderOffset = 150
+      
+      // Filter headings that are above or close to the top of the viewport
+      const visibleHeadings = headingsWithPositions
+        .filter(h => h.element && h.top <= baseHeaderOffset)
+        // Sort by position (closest to the top but still visible gets priority)
         .sort((a, b) => b.top - a.top)
 
+      // If we have visible headings, use the first one
       if (visibleHeadings.length > 0) {
+        // If there are multiple visible headings at similar positions, prefer the higher level heading
         setActiveHeading(visibleHeadings[0].id)
-      } else if (headings.length > 0) {
-        // If no headings are visible, use the first one
-        setActiveHeading(headings[0].id)
+        
+        // Log the active heading for debugging
+        console.log("Active heading:", visibleHeadings[0].id)
+      } else if (headingsWithPositions.length > 0) {
+        // If no headings are visible, find the one closest to becoming visible
+        const sortedByProximity = [...headingsWithPositions]
+          .filter(h => h.element)
+          .sort((a, b) => a.top - b.top)
+          
+        if (sortedByProximity.length > 0) {
+          setActiveHeading(sortedByProximity[0].id)
+        }
       }
     }
 
-    window.addEventListener("scroll", handleScroll)
+    // Run once on mount and whenever TOC items change
+    handleScroll()
+
+    // Add throttled scroll handler for better performance
+    let ticking = false
+    const scrollListener = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    // Add event listeners with proper cleanup
+    window.addEventListener("scroll", scrollListener, { passive: true })
+    window.addEventListener("resize", handleScroll, { passive: true })
+    window.addEventListener("hashchange", handleScroll, { passive: true })
+    
+    // Check if there's a hash in the URL on load and scroll to it
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          const headerOffset = 120;
+          const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({
+            top: elementPosition - headerOffset,
+            behavior: "smooth"
+          });
+          setActiveHeading(id);
+        }, 300);
+      }
+    }
+    
     return () => {
-      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("scroll", scrollListener);
+      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("hashchange", handleScroll);
     }
   }, [tocItems])
 
@@ -347,7 +510,11 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
               transition={{ delay: 0.5 }}
               className="sticky top-20"
             >
-              <TableOfContents items={tocItems} activeId={activeHeading} />
+              <TableOfContents 
+                items={tocItems} 
+                activeId={activeHeading} 
+                onHeadingClick={setActiveHeading} 
+              />
             </motion.div>
           )}
         </div>

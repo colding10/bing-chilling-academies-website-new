@@ -232,6 +232,76 @@
   .line-highlight {
     @apply bg-custom-blue/20 -mx-4 px-4;
   }
+
+  /* Table of contents and heading interactions */
+  .writeup-heading {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .writeup-heading:hover::before {
+    content: "#";
+    position: absolute;
+    left: -1.2em;
+    color: var(--color-primary);
+    opacity: 0.6;
+  }
+
+  .writeup-heading.active-heading {
+    color: var(--color-primary) !important;
+    transition: color 0.3s ease;
+  }
+
+  .table-of-contents a:hover {
+    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
+  }
+
+  .table-of-contents a:focus {
+    outline: none;
+    background-color: rgba(32, 141, 214, 0.1);
+  }
+
+  /* Fix anchor positioning with sticky header */
+  h1, h2, h3, h4, h5, h6 {
+    scroll-margin-top: 120px;
+  }
+
+  /* Fix table of contents scrolling */
+  .table-of-contents {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(32, 141, 214, 0.3) transparent;
+  }
+
+  .table-of-contents::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .table-of-contents::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .table-of-contents::-webkit-scrollbar-thumb {
+    background-color: rgba(32, 141, 214, 0.3);
+    border-radius: 20px;
+  }
+
+  .table-of-contents button {
+    text-align: left;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .table-of-contents button:hover {
+    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
+  }
+
+  .table-of-contents button:focus {
+    outline: none;
+    background-color: rgba(32, 141, 214, 0.1);
+  }
 }
 
 @layer components {
