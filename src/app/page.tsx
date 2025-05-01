@@ -46,15 +46,15 @@ export default function Home() {
         color: "text-custom-blue",
       },
       {
-        label: "CTFs Participated",
-        value: "24",
-        icon: FiFlag,
+        label: "USA Ranking",
+        value: "#15",
+        icon: FiZap,
         color: "text-custom-pink",
       },
       {
-        label: "Challenges Solved",
+        label: "Flags Captured",
         value: "224",
-        icon: FiZap,
+        icon: FiFlag,
         color: "text-custom-yellow",
       },
       {
