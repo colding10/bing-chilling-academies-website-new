@@ -23,6 +23,7 @@
   h5,
   h6 {
     @apply font-orbitron mb-4;
+    scroll-margin-top: 120px;
   }
 
   h1 {
