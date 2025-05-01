@@ -1,0 +1,105 @@
+/* Critical CSS styles that should load immediately */
+
+:root {
+  --custom-blue: 0, 255, 249;
+  --custom-pink: 255, 0, 143;
+  --custom-yellow: 244, 218, 93;
+  --custom-black: 16, 16, 20;
+  --cyber-overlay: rgba(18, 21, 26, 0.6);
+  --text-primary: 255, 255, 255;
+
+  /* Precomputed values for performance */
+  --text-glow-blue: 0 0 8px rgba(var(--custom-blue), 0.6);
+  --text-glow-pink: 0 0 8px rgba(var(--custom-pink), 0.6);
+  --text-glow-yellow: 0 0 8px rgba(var(--custom-yellow), 0.6);
+}
+
+/* Optimize layout rendering */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduce layout shifts during loading */
+html,
+body {
+  height: 100%;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: rgb(var(--custom-black));
+  color: rgb(var(--text-primary));
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Content-visibility improvements for below-the-fold content */
+main > *:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Performance hints for browsers */
+img,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Optimize image loading */
+img.lazyload {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+img.lazyloaded {
+  opacity: 1;
+}
+
+/* Optimize animations to use GPU acceleration */
+.animated {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* CSS optimizations for loading screens */
+.cyber-loading::after {
+  content: "";
+  display: inline-block;
+  animation: ellipsis 1.5s infinite;
+  width: 0.75em;
+  text-align: left;
+}
+
+@keyframes ellipsis {
+  33% {
+    content: ".";
+  }
+  66% {
+    content: "..";
+  }
+  100% {
+    content: "...";
+  }
+}
+
+/* Fix the most common layout shift issues */
+body > [id] {
+  scroll-margin-top: 80px;
+}
+
+/* Minimal baseline scanline effect for critical above-the-fold sections */
+.scanlines {
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(255, 255, 255, 0.02) 51%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}

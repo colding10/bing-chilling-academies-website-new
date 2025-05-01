@@ -1,105 +1,239 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo } from "react"
 import { useTheme } from "next-themes"
-import { FiEye, FiEyeOff } from "react-icons/fi"
+import { FiEye, FiEyeOff, FiMenu, FiX } from "react-icons/fi"
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { usePathname } from "next/navigation"
+
+// Memo-ize NavLink component for better performance
+const NavLink = memo(
+  ({
+    href,
+    children,
+    isActive,
+  }: {
+    href: string
+    children: React.ReactNode
+    isActive: boolean
+  }) => (
+    <Link
+      href={href}
+      className={`transition-colors duration-300 ${
+        isActive
+          ? "text-custom-pink text-glow-pink"
+          : "text-custom-blue hover:text-custom-pink"
+      }`}
+    >
+      {children}
+    </Link>
+  )
+)
+
+NavLink.displayName = "NavLink" // Required for memo component
 
 export default function Navbar() {
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const { effectsMode, toggleEffectsMode, setMatrixOpacity } =
-    useBackgroundEffects()
-  const [isMatrixTooltipVisible, setIsMatrixTooltipVisible] = useState(false)
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMatrixTooltipVisible, setIsMatrixTooltipVisible] = useState(false)
+  const { toggleEffectsMode, effectsMode, setMatrixOpacity } =
+    useBackgroundEffects()
+  const { theme, setTheme } = useTheme()
 
-  // Handle initial mounting and scroll events
+  // Handle scroll effect
   useEffect(() => {
-    setMounted(true)
-
     const handleScroll = () => {
-      setScrollY(window.scrollY)
+      setIsScrolled(window.scrollY > 20)
     }
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    // Add passive flag for better performance
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    // Check initial scroll position
+    handleScroll()
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
   }, [])
 
-  if (!mounted) return null
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsOpen(false)
+  }, [pathname])
+
+  // Precompute active states for nav links
+  const isHomeActive = pathname === "/"
+  const isAboutActive = pathname === "/about"
+  const isAchievementsActive = pathname === "/achievements"
+  const isWriteupsActive = pathname?.startsWith("/writeups")
 
   return (
     <nav
-      className={`fixed top-0 inset-x-0 transition-colors duration-300 z-[60]`}
-      style={{
-        backgroundColor:
-          scrollY > 0 || isOpen ? "rgba(8, 8, 16, 0.85)" : "transparent",
-        backdropFilter: scrollY > 0 || isOpen ? "blur(8px)" : "none",
-        boxShadow: scrollY > 0 || isOpen ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-      }}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-custom-black/80 backdrop-blur-md shadow-lg"
+          : "bg-transparent"
+      }`}
     >
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-orbitron text-custom-blue">
-          🍦🍦🍦
-        </Link>
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between py-4">
+          {/* Logo */}
+          <Link href="/" className="font-orbitron text-xl text-custom-blue">
+            <span className="text-glow-blue">BING CHILLING</span>
+          </Link>
 
-        <div className="hidden md:flex items-center space-x-6">
-          <Link
-            href="/"
-            className="text-custom-blue hover:text-custom-pink transition-colors"
-          >
-            Home
-          </Link>
-          <Link
-            href="/about"
-            className="text-custom-blue hover:text-custom-pink transition-colors"
-          >
-            About
-          </Link>
-          <Link
-            href="/achievements"
-            className="text-custom-blue hover:text-custom-pink transition-colors"
-          >
-            Achievements
-          </Link>
-          <Link
-            href="/writeups"
-            className="text-custom-blue hover:text-custom-pink transition-colors"
-          >
-            Writeups
-          </Link>
-          <div className="relative">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <NavLink href="/" isActive={isHomeActive}>
+              Home
+            </NavLink>
+            <NavLink href="/about" isActive={isAboutActive}>
+              About
+            </NavLink>
+            <NavLink href="/achievements" isActive={isAchievementsActive}>
+              Achievements
+            </NavLink>
+            <NavLink href="/writeups" isActive={isWriteupsActive}>
+              Writeups
+            </NavLink>
+            <div className="relative">
+              <button
+                onClick={() => {
+                  toggleEffectsMode()
+                  if (effectsMode === "none") {
+                    setMatrixOpacity(0.6)
+                  }
+                }}
+                onMouseEnter={() => setIsMatrixTooltipVisible(true)}
+                onMouseLeave={() => setIsMatrixTooltipVisible(false)}
+                className="p-2 rounded-full transition-colors bg-background/20 hover:bg-background/30"
+                aria-label={`${effectsMode !== "none" ? "Disable" : "Enable"} visual effects`}
+              >
+                {effectsMode !== "none" ? (
+                  <FiEye className="h-5 w-5 text-custom-blue" />
+                ) : (
+                  <FiEyeOff className="h-5 w-5 text-gray-400" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {isMatrixTooltipVisible && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute left-1/2 transform -translate-x-1/2 mt-2 top-full z-50 bg-background/90 border border-custom-blue/30 rounded-md py-1 px-2 text-xs whitespace-nowrap shadow-lg"
+                  >
+                    {effectsMode !== "none"
+                      ? "Disable Matrix Rain"
+                      : "Enable Matrix Rain"}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
             <button
-              onClick={() => {
-                toggleEffectsMode()
-                if (effectsMode === "none") {
-                  setMatrixOpacity(0.6) // Reduced from 0.8 to match new opacity
-                }
-              }}
-              onMouseEnter={() => setIsMatrixTooltipVisible(true)}
-              onMouseLeave={() => setIsMatrixTooltipVisible(false)}
-              className="p-2 rounded-full transition-colors bg-background/20 hover:bg-background/30"
-              aria-label="Toggle matrix rain effect"
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-custom-blue hover:text-custom-pink"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
             >
-              {effectsMode !== "none" ? (
-                <FiEye className="h-5 w-5 text-custom-blue" />
+              {isOpen ? (
+                <FiX className="h-6 w-6" />
               ) : (
-                <FiEyeOff className="h-5 w-5 text-gray-400" />
+                <FiMenu className="h-6 w-6" />
               )}
             </button>
-
-            {isMatrixTooltipVisible && (
-              <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 top-full z-50 bg-background/90 border border-border rounded-md py-1 px-2 text-xs whitespace-nowrap shadow-lg">
-                {effectsMode !== "none"
-                  ? "Disable Matrix Rain"
-                  : "Enable Matrix Rain"}
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-custom-black/90 backdrop-blur-md border-t border-custom-blue/30"
+          >
+            <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+              <Link
+                href="/"
+                className={`${
+                  isHomeActive
+                    ? "text-custom-pink text-glow-pink"
+                    : "text-custom-blue"
+                } hover:text-custom-pink transition-colors py-2`}
+              >
+                Home
+              </Link>
+              <Link
+                href="/about"
+                className={`${
+                  isAboutActive
+                    ? "text-custom-pink text-glow-pink"
+                    : "text-custom-blue"
+                } hover:text-custom-pink transition-colors py-2`}
+              >
+                About
+              </Link>
+              <Link
+                href="/achievements"
+                className={`${
+                  isAchievementsActive
+                    ? "text-custom-pink text-glow-pink"
+                    : "text-custom-blue"
+                } hover:text-custom-pink transition-colors py-2`}
+              >
+                Achievements
+              </Link>
+              <Link
+                href="/writeups"
+                className={`${
+                  isWriteupsActive
+                    ? "text-custom-pink text-glow-pink"
+                    : "text-custom-blue"
+                } hover:text-custom-pink transition-colors py-2`}
+              >
+                Writeups
+              </Link>
+
+              {/* Mobile effects toggle */}
+              <button
+                onClick={() => {
+                  toggleEffectsMode()
+                  if (effectsMode === "none") {
+                    setMatrixOpacity(0.6)
+                  }
+                }}
+                className="flex items-center gap-2 py-2 text-custom-blue hover:text-custom-pink transition-colors"
+              >
+                {effectsMode !== "none" ? (
+                  <>
+                    <FiEye className="h-5 w-5" />
+                    <span>Disable Matrix Rain</span>
+                  </>
+                ) : (
+                  <>
+                    <FiEyeOff className="h-5 w-5" />
+                    <span>Enable Matrix Rain</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   )
 }

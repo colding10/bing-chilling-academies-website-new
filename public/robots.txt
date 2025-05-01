@@ -1,0 +1,12 @@
+# Allow all search engines to index the site
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://bingchilling.example.com/sitemap.xml
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Disallow any potential admin areas
+Disallow: /admin/

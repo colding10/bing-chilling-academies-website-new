@@ -27,17 +27,21 @@ interface StatCardProps {
 const StatCard = memo(
   ({ label, value, color, icon: Icon, href }: StatCardProps) => {
     const card = (
-      <HologramCard className="hover:scale-[1.02] transition-all duration-300">
-        <div className="flex items-center justify-between mb-4">
-          <Icon className={`w-8 h-8 ${color}`} />
-          <span className={`text-2xl font-orbitron ${color}`}>{value}</span>
+      <HologramCard className="hover:scale-[1.03] transition-all duration-300 h-full">
+        <div className="flex items-center justify-between mb-6">
+          <Icon className={`w-10 h-10 ${color}`} />
+          <span className={`text-3xl font-orbitron ${color}`}>{value}</span>
         </div>
-        <p className="text-gray-400 font-play">{label}</p>
+        <p className="text-gray-400 font-play text-lg">{label}</p>
       </HologramCard>
     )
 
     if (href) {
-      return <Link href={href}>{card}</Link>
+      return (
+        <Link href={href} className="h-full">
+          {card}
+        </Link>
+      )
     }
 
     return card
@@ -46,8 +50,32 @@ const StatCard = memo(
 
 StatCard.displayName = "StatCard"
 
+// Pre-calculate animation variants for more efficient animations
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8 },
+  },
+}
+
+const titleVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      delay: 0.2,
+      type: "spring",
+      stiffness: 100,
+    },
+  },
+}
+
 export default function Home() {
-  // Use useMemo to prevent recalculating on every render
+  // Use useMemo to prevent recalculating stats on every render
   const stats = useMemo(
     () => [
       {
@@ -83,15 +111,18 @@ export default function Home() {
   )
 
   return (
-    <div className="relative z-10 min-h-[90vh] flex items-center justify-center flex-col py-12">
+    <div className="relative z-10 min-h-[90vh] flex items-center justify-center flex-col py-12 px-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="text-center mb-16"
       >
         {/* Title with data corruption effect */}
-        <h1 className="text-6xl font-bold mb-6 relative">
+        <motion.h1
+          className="text-6xl font-bold mb-6 relative"
+          variants={titleVariants}
+        >
           <span className="data-corruption text-custom-blue" data-text="BING">
             BING
           </span>{" "}
@@ -107,24 +138,28 @@ export default function Home() {
           >
             ACADEMIES
           </span>
-        </h1>
+        </motion.h1>
 
         {/* Terminal text effect */}
-        <div className="mb-12">
+        <div className="mb-8">
           <TerminalText
             text="a group of high schoolers from the bing chilling academies who like ice cream"
             speed={70}
           />
         </div>
+      </motion.div>
 
-        {/* Stats grid with hologram cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+      {/* Clean professional grid layout */}
+      <div className="max-w-7xl w-full mx-auto">
+        {/* Main stats grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
+              className="h-full"
             >
               <StatCard
                 label={stat.label}
@@ -137,100 +172,56 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Featured sections container */}
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch mt-16">
-          {/* Recent Victory section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="flex-1 max-w-md"
-          >
-            <Link href="/achievements">
-              <HologramCard>
-                <div className="flex flex-col h-full">
-                  <h2 className="text-xl font-orbitron mb-4 text-custom-pink">
-                    Latest Achievement
-                  </h2>
-                  <div className="flex-grow">
-                    <h3 className="font-share-tech text-custom-blue text-xl">
-                      Incognito 6.0
-                    </h3>
-                    <p className="text-gray-400 my-2 font-play">
-                      6th finish at Incognito 6.0
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-2 mt-3">
-                      <span
-                        className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
-                        rounded-full text-sm text-custom-yellow"
-                      >
-                        1000 Points
-                      </span>
-                      <span
-                        className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
-                        rounded-full text-sm text-custom-pink"
-                      >
-                        #6 Placement
-                      </span>
-                      <span
-                        className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
-                        rounded-full text-sm text-custom-blue"
-                      >
-                        31.533 Rating
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </HologramCard>
-            </Link>
-          </motion.div>
-
-          {/* CTFTime link section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="flex-1 max-w-md"
-          >
-            <HologramCard className="h-full flex items-center justify-center">
-              <a
-                href="https://ctftime.org/team/283028"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-center space-x-3 hover:scale-105 transition-transform"
-              >
-                <Image
-                  src="/ctftime-logo.svg"
-                  alt="CTFtime"
-                  width={150}
-                  height={70}
-                  className="w-15 h-14"
-                />
-                <span className="text-custom-blue group-hover:text-custom-pink transition-colors">
-                  Check us out on CTFtime
-                </span>
-                <FiExternalLink className="w-5 h-5 text-custom-blue group-hover:text-custom-pink transition-colors" />
-              </a>
-            </HologramCard>
-          </motion.div>
-        </div>
-
-        {/* Call to action */}
+        {/* CTFTime profile section */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="w-full"
         >
-          <Link
-            href="/writeups"
-            className="cyber-button-small cyber-tooltip"
-            data-tooltip="View our latest writeups"
-          >
-            Explore Writeups
-          </Link>
+          <HologramCard className="w-full py-8">
+            <a
+              href="https://ctftime.org/team/283028"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-center space-x-6 hover:scale-105 transition-transform"
+            >
+              <div className="text-custom-blue">
+                <svg
+                  className="w-20 h-20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 6V12L16 14"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="text-left">
+                <h3 className="text-2xl font-orbitron text-custom-pink mb-2">
+                  View Our CTFTime Profile
+                </h3>
+                <p className="text-gray-400 font-play flex items-center text-lg">
+                  Check our global ranking and competition history
+                  <FiExternalLink className="ml-2 text-custom-blue" />
+                </p>
+              </div>
+            </a>
+          </HologramCard>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,3 @@
-// File: page.tsx (Writeups List)
 "use client"
 
 import { useState, useEffect, useCallback, useMemo, memo } from "react"
@@ -9,7 +8,7 @@ import CyberCard from "@/components/CyberCard"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { WriteupMetadata } from "@/lib/writeups"
 
-// Memoize the CyberCard wrapper for writeup items
+// Memoize the CyberCard wrapper for writeup items to prevent unnecessary re-renders
 const WriteupCard = memo(
   ({
     writeup,
@@ -18,7 +17,7 @@ const WriteupCard = memo(
     writeup: WriteupMetadata
     selectedTags: string[]
   }) => (
-    <Link href={`/writeups/${writeup.id}`}>
+    <Link href={`/writeups/${writeup.id}`} prefetch={false}>
       <CyberCard className="hover:scale-[1.01] transition-all duration-300 group relative overflow-hidden">
         <div className="absolute scanline opacity-10 pointer-events-none"></div>
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
@@ -31,7 +30,7 @@ const WriteupCard = memo(
                 {writeup.title}
               </span>
             </h2>
-            <p className="text-gray-400 mt-2 font-share-tech">
+            <p className="text-gray-400 mt-2 font-share-tech line-clamp-2">
               {writeup.description}
             </p>
           </div>
@@ -79,50 +78,83 @@ export default function WriteupsPage() {
   const [allTags, setAllTags] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [filterOpen, setFilterOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  // Use a cache key to avoid refetching when the component remounts
+  // Cache key for session storage
   const CACHE_KEY = "writeups-data"
+  const CACHE_EXPIRY = 30 * 60 * 1000 // 30 minutes in milliseconds
 
   useEffect(() => {
     const fetchWriteups = async () => {
       // Try to get from sessionStorage first
-      const cachedData = sessionStorage.getItem(CACHE_KEY)
+      if (typeof window !== "undefined") {
+        try {
+          const cachedData = sessionStorage.getItem(CACHE_KEY)
 
-      if (cachedData) {
-        const parsedData = JSON.parse(cachedData)
-        setWriteups(parsedData.writeups)
-        setAllTags(parsedData.tags)
-        setLoading(false)
-        return
+          if (cachedData) {
+            const parsedData = JSON.parse(cachedData)
+
+            // Check if cache is still valid
+            if (
+              parsedData.timestamp &&
+              Date.now() - parsedData.timestamp < CACHE_EXPIRY
+            ) {
+              setWriteups(parsedData.writeups)
+              setAllTags(parsedData.tags)
+              setLoading(false)
+              return
+            }
+          }
+        } catch (e) {
+          console.error("Error reading from cache:", e)
+          // Continue with fetch if cache read fails
+        }
       }
 
       try {
-        const response = await fetch("/api/writeups")
+        setLoading(true)
+        const response = await fetch("/api/writeups", {
+          next: { revalidate: 3600 }, // Revalidate every hour
+        })
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch writeups: ${response.status}`)
+        }
+
         const data = await response.json()
 
-        // Extract all unique tags in one pass
+        // Extract all unique tags in one pass for better performance
         const uniqueTags = new Set<string>()
         data.forEach((w: WriteupMetadata) => {
           w.tags.forEach((tag) => uniqueTags.add(tag))
         })
 
-        const tags = Array.from(uniqueTags)
+        const tags = Array.from(uniqueTags).sort()
 
-        // Cache the data
-        sessionStorage.setItem(
-          CACHE_KEY,
-          JSON.stringify({
-            writeups: data,
-            tags: tags,
-            timestamp: Date.now(),
-          })
-        )
+        // Cache the data with timestamp
+        if (typeof window !== "undefined") {
+          try {
+            sessionStorage.setItem(
+              CACHE_KEY,
+              JSON.stringify({
+                writeups: data,
+                tags,
+                timestamp: Date.now(),
+              })
+            )
+          } catch (e) {
+            console.error("Error caching writeups data:", e)
+            // Continue even if caching fails
+          }
+        }
 
         setWriteups(data)
         setAllTags(tags)
-        setLoading(false)
+        setError(null)
       } catch (error) {
         console.error("Error fetching writeups:", error)
+        setError("Failed to load writeups. Please try again later.")
+      } finally {
         setLoading(false)
       }
     }
@@ -130,18 +162,29 @@ export default function WriteupsPage() {
     fetchWriteups()
   }, [])
 
-  // Memoize filtered writeups to avoid unnecessary recalculations
+  // Memoize filtered writeups to avoid recomputing on every render
   const filteredWriteups = useMemo(() => {
-    return writeups.filter((writeup) => {
-      const matchesSearch =
-        writeup.title.toLowerCase().includes(search.toLowerCase()) ||
-        writeup.ctfName.toLowerCase().includes(search.toLowerCase()) ||
-        writeup.description.toLowerCase().includes(search.toLowerCase())
-      const matchesTags =
-        selectedTags.length === 0 ||
-        selectedTags.some((tag) => writeup.tags.includes(tag))
-      return matchesSearch && matchesTags
-    })
+    return (
+      writeups
+        .filter((writeup) => {
+          // Search through all relevant fields
+          const matchesSearch =
+            search === "" ||
+            writeup.title.toLowerCase().includes(search.toLowerCase()) ||
+            writeup.ctfName.toLowerCase().includes(search.toLowerCase()) ||
+            writeup.description.toLowerCase().includes(search.toLowerCase()) ||
+            writeup.author.toLowerCase().includes(search.toLowerCase())
+
+          // Check if writeup has any of the selected tags
+          const matchesTags =
+            selectedTags.length === 0 ||
+            selectedTags.some((tag) => writeup.tags.includes(tag))
+
+          return matchesSearch && matchesTags
+        })
+        // Sort by date (newest first)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    )
   }, [writeups, search, selectedTags])
 
   // Use callback for tag toggle handler to prevent recreating on every render
@@ -151,7 +194,19 @@ export default function WriteupsPage() {
     )
   }, [])
 
-  if (loading)
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearch(e.target.value)
+    },
+    []
+  )
+
+  const clearFilters = useCallback(() => {
+    setSelectedTags([])
+    setSearch("")
+  }, [])
+
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-96">
         <LoadingSpinner />
@@ -165,6 +220,27 @@ export default function WriteupsPage() {
         </motion.div>
       </div>
     )
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-96 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-custom-pink text-2xl font-orbitron mb-4"
+        >
+          {error}
+        </motion.div>
+        <button
+          onClick={() => window.location.reload()}
+          className="cyber-button-small"
+        >
+          Try Again
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -205,10 +281,11 @@ export default function WriteupsPage() {
               <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-custom-blue animate-pulse" />
               <input
                 type="text"
-                placeholder="Search writeups..."
+                placeholder="Search writeups by title, CTF name, description, or author..."
                 className="cyber-input pl-10 w-full"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearchChange}
+                aria-label="Search writeups"
               />
             </div>
             <button
@@ -216,6 +293,8 @@ export default function WriteupsPage() {
               className={`cyber-button-small flex items-center gap-2 ${
                 selectedTags.length > 0 ? "cyber-button-active" : ""
               }`}
+              aria-expanded={filterOpen}
+              aria-controls="filter-panel"
             >
               {filterOpen ? <FiX /> : <FiFilter />}
               <span>Filters</span>
@@ -231,6 +310,7 @@ export default function WriteupsPage() {
           <AnimatePresence>
             {filterOpen && (
               <motion.div
+                id="filter-panel"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
@@ -252,6 +332,7 @@ export default function WriteupsPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.05 * index, duration: 0.3 }}
                       whileHover={{ scale: 1.05 }}
+                      aria-pressed={selectedTags.includes(tag)}
                     >
                       <FiTag className="inline" />
                       {tag}
@@ -266,8 +347,9 @@ export default function WriteupsPage() {
                     animate={{ opacity: 1 }}
                   >
                     <button
-                      onClick={() => setSelectedTags([])}
+                      onClick={clearFilters}
                       className="text-custom-pink text-sm flex items-center gap-1 hover:text-glow-pink"
+                      aria-label="Clear all filters"
                     >
                       <FiX /> Clear filters
                     </button>
@@ -284,7 +366,7 @@ export default function WriteupsPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {filteredWriteups.map((writeup, index) => (
               <motion.div
                 key={writeup.id}
@@ -292,6 +374,7 @@ export default function WriteupsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
+                layout
               >
                 <WriteupCard writeup={writeup} selectedTags={selectedTags} />
               </motion.div>
@@ -312,9 +395,14 @@ export default function WriteupsPage() {
             >
               No results found
             </div>
-            <p className="text-gray-400">
+            <p className="text-gray-400 mb-6">
               Try adjusting your search or filter criteria.
             </p>
+            {(search !== "" || selectedTags.length > 0) && (
+              <button onClick={clearFilters} className="cyber-button-small">
+                Clear All Filters
+              </button>
+            )}
           </motion.div>
         )}
       </motion.div>

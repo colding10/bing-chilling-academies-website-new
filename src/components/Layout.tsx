@@ -8,33 +8,57 @@ import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { BackgroundEffectsProvider } from "@/contexts/BackgroundEffectsContext"
 
-// Dynamically import heavy components with loading disabled
-// This improves initial load time by only loading them when needed
-const MatrixRain = dynamic(() => import("./MatrixRain"), { ssr: false })
-const GlobalEffects = dynamic(() => import("./GlobalEffects"), { ssr: false })
+// Dynamically import heavy visual components to improve initial load time
+const MatrixRain = dynamic(() => import("./MatrixRain"), {
+  ssr: false,
+  loading: () => null,
+})
 
-// Optimize the Layout component with memoization
+const ParticleField = dynamic(() => import("./ParticleField"), {
+  ssr: false,
+  loading: () => null,
+})
+
+const GlobalEffects = dynamic(() => import("./GlobalEffects"), {
+  ssr: false,
+  loading: () => null,
+})
+
+// Optimize with memo to prevent unnecessary re-renders
 export default memo(function Layout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  // Use state to track if the component is mounted (client-side)
+  // Track client-side mounting to prevent hydration issues
   const [isMounted, setIsMounted] = useState(false)
 
-  // After first render (client-side), set mounted to true
   useEffect(() => {
     setIsMounted(true)
+
+    // Signal to background effects that loading is complete
+    const timer = setTimeout(() => {
+      if (typeof window !== "undefined") {
+        const event = new CustomEvent("layoutMounted", {
+          detail: { mounted: true },
+        })
+        window.dispatchEvent(event)
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [])
 
+  // Avoid rendering certain components during SSR
   return (
-    <ThemeProvider attribute="class">
+    <ThemeProvider attribute="class" defaultTheme="dark">
       <BackgroundEffectsProvider>
         <div className="min-h-screen cyber-grid relative">
           {/* Only render visual effects when client-side mounted */}
           {isMounted && (
             <>
               <MatrixRain />
+              <ParticleField />
               <GlobalEffects />
             </>
           )}

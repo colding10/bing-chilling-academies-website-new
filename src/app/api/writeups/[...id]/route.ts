@@ -1,45 +1,58 @@
-import { NextResponse } from "next/server"
-import { getWriteupData } from "@/lib/writeups"
-import { remark } from "remark"
-import remarkGfm from "remark-gfm"
-import rehypePrism from "rehype-prism-plus"
-import rehypeSlug from "rehype-slug"
-import remarkRehype from "remark-rehype"
-import rehypeStringify from "rehype-stringify"
+import { NextRequest, NextResponse } from "next/server"
+import { getWriteupByPath } from "@/lib/writeups"
 
-export async function GET(request: Request) {
+// In-memory cache to avoid repeated filesystem reads and markdown processing
+const writeupCache = new Map<string, { data: any; timestamp: number }>()
+const CACHE_DURATION = 1000 * 60 * 30 // 30 minutes
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string[] } }
+) {
   try {
-    // Extract the URL directly from the request
-    const url = new URL(request.url)
-    const pathSegments = url.pathname.split("/").filter(Boolean)
+    // Convert the params to a path
+    const path = Array.isArray(params.id) ? params.id.join("/") : params.id
 
-    // Remove 'api' and 'writeups' from the path segments
-    const idSegments = pathSegments.slice(2) // Skip 'api' and 'writeups'
+    // Check cache first
+    const now = Date.now()
+    const cachedData = writeupCache.get(path)
+    const isCacheValid =
+      cachedData && now - cachedData.timestamp < CACHE_DURATION
 
-    // Join the segments with '/'
-    const writeupId = idSegments.join("/")
+    if (isCacheValid) {
+      // Return cached data with proper headers
+      return NextResponse.json(cachedData.data, {
+        headers: {
+          "Cache-Control":
+            "public, s-maxage=3600, stale-while-revalidate=86400",
+          "Content-Type": "application/json",
+        },
+      })
+    }
 
-    console.log(`Fetching writeup with ID: ${writeupId}`)
+    // Fetch fresh data
+    const writeup = await getWriteupByPath(path)
 
-    const writeupData = await getWriteupData(writeupId)
+    if (!writeup) {
+      return NextResponse.json({ error: "Writeup not found" }, { status: 404 })
+    }
 
-    // Process the markdown content with syntax highlighting and slug generation
-    const processedContent = await remark()
-      .use(remarkGfm) // Support GitHub Flavored Markdown
-      .use(remarkRehype, { allowDangerousHtml: true }) // Convert to rehype with HTML passthrough
-      .use(rehypeSlug) // Add IDs to headings for the table of contents
-      .use(rehypePrism, { ignoreMissing: true, showLineNumbers: true }) // Add syntax highlighting
-      .use(rehypeStringify, { allowDangerousHtml: true }) // Convert back to HTML string
-      .process(writeupData.content)
+    // Update cache
+    writeupCache.set(path, { data: writeup, timestamp: now })
 
-    const contentHtml = processedContent.toString()
-
-    return NextResponse.json({
-      ...writeupData,
-      content: contentHtml,
+    // Return the writeup with caching headers
+    return NextResponse.json(writeup, {
+      headers: {
+        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        "Content-Type": "application/json",
+      },
     })
   } catch (error) {
-    console.error(`Error handling request: ${error}`)
-    return NextResponse.json({ error: "Writeup not found" }, { status: 404 })
+    console.error(`Error fetching writeup ${params.id}:`, error)
+
+    return NextResponse.json(
+      { error: "Failed to fetch writeup" },
+      { status: 500 }
+    )
   }
 }
