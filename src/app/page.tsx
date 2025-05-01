@@ -142,7 +142,7 @@ export default function Home() {
         {/* Terminal text effect */}
         <div className="mb-8">
           <TerminalText
-            text="a group of high schoolers from the bing chilling academies who like ice cream"
+            text="a competitive highschool ctf team from the bergen county academies (we like ice cream)"
             speed={70}
           />
         </div>
