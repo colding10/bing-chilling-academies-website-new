@@ -7,6 +7,11 @@
 }
 
 @layer base {
+  html,
+  body {
+    @apply text-gray-300 bg-background;
+  }
+
   body {
     @apply bg-custom-black text-white font-play;
   }
@@ -17,7 +22,19 @@
   h4,
   h5,
   h6 {
-    @apply font-orbitron;
+    @apply font-orbitron mb-4;
+  }
+
+  h1 {
+    @apply text-3xl;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3 {
+    @apply text-xl;
   }
 
   code,
@@ -53,6 +70,167 @@
   .writeup-content code {
     @apply bg-black bg-opacity-50 text-custom-blue px-1 py-0.5 rounded;
   }
+
+  .glitch {
+    @apply relative text-custom-blue inline-block;
+    text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+
+  .scanline {
+    @apply w-full h-full overflow-hidden pointer-events-none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15) 0px,
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  }
+
+  .data-corruption {
+    @apply relative inline-block;
+    transition: text-shadow 0.3s ease;
+  }
+
+  .data-corruption:before {
+    content: attr(data-text);
+    @apply absolute top-0 left-0 w-full h-full overflow-hidden;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim-2 5s infinite linear alternate-reverse;
+  }
+
+  .text-glow-blue {
+    @apply text-custom-blue;
+    text-shadow: 0 0 5px rgba(32, 141, 214, 0.4);
+  }
+
+  .text-glow-pink {
+    @apply text-custom-pink;
+    text-shadow: 0 0 5px rgba(249, 50, 131, 0.4);
+  }
+
+  .text-glow-purple {
+    @apply text-custom-purple;
+    text-shadow: 0 0 5px rgba(171, 92, 235, 0.4);
+  }
+
+  /* Code highlighting styling */
+  .writeup-content pre {
+    @apply bg-cyber-overlay border border-custom-blue/30 rounded-md my-4 overflow-x-auto max-w-full;
+  }
+
+  .writeup-content pre > code {
+    @apply bg-transparent text-gray-300 p-0 block py-4 px-4 w-full;
+  }
+
+  /* Line numbers */
+  .writeup-content .line-number-style {
+    @apply text-gray-500 mr-4 inline-block w-8 text-right pr-2 select-none;
+  }
+
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Add a sticky header with inset shadow on the table of contents */
+  .table-of-contents {
+    @apply sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--custom-blue) transparent;
+  }
+
+  .table-of-contents::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .table-of-contents::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .table-of-contents::-webkit-scrollbar-thumb {
+    @apply bg-custom-blue/40 rounded-full;
+  }
+
+  /* Syntax highlighting colors - adjust to match your theme */
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    @apply text-gray-500;
+  }
+
+  .token.punctuation {
+    @apply text-gray-400;
+  }
+
+  .token.namespace {
+    @apply opacity-70;
+  }
+
+  .token.property,
+  .token.tag,
+  .token.boolean,
+  .token.number,
+  .token.constant,
+  .token.symbol,
+  .token.deleted {
+    @apply text-custom-pink;
+  }
+
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin,
+  .token.inserted {
+    @apply text-custom-green;
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string {
+    @apply text-yellow-300;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.keyword {
+    @apply text-custom-blue;
+  }
+
+  .token.function,
+  .token.class-name {
+    @apply text-custom-yellow;
+  }
+
+  .token.regex,
+  .token.important,
+  .token.variable {
+    @apply text-custom-purple;
+  }
+
+  .token.important,
+  .token.bold {
+    @apply font-bold;
+  }
+
+  .token.italic {
+    font-style: italic; /* Direct style instead of @apply */
+  }
+
+  .token.entity {
+    @apply cursor-help;
+  }
+
+  /* Highlight current line */
+  .line-highlight {
+    @apply bg-custom-blue/20 -mx-4 px-4;
+  }
 }
 
 @layer components {
@@ -64,13 +242,37 @@
 
   .cyber-button {
     @apply px-6 py-2 bg-transparent border-2 border-custom-blue text-custom-blue
-    hover:bg-custom-blue hover:text-custom-black transition-all duration-300
-    focus:ring-4 focus:ring-custom-blue/50 relative overflow-hidden;
+    rounded hover:bg-custom-blue/20 transition-all duration-300 hover:text-glow-blue
+    font-share-tech tracking-wide uppercase hover:border-opacity-80;
+  }
+
+  .cyber-button-small {
+    @apply px-4 py-1 bg-transparent border border-custom-blue text-custom-blue
+    rounded hover:bg-custom-blue/20 transition-all duration-300 hover:text-glow-blue
+    font-share-tech tracking-wide uppercase hover:border-opacity-80 text-sm;
+  }
+
+  .cyber-button-active {
+    @apply bg-custom-blue/20 text-glow-blue;
+  }
+
+  .cyber-card-input {
+    @apply border-2 border-custom-blue/50 rounded-lg p-4 bg-custom-black/50;
   }
 
   .cyber-input {
-    @apply w-full px-4 py-2 bg-custom-black/50 border-2 border-custom-blue 
-    text-white placeholder-custom-blue/50 focus:outline-none transition-all duration-300;
+    @apply bg-black/50 border border-custom-blue/30 text-gray-300 p-2 rounded-md
+    focus:border-custom-blue focus:outline-none w-full;
+  }
+
+  .hologram-lines {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(32, 141, 214, 0.15) 0px,
+      rgba(32, 141, 214, 0.15) 1px,
+      transparent 1px,
+      transparent 8px
+    );
   }
 }
 .cyber-cursor {
@@ -430,4 +632,17 @@ h3:hover {
     0 0 1px rgba(255, 255, 255, 0.5),
     0 0 2px rgba(255, 255, 255, 0.3);
   font-weight: 500;
+}
+
+@keyframes glitch-anim-2 {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  33% {
+    transform: translate(-5px, 0);
+  }
+  66% {
+    transform: translate(5px, 0);
+  }
 }

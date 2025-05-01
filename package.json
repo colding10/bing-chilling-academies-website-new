@@ -1,37 +1,45 @@
 {
-  "name": "bing-chilling-academies-website",
+  "name": "bing-chilling-academies-website-new",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.2.0",
-    "framer-motion": "^12.7.3",
+    "@types/node": "20.3.0",
+    "@types/react": "18.2.11",
+    "@types/react-dom": "18.2.4",
+    "autoprefixer": "10.4.14",
+    "eslint": "8.41.0",
+    "eslint-config-next": "13.4.4",
+    "framer-motion": "^10.12.16",
     "gray-matter": "^4.0.3",
-    "next": "15.3.1",
+    "highlight.js": "^11.8.0",
+    "next": "13.4.4",
     "next-themes": "^0.4.6",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-icons": "^5.5.0",
-    "remark": "^15.0.1",
-    "remark-html": "^16.0.1"
+    "postcss": "8.4.24",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.9.0",
+    "rehype-prism-plus": "^1.6.1",
+    "rehype-slug": "^5.1.0",
+    "rehype-stringify": "^9.0.3",
+    "remark": "^14.0.3",
+    "remark-gfm": "^3.0.1",
+    "remark-html": "^15.0.2",
+    "remark-rehype": "^10.1.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
-    "@types/node": "22.14.1",
-    "@types/react": "19.1.2",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^9.24.0",
-    "eslint-config-next": "^15.3.1",
     "eslint-config-prettier": "^10.1.2",
-    "postcss": "^8",
     "prettier": "^3.5.3",
-    "tailwindcss": "^3.3.0",
-    "typescript": "5.8.3"
+    "tailwindcss": "3.3.2",
+    "typescript": "5.1.3"
   }
 }

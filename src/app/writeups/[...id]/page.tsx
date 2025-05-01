@@ -4,10 +4,17 @@
 import { useState, useEffect, useCallback, memo } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { FiCalendar, FiUser, FiTag, FiArrowLeft } from "react-icons/fi"
+import { FiCalendar, FiUser, FiTag, FiArrowLeft, FiList } from "react-icons/fi"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { Writeup } from "@/lib/writeups"
-import { use } from "react"
+import 'highlight.js/styles/github-dark.css'
+
+// Table of Contents interface
+interface TOCItem {
+  id: string;
+  text: string;
+  level: number;
+}
 
 // Memoize tag components for better performance
 const WriteupTag = memo(({ tag, index }: { tag: string; index: number }) => (
@@ -26,14 +33,47 @@ const WriteupTag = memo(({ tag, index }: { tag: string; index: number }) => (
 
 WriteupTag.displayName = "WriteupTag"
 
+// Table of Contents component
+const TableOfContents = memo(({ items, activeId }: { items: TOCItem[], activeId: string }) => (
+  <div className="cyber-card p-4 sticky top-8 max-h-[80vh] overflow-y-auto">
+    <div className="font-orbitron text-custom-pink mb-4 flex items-center gap-2">
+      <FiList />
+      <span>Table of Contents</span>
+    </div>
+    <ul className="space-y-2">
+      {items.map((item) => (
+        <li 
+          key={item.id} 
+          style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
+          className="transition-all duration-200"
+        >
+          <a 
+            href={`#${item.id}`}
+            className={`block py-1 px-2 rounded hover:bg-custom-blue/10 border-l-2 transition-all duration-200 ${
+              activeId === item.id 
+                ? 'border-custom-blue text-custom-blue font-medium' 
+                : 'border-transparent'
+            }`}
+          >
+            {item.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+))
+
+TableOfContents.displayName = "TableOfContents"
+
 export default function WriteupPage({
   params,
 }: {
-  params: Promise<{ id: string[] }>
+  params: { id: string[] }
 }) {
   const [writeup, setWriteup] = useState<Writeup | null>(null)
   const [loading, setLoading] = useState(true)
-  const resolvedParams = use(params)
+  const [tocItems, setTocItems] = useState<TOCItem[]>([])
+  const [activeHeading, setActiveHeading] = useState<string>("")
 
   // Use a memo cache for writeups to avoid refetching
   const CACHE_PREFIX = "writeup-data-"
@@ -42,17 +82,21 @@ export default function WriteupPage({
   const fetchWriteup = useCallback(async (path: string) => {
     // Check cache first
     const cacheKey = `${CACHE_PREFIX}${path}`
-    const cachedData = sessionStorage.getItem(cacheKey)
+    
+    // Client-side check for sessionStorage
+    if (typeof window !== 'undefined') {
+      const cachedData = sessionStorage.getItem(cacheKey)
 
-    if (cachedData) {
-      try {
-        const parsedData = JSON.parse(cachedData)
-        setWriteup(parsedData)
-        setLoading(false)
-        return
-      } catch (e) {
-        // Cache parsing failed, proceed with fetch
-        console.error("Error parsing cached writeup:", e)
+      if (cachedData) {
+        try {
+          const parsedData = JSON.parse(cachedData)
+          setWriteup(parsedData)
+          setLoading(false)
+          return
+        } catch (e) {
+          // Cache parsing failed, proceed with fetch
+          console.error("Error parsing cached writeup:", e)
+        }
       }
     }
 
@@ -60,8 +104,10 @@ export default function WriteupPage({
       const response = await fetch(`/api/writeups/${path}`)
       const data = await response.json()
 
-      // Cache the result
-      sessionStorage.setItem(cacheKey, JSON.stringify(data))
+      // Cache the result if in browser
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(cacheKey, JSON.stringify(data))
+      }
 
       setWriteup(data)
       setLoading(false)
@@ -71,14 +117,78 @@ export default function WriteupPage({
     }
   }, [])
 
+  // Extract headings after content is loaded
   useEffect(() => {
-    // Convert resolvedParams.id to the proper path format
-    const path = Array.isArray(resolvedParams.id)
-      ? resolvedParams.id.join("/")
-      : resolvedParams.id
+    if (writeup) {
+      // Wait for the DOM to update with the new content
+      setTimeout(() => {
+        const headingElements = document.querySelectorAll('.prose h2, .prose h3, .prose h4');
+        const items: TOCItem[] = [];
+        
+        headingElements.forEach((element) => {
+          const headingEl = element as HTMLElement;
+          if (!headingEl.id) {
+            // Generate an ID if it doesn't exist
+            const id = headingEl.textContent?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || '';
+            headingEl.id = id;
+          }
+          
+          items.push({
+            id: headingEl.id,
+            text: headingEl.textContent || '',
+            level: parseInt(headingEl.tagName.substring(1), 10)
+          });
+        });
+        
+        setTocItems(items);
+      }, 500);
+    }
+  }, [writeup]);
+
+  // Handle scroll to update active heading
+  useEffect(() => {
+    const handleScroll = () => {
+      const headingElements = document.querySelectorAll('.prose h2, .prose h3, .prose h4');
+      if (headingElements.length === 0) return;
+      
+      // Find the heading that's currently in view
+      let currentHeadingId = '';
+      const scrollPosition = window.scrollY + 100; // Add some offset
+      
+      for (let i = 0; i < headingElements.length; i++) {
+        const element = headingElements[i] as HTMLElement;
+        if (element.offsetTop <= scrollPosition) {
+          currentHeadingId = element.id;
+        } else {
+          break;
+        }
+      }
+      
+      if (currentHeadingId) {
+        setActiveHeading(currentHeadingId);
+      } else if (headingElements.length > 0) {
+        // Default to first heading if none are in view
+        setActiveHeading((headingElements[0] as HTMLElement).id);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    // Trigger once on load
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [tocItems]);
+
+  useEffect(() => {
+    // Convert params.id to the proper path format
+    const path = Array.isArray(params.id)
+      ? params.id.join("/")
+      : params.id
 
     fetchWriteup(path)
-  }, [resolvedParams, fetchWriteup])
+  }, [params, fetchWriteup])
 
   if (loading)
     return (
@@ -127,7 +237,7 @@ export default function WriteupPage({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="max-w-4xl mx-auto px-4 py-8"
+      className="max-w-7xl mx-auto px-4 py-8"
     >
       <motion.div
         initial={{ x: -20, opacity: 0 }}
@@ -143,64 +253,77 @@ export default function WriteupPage({
         </Link>
       </motion.div>
 
-      <article className="cyber-card relative overflow-hidden">
-        <div className="absolute scanline opacity-20 pointer-events-none"></div>
+      <div className="flex flex-col md:flex-row gap-8">
+        {tocItems.length > 0 && (
+          <motion.aside 
+            className="w-full md:w-64 shrink-0"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <TableOfContents items={tocItems} activeId={activeHeading} />
+          </motion.aside>
+        )}
 
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="flex items-center gap-4">
-            <h1
-              className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue data-corruption"
-              data-text={writeup.ctfName}
-            >
-              <span className="text-custom-blue">{writeup.ctfName}</span>
-            </h1>
-            <h1
-              className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink data-corruption"
-              data-text={writeup.title}
-            >
-              <span className="text-custom-pink">{writeup.title}</span>
-            </h1>
-          </div>
+        <article className="cyber-card relative overflow-hidden flex-grow">
+          <div className="absolute scanline opacity-20 pointer-events-none"></div>
 
-          <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-            <div className="flex items-center gap-2">
-              <FiCalendar className="text-custom-yellow" />
-              {new Date(writeup.date).toLocaleDateString()}
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <div className="flex items-center gap-4">
+              <h1
+                className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue data-corruption"
+                data-text={writeup.ctfName}
+              >
+                <span className="text-custom-blue">{writeup.ctfName}</span>
+              </h1>
+              <h1
+                className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink data-corruption"
+                data-text={writeup.title}
+              >
+                <span className="text-custom-pink">{writeup.title}</span>
+              </h1>
             </div>
-            <div className="flex items-center gap-2">
-              <FiUser className="text-custom-pink" />
-              <span className="font-share-tech">{writeup.author}</span>
+
+            <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <FiCalendar className="text-custom-yellow" />
+                {new Date(writeup.date).toLocaleDateString()}
+              </div>
+              <div className="flex items-center gap-2">
+                <FiUser className="text-custom-pink" />
+                <span className="font-share-tech">{writeup.author}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-wrap gap-2 mt-4">
-            {writeup.tags.map((tag, index) => (
-              <WriteupTag key={tag} tag={tag} index={index} />
-            ))}
-          </div>
-        </motion.div>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {writeup.tags.map((tag, index) => (
+                <WriteupTag key={tag} tag={tag} index={index} />
+              ))}
+            </div>
+          </motion.div>
 
-        <motion.div
-          className="prose dark:prose-invert max-w-none relative z-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
-          dangerouslySetInnerHTML={{ __html: writeup.content }}
-        />
+          <motion.div
+            className="prose dark:prose-invert max-w-none relative z-10 writeup-content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            dangerouslySetInnerHTML={{ __html: writeup.content }}
+          />
 
-        {/* Bottom highlight effect */}
-        <motion.div
-          className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-        />
-      </article>
+          {/* Bottom highlight effect */}
+          <motion.div
+            className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: 1, duration: 0.8 }}
+          />
+        </article>
+      </div>
     </motion.div>
   )
 }
