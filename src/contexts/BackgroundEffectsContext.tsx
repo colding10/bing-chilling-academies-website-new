@@ -18,33 +18,39 @@ interface BackgroundEffectsContextType {
   setIsLoadingComplete: (complete: boolean) => void
 }
 
-const BackgroundEffectsContext = createContext<BackgroundEffectsContextType | undefined>(undefined)
+const BackgroundEffectsContext = createContext<
+  BackgroundEffectsContextType | undefined
+>(undefined)
 
-export function BackgroundEffectsProvider({ children }: { children: React.ReactNode }) {
+export function BackgroundEffectsProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   // Initialize with stored state or defaults
   const [effectsMode, setEffectsMode] = useState<EffectsMode>("reduced")
   const [matrixOpacity, setMatrixOpacity] = useState<number>(0.5)
   const [scanLinesEnabled, setScanLinesEnabled] = useState<boolean>(true)
   const [particlesEnabled, setParticlesEnabled] = useState<boolean>(true)
   const [isLoadingComplete, setIsLoadingComplete] = useState<boolean>(false)
-  
+
   // Load saved preferences
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return
+
     const savedMode = localStorage.getItem("effectsMode") as EffectsMode | null
-    const savedOpacity = localStorage.getItem("matrixOpacity") 
+    const savedOpacity = localStorage.getItem("matrixOpacity")
     const savedScanLines = localStorage.getItem("scanLinesEnabled")
     const savedParticles = localStorage.getItem("particlesEnabled")
-    
+
     if (savedMode) {
       setEffectsMode(savedMode)
     }
-    
+
     if (savedOpacity) {
       setMatrixOpacity(parseFloat(savedOpacity))
     }
-    
+
     if (savedScanLines !== null) {
       setScanLinesEnabled(savedScanLines === "true")
     }
@@ -53,11 +59,11 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
       setParticlesEnabled(savedParticles === "true")
     }
   }, [])
-  
+
   // Save preferences whenever they change
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return
+
     localStorage.setItem("effectsMode", effectsMode)
     localStorage.setItem("matrixOpacity", matrixOpacity.toString())
     localStorage.setItem("scanLinesEnabled", scanLinesEnabled.toString())
@@ -69,11 +75,11 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
     const currentIndex = modes.indexOf(effectsMode)
     const nextIndex = (currentIndex + 1) % modes.length
     setEffectsMode(modes[nextIndex])
-    
+
     // Set appropriate opacity based on the new mode
     const opacities = [0, 0.3, 0.5, 0.8]
     setMatrixOpacity(opacities[nextIndex])
-    
+
     // Toggle scan lines based on the mode
     setScanLinesEnabled(modes[nextIndex] !== "none")
 
@@ -82,19 +88,19 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
   }
 
   return (
-    <BackgroundEffectsContext.Provider 
-      value={{ 
-        effectsMode, 
+    <BackgroundEffectsContext.Provider
+      value={{
+        effectsMode,
         matrixOpacity,
         scanLinesEnabled,
         particlesEnabled,
-        toggleEffectsMode, 
+        toggleEffectsMode,
         setEffectsMode,
         setMatrixOpacity,
         setScanLinesEnabled,
         setParticlesEnabled,
         isLoadingComplete,
-        setIsLoadingComplete
+        setIsLoadingComplete,
       }}
     >
       {children}
@@ -105,7 +111,9 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
 export function useBackgroundEffects() {
   const context = useContext(BackgroundEffectsContext)
   if (context === undefined) {
-    throw new Error("useBackgroundEffects must be used within a BackgroundEffectsProvider")
+    throw new Error(
+      "useBackgroundEffects must be used within a BackgroundEffectsProvider"
+    )
   }
   return context
 }

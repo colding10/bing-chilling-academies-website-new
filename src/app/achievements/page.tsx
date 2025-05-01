@@ -354,7 +354,9 @@ export default function Achievements() {
             transition={{ delay: 0.2, duration: 0.7 }}
           >
             <span className="text-custom-blue text-glow-blue">Team</span>{" "}
-            <span className="text-custom-pink text-glow-pink">Achievements</span>
+            <span className="text-custom-pink text-glow-pink">
+              Achievements
+            </span>
           </motion.h1>
 
           <a

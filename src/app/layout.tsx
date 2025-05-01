@@ -7,18 +7,21 @@ import React from "react"
 const orbitron = Orbitron({
   subsets: ["latin"],
   variable: "--font-orbitron",
+  display: "swap",
 })
 
 const shareTechMono = Share_Tech_Mono({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-share-tech-mono",
+  display: "swap",
 })
 
 const play = Play({
   weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-play",
+  display: "swap",
 })
 
 export const metadata: Metadata = {

@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    mdxRs: true,
-  },
+  // Remove mdxRs which is no longer experimental in newer Next.js versions
   eslint: {
     dirs: ["."], // Specify the directories to lint
     ignoreDuringBuilds: false,

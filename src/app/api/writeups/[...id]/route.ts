@@ -31,7 +31,7 @@ export async function GET(request: Request) {
       .use(rehypePrism, { ignoreMissing: true, showLineNumbers: true }) // Add syntax highlighting
       .use(rehypeStringify, { allowDangerousHtml: true }) // Convert back to HTML string
       .process(writeupData.content)
-    
+
     const contentHtml = processedContent.toString()
 
     return NextResponse.json({

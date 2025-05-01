@@ -183,7 +183,9 @@ export default function WriteupsPage() {
           >
             <span className="text-custom-blue text-glow-blue">Capture</span>{" "}
             <span className="text-custom-pink text-glow-pink">The</span>{" "}
-            <span className="text-custom-yellow text-glow-yellow">Writeups</span>
+            <span className="text-custom-yellow text-glow-yellow">
+              Writeups
+            </span>
           </motion.h1>
 
           <p className="text-gray-400 font-play max-w-xl mx-auto mt-4 relative z-10">

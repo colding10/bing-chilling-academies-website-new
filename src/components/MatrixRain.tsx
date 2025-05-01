@@ -5,11 +5,16 @@ import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 
 export default memo(function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { effectsMode, matrixOpacity, isLoadingComplete } = useBackgroundEffects()
+  const { effectsMode, matrixOpacity, isLoadingComplete } =
+    useBackgroundEffects()
 
   // Simplified opacity - either 0.15 (barely visible) or 0 (not visible)
-  const actualOpacity = typeof matrixOpacity === 'number' ? matrixOpacity : 
-    effectsMode === 'none' ? 0 : 0.15;
+  const actualOpacity =
+    typeof matrixOpacity === "number"
+      ? matrixOpacity
+      : effectsMode === "none"
+        ? 0
+        : 0.15
 
   useEffect(() => {
     // Don't initialize during loading or if opacity is 0
@@ -45,11 +50,11 @@ export default memo(function MatrixRain() {
       if (!ctx || !canvas) return
 
       // Use a slightly darker background with more opacity
-      ctx.fillStyle = "rgba(0, 0, 0, 0.15)" 
+      ctx.fillStyle = "rgba(0, 0, 0, 0.15)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       // Use a more visible green color for better contrast against dark backgrounds
-      ctx.fillStyle = "rgba(0, 255, 170, 0.9)" 
+      ctx.fillStyle = "rgba(0, 255, 170, 0.9)"
       ctx.font = `${fontSize}px monospace`
 
       for (let i = 0; i < drops.length; i++) {
@@ -106,14 +111,14 @@ export default memo(function MatrixRain() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ 
+      style={{
         zIndex: 10, // Set z-index to 10 - above scanlines but below main content
         opacity: actualOpacity,
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%'
+        width: "100%",
+        height: "100%",
       }}
     />
   )

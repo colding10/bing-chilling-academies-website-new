@@ -24,23 +24,25 @@ interface StatCardProps {
 }
 
 // Memoize StatCard to prevent unnecessary re-renders
-const StatCard = memo(({ label, value, color, icon: Icon, href }: StatCardProps) => {
-  const card = (
-    <HologramCard className="hover:scale-[1.02] transition-all duration-300">
-      <div className="flex items-center justify-between mb-4">
-        <Icon className={`w-8 h-8 ${color}`} />
-        <span className={`text-2xl font-orbitron ${color}`}>{value}</span>
-      </div>
-      <p className="text-gray-400 font-play">{label}</p>
-    </HologramCard>
-  );
+const StatCard = memo(
+  ({ label, value, color, icon: Icon, href }: StatCardProps) => {
+    const card = (
+      <HologramCard className="hover:scale-[1.02] transition-all duration-300">
+        <div className="flex items-center justify-between mb-4">
+          <Icon className={`w-8 h-8 ${color}`} />
+          <span className={`text-2xl font-orbitron ${color}`}>{value}</span>
+        </div>
+        <p className="text-gray-400 font-play">{label}</p>
+      </HologramCard>
+    )
 
-  if (href) {
-    return <Link href={href}>{card}</Link>;
+    if (href) {
+      return <Link href={href}>{card}</Link>
+    }
+
+    return card
   }
-  
-  return card;
-})
+)
 
 StatCard.displayName = "StatCard"
 
@@ -53,28 +55,28 @@ export default function Home() {
         value: "#105",
         icon: FiTarget,
         color: "text-custom-blue",
-        href: "/achievements"
+        href: "/achievements",
       },
       {
         label: "USA Ranking",
         value: "#15",
         icon: FiZap,
         color: "text-custom-pink",
-        href: "/achievements"
+        href: "/achievements",
       },
       {
         label: "Flags Captured",
         value: "224",
         icon: FiFlag,
         color: "text-custom-yellow",
-        href: "/achievements"
+        href: "/achievements",
       },
       {
         label: "Team Members",
         value: "6",
         icon: FiServer,
         color: "text-green-500",
-        href: "/about"
+        href: "/about",
       },
     ],
     []

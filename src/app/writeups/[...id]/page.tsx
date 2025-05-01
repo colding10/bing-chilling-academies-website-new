@@ -7,13 +7,13 @@ import { motion } from "framer-motion"
 import { FiCalendar, FiUser, FiTag, FiArrowLeft, FiList } from "react-icons/fi"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { Writeup } from "@/lib/writeups"
-import 'highlight.js/styles/github-dark.css'
+import "highlight.js/styles/github-dark.css"
 
 // Table of Contents interface
 interface TOCItem {
-  id: string;
-  text: string;
-  level: number;
+  id: string
+  text: string
+  level: number
 }
 
 // Memoize tag components for better performance
@@ -34,42 +34,40 @@ const WriteupTag = memo(({ tag, index }: { tag: string; index: number }) => (
 WriteupTag.displayName = "WriteupTag"
 
 // Table of Contents component
-const TableOfContents = memo(({ items, activeId }: { items: TOCItem[], activeId: string }) => (
-  <div className="cyber-card p-4 sticky top-8 max-h-[80vh] overflow-y-auto">
-    <div className="font-orbitron text-custom-pink mb-4 flex items-center gap-2">
-      <FiList />
-      <span>Table of Contents</span>
-    </div>
-    <ul className="space-y-2">
-      {items.map((item) => (
-        <li 
-          key={item.id} 
-          style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
-          className="transition-all duration-200"
-        >
-          <a 
-            href={`#${item.id}`}
-            className={`block py-1 px-2 rounded hover:bg-custom-blue/10 border-l-2 transition-all duration-200 ${
-              activeId === item.id 
-                ? 'border-custom-blue text-custom-blue font-medium' 
-                : 'border-transparent'
-            }`}
+const TableOfContents = memo(
+  ({ items, activeId }: { items: TOCItem[]; activeId: string }) => (
+    <div className="cyber-card p-4 sticky top-8 max-h-[80vh] overflow-y-auto">
+      <div className="font-orbitron text-custom-pink mb-4 flex items-center gap-2">
+        <FiList />
+        <span>Table of Contents</span>
+      </div>
+      <ul className="space-y-2">
+        {items.map((item) => (
+          <li
+            key={item.id}
+            style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
+            className="transition-all duration-200"
           >
-            {item.text}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
-))
+            <a
+              href={`#${item.id}`}
+              className={`block py-1 px-2 rounded hover:bg-custom-blue/10 border-l-2 transition-all duration-200 ${
+                activeId === item.id
+                  ? "border-custom-blue text-custom-blue font-medium"
+                  : "border-transparent"
+              }`}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+)
 
 TableOfContents.displayName = "TableOfContents"
 
-export default function WriteupPage({
-  params,
-}: {
-  params: { id: string[] }
-}) {
+export default function WriteupPage({ params }: { params: { id: string[] } }) {
   const [writeup, setWriteup] = useState<Writeup | null>(null)
   const [loading, setLoading] = useState(true)
   const [tocItems, setTocItems] = useState<TOCItem[]>([])
@@ -82,9 +80,9 @@ export default function WriteupPage({
   const fetchWriteup = useCallback(async (path: string) => {
     // Check cache first
     const cacheKey = `${CACHE_PREFIX}${path}`
-    
+
     // Client-side check for sessionStorage
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const cachedData = sessionStorage.getItem(cacheKey)
 
       if (cachedData) {
@@ -105,7 +103,7 @@ export default function WriteupPage({
       const data = await response.json()
 
       // Cache the result if in browser
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         sessionStorage.setItem(cacheKey, JSON.stringify(data))
       }
 
@@ -122,70 +120,76 @@ export default function WriteupPage({
     if (writeup) {
       // Wait for the DOM to update with the new content
       setTimeout(() => {
-        const headingElements = document.querySelectorAll('.prose h2, .prose h3, .prose h4');
-        const items: TOCItem[] = [];
-        
+        const headingElements = document.querySelectorAll(
+          ".prose h2, .prose h3, .prose h4"
+        )
+        const items: TOCItem[] = []
+
         headingElements.forEach((element) => {
-          const headingEl = element as HTMLElement;
+          const headingEl = element as HTMLElement
           if (!headingEl.id) {
             // Generate an ID if it doesn't exist
-            const id = headingEl.textContent?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || '';
-            headingEl.id = id;
+            const id =
+              headingEl.textContent
+                ?.toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[^\w-]/g, "") || ""
+            headingEl.id = id
           }
-          
+
           items.push({
             id: headingEl.id,
-            text: headingEl.textContent || '',
-            level: parseInt(headingEl.tagName.substring(1), 10)
-          });
-        });
-        
-        setTocItems(items);
-      }, 500);
+            text: headingEl.textContent || "",
+            level: parseInt(headingEl.tagName.substring(1), 10),
+          })
+        })
+
+        setTocItems(items)
+      }, 500)
     }
-  }, [writeup]);
+  }, [writeup])
 
   // Handle scroll to update active heading
   useEffect(() => {
     const handleScroll = () => {
-      const headingElements = document.querySelectorAll('.prose h2, .prose h3, .prose h4');
-      if (headingElements.length === 0) return;
-      
+      const headingElements = document.querySelectorAll(
+        ".prose h2, .prose h3, .prose h4"
+      )
+      if (headingElements.length === 0) return
+
       // Find the heading that's currently in view
-      let currentHeadingId = '';
-      const scrollPosition = window.scrollY + 100; // Add some offset
-      
+      let currentHeadingId = ""
+      const scrollPosition = window.scrollY + 100 // Add some offset
+
       for (let i = 0; i < headingElements.length; i++) {
-        const element = headingElements[i] as HTMLElement;
+        const element = headingElements[i] as HTMLElement
         if (element.offsetTop <= scrollPosition) {
-          currentHeadingId = element.id;
+          currentHeadingId = element.id
         } else {
-          break;
+          break
         }
       }
-      
+
       if (currentHeadingId) {
-        setActiveHeading(currentHeadingId);
+        setActiveHeading(currentHeadingId)
       } else if (headingElements.length > 0) {
         // Default to first heading if none are in view
-        setActiveHeading((headingElements[0] as HTMLElement).id);
+        setActiveHeading((headingElements[0] as HTMLElement).id)
       }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
+    }
+
+    window.addEventListener("scroll", handleScroll)
     // Trigger once on load
-    handleScroll();
-    
+    handleScroll()
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [tocItems]);
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [tocItems])
 
   useEffect(() => {
     // Convert params.id to the proper path format
-    const path = Array.isArray(params.id)
-      ? params.id.join("/")
-      : params.id
+    const path = Array.isArray(params.id) ? params.id.join("/") : params.id
 
     fetchWriteup(path)
   }, [params, fetchWriteup])

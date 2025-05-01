@@ -30,17 +30,17 @@ export default function TerminalText({
   useEffect(() => {
     // Only start typing if loading is complete
     if (!isLoadingComplete) {
-      return;
+      return
     }
 
     if (textIndex.current < text.length) {
       const timeoutId = setTimeout(() => {
         setDisplayText(text.substring(0, textIndex.current + 1))
         textIndex.current += 1
-        
+
         // Check if we've completed the text
         if (textIndex.current >= text.length) {
-          isComplete.current = true;
+          isComplete.current = true
         }
       }, speed)
 
