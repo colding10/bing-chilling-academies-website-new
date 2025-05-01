@@ -1,59 +1,61 @@
 "use client"
 
-import { useState, useEffect, useRef, memo } from "react"
+import { useState, useEffect, useRef } from "react"
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 
 interface TerminalTextProps {
   text: string
   speed?: number
+  className?: string
 }
 
-export default memo(function TerminalText({
+export default function TerminalText({
   text,
   speed = 50,
+  className = "",
 }: TerminalTextProps) {
-  const [displayedText, setDisplayedText] = useState("")
-  const [isComplete, setIsComplete] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const [displayText, setDisplayText] = useState("")
+  const textIndex = useRef(0)
+  const isComplete = useRef(false)
+  const { isLoadingComplete } = useBackgroundEffects()
 
+  // Reset terminal when text prop changes
   useEffect(() => {
-    // Reset state when text changes
-    setDisplayedText("")
-    setIsComplete(false)
+    setDisplayText("")
+    textIndex.current = 0
+    isComplete.current = false
+  }, [text])
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
+  // Type out the text letter by letter
+  useEffect(() => {
+    // Only start typing if loading is complete
+    if (!isLoadingComplete) {
+      return;
     }
 
-    let i = 0
+    if (textIndex.current < text.length) {
+      const timeoutId = setTimeout(() => {
+        setDisplayText(text.substring(0, textIndex.current + 1))
+        textIndex.current += 1
+        
+        // Check if we've completed the text
+        if (textIndex.current >= text.length) {
+          isComplete.current = true;
+        }
+      }, speed)
 
-    // Use a more efficient recursive approach instead of creating a new timeout for each character
-    const typeNextChar = () => {
-      if (i < text.length) {
-        // Ensure we're getting a character from the text string and handle spaces correctly
-        const nextChar = text.charAt(i)
-        setDisplayedText((prev) => prev + nextChar)
-        i++
-        timeoutRef.current = setTimeout(typeNextChar, speed)
-      } else {
-        setIsComplete(true)
-      }
+      return () => clearTimeout(timeoutId)
     }
-
-    // Start typing
-    timeoutRef.current = setTimeout(typeNextChar, speed)
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [text, speed])
+  }, [text, speed, isLoadingComplete, displayText])
 
   return (
-    <div className="font-share-tech">
-      <span className="text-custom-blue">&gt; </span>
-      <span>{displayedText}</span>
-      {!isComplete && <span className="animate-pulse">_</span>}
+    <div className={`inline-block font-mono text-sm ${className}`}>
+      <span className="text-custom-green">&gt;</span>
+      <span className="text-custom-yellow font-medium"> {displayText}</span>
+      {/* Only show cursor while text is still typing */}
+      {isLoadingComplete && !isComplete.current && (
+        <span className="text-custom-pink">|</span>
+      )}
     </div>
   )
-})
+}

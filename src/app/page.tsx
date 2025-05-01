@@ -20,18 +20,27 @@ interface StatCardProps {
   value: string
   color: string
   icon: React.ElementType
+  href?: string
 }
 
 // Memoize StatCard to prevent unnecessary re-renders
-const StatCard = memo(({ label, value, color, icon: Icon }: StatCardProps) => (
-  <HologramCard className="hover:scale-[1.02] transition-all duration-300">
-    <div className="flex items-center justify-between mb-4">
-      <Icon className={`w-8 h-8 ${color}`} />
-      <span className={`text-2xl font-orbitron ${color}`}>{value}</span>
-    </div>
-    <p className="text-gray-400 font-play">{label}</p>
-  </HologramCard>
-))
+const StatCard = memo(({ label, value, color, icon: Icon, href }: StatCardProps) => {
+  const card = (
+    <HologramCard className="hover:scale-[1.02] transition-all duration-300">
+      <div className="flex items-center justify-between mb-4">
+        <Icon className={`w-8 h-8 ${color}`} />
+        <span className={`text-2xl font-orbitron ${color}`}>{value}</span>
+      </div>
+      <p className="text-gray-400 font-play">{label}</p>
+    </HologramCard>
+  );
+
+  if (href) {
+    return <Link href={href}>{card}</Link>;
+  }
+  
+  return card;
+})
 
 StatCard.displayName = "StatCard"
 
@@ -44,24 +53,28 @@ export default function Home() {
         value: "#105",
         icon: FiTarget,
         color: "text-custom-blue",
+        href: "/achievements"
       },
       {
         label: "USA Ranking",
         value: "#15",
         icon: FiZap,
         color: "text-custom-pink",
+        href: "/achievements"
       },
       {
         label: "Flags Captured",
         value: "224",
         icon: FiFlag,
         color: "text-custom-yellow",
+        href: "/achievements"
       },
       {
         label: "Team Members",
         value: "6",
         icon: FiServer,
         color: "text-green-500",
+        href: "/about"
       },
     ],
     []
@@ -116,6 +129,7 @@ export default function Home() {
                 value={stat.value}
                 icon={stat.icon}
                 color={stat.color}
+                href={stat.href}
               />
             </motion.div>
           ))}
@@ -130,41 +144,43 @@ export default function Home() {
             transition={{ delay: 0.6 }}
             className="flex-1 max-w-md"
           >
-            <HologramCard>
-              <div className="flex flex-col h-full">
-                <h2 className="text-xl font-orbitron mb-4 text-custom-pink">
-                  Latest Achievement
-                </h2>
-                <div className="flex-grow">
-                  <h3 className="font-share-tech text-custom-blue text-xl">
-                    Incognito 6.0
-                  </h3>
-                  <p className="text-gray-400 my-2 font-play">
-                    6th finish at Incognito 6.0
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-2 mt-3">
-                    <span
-                      className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
-                      rounded-full text-sm text-custom-yellow"
-                    >
-                      1000 Points
-                    </span>
-                    <span
-                      className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
-                      rounded-full text-sm text-custom-pink"
-                    >
-                      #6 Placement
-                    </span>
-                    <span
-                      className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
-                      rounded-full text-sm text-custom-blue"
-                    >
-                      31.533 Rating
-                    </span>
+            <Link href="/achievements">
+              <HologramCard>
+                <div className="flex flex-col h-full">
+                  <h2 className="text-xl font-orbitron mb-4 text-custom-pink">
+                    Latest Achievement
+                  </h2>
+                  <div className="flex-grow">
+                    <h3 className="font-share-tech text-custom-blue text-xl">
+                      Incognito 6.0
+                    </h3>
+                    <p className="text-gray-400 my-2 font-play">
+                      6th finish at Incognito 6.0
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2 mt-3">
+                      <span
+                        className="px-3 py-1 bg-custom-yellow/10 border border-custom-yellow/30 
+                        rounded-full text-sm text-custom-yellow"
+                      >
+                        1000 Points
+                      </span>
+                      <span
+                        className="px-3 py-1 bg-custom-pink/10 border border-custom-pink/30 
+                        rounded-full text-sm text-custom-pink"
+                      >
+                        #6 Placement
+                      </span>
+                      <span
+                        className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
+                        rounded-full text-sm text-custom-blue"
+                      >
+                        31.533 Rating
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </HologramCard>
+              </HologramCard>
+            </Link>
           </motion.div>
 
           {/* CTFTime link section */}

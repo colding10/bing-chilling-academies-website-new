@@ -5,11 +5,15 @@ import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 
 export default memo(function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { matrixOpacity } = useBackgroundEffects()
+  const { effectsMode, matrixOpacity, isLoadingComplete } = useBackgroundEffects()
+
+  // Simplified opacity - either 0.15 (barely visible) or 0 (not visible)
+  const actualOpacity = typeof matrixOpacity === 'number' ? matrixOpacity : 
+    effectsMode === 'none' ? 0 : 0.15;
 
   useEffect(() => {
-    // If opacity is 0, don't initialize the canvas
-    if (matrixOpacity === 0) return
+    // Don't initialize during loading or if opacity is 0
+    if (!isLoadingComplete || actualOpacity <= 0) return
 
     const canvas = canvasRef.current
     if (!canvas) return
@@ -40,11 +44,12 @@ export default memo(function MatrixRain() {
     function draw() {
       if (!ctx || !canvas) return
 
-      // Use a more efficient opacity approach
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
+      // Use a slightly darker background with more opacity
+      ctx.fillStyle = "rgba(0, 0, 0, 0.15)" 
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      ctx.fillStyle = "#0ff"
+      // Use a more visible green color for better contrast against dark backgrounds
+      ctx.fillStyle = "rgba(0, 255, 170, 0.9)" 
       ctx.font = `${fontSize}px monospace`
 
       for (let i = 0; i < drops.length; i++) {
@@ -81,7 +86,7 @@ export default memo(function MatrixRain() {
       // Recalculate columns and drops on resize
       const newColumns = Math.floor(window.innerWidth / fontSize)
       drops.length = newColumns
-      for (let i = columns; i < newColumns; i++) {
+      for (let i = 0; i < newColumns; i++) {
         drops[i] = 1
       }
     }
@@ -92,13 +97,24 @@ export default memo(function MatrixRain() {
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener("resize", handleResize)
     }
-  }, [matrixOpacity]) // Dependency on matrixOpacity ensures effect reruns when changed
+  }, [actualOpacity, effectsMode, isLoadingComplete]) // Added isLoadingComplete dependency
+
+  // Don't render at all if opacity is 0 or during loading
+  if (actualOpacity <= 0 || !isLoadingComplete) return null
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: -1, opacity: matrixOpacity }}
+      style={{ 
+        zIndex: 10, // Set z-index to 10 - above scanlines but below main content
+        opacity: actualOpacity,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%'
+      }}
     />
   )
 })
