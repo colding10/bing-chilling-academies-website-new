@@ -41,10 +41,10 @@ export default function MatrixRain() {
         const text = charArray[Math.floor(Math.random() * charArray.length)]
         const x = i * fontSize
         const y = drops[i] * fontSize
-        
+
         // Use random to determine color variation
         const colorVariation = Math.random() > 0.8 ? "#f93283" : "#00fff9"
-        
+
         ctx.fillStyle = colorVariation
         ctx.fillText(text, x, y)
 

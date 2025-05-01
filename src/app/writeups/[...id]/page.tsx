@@ -297,7 +297,8 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           Writeup Not Found
         </h1>
         <p className="text-gray-400 mt-4 mb-6">
-          The writeup you&apos;re looking for doesn&apos;t exist or has been moved.
+          The writeup you&apos;re looking for doesn&apos;t exist or has been
+          moved.
         </p>
         <Link href="/writeups" className="cyber-button-small">
           <FiArrowLeft className="mr-2" /> Back to writeups
@@ -414,7 +415,8 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           />
 
           <p className="text-sm text-gray-400 mb-4">
-            If you can&apos;t see the writeup, it&apos;s likely because it hasn&apos;t been published yet.
+            If you can&apos;t see the writeup, it&apos;s likely because it
+            hasn&apos;t been published yet.
           </p>
 
           {/* Bottom highlight effect */}

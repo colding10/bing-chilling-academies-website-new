@@ -11,11 +11,11 @@ const MatrixRainBackground = memo(
   ({ opacity = 0.2 }: MatrixRainBackgroundProps) => {
     // Render null early if opacity is 0 without breaking hook rules
     if (opacity <= 0) {
-      return null;
+      return null
     }
-    
+
     // Use a separate component for the actual implementation
-    return <MatrixRainEffect opacity={opacity} />;
+    return <MatrixRainEffect opacity={opacity} />
   }
 )
 
@@ -40,7 +40,8 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
     updateCanvasSize()
 
     // Character set for matrix rain
-    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
+    const chars =
+      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
     const charArray = chars.split("")
     const fontSize = 14
     const columns = Math.floor(window.innerWidth / fontSize)
@@ -48,7 +49,7 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
 
     // Check for mobile device to optimize performance
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-    
+
     // Frame rate control for better performance
     const frameDelay = isMobile ? 50 : 33 // Fewer frames on mobile
     let lastFrameTime = 0
@@ -74,11 +75,13 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
       for (let i = 0; i < drops.length; i++) {
         // Select a random character from the array
         const text = charArray[Math.floor(Math.random() * charArray.length)]
-        
+
         // Select a color based on position (creates a subtle effect)
-        const colorIndex = Math.floor((drops[i] / canvas.height) * colors.length)
+        const colorIndex = Math.floor(
+          (drops[i] / canvas.height) * colors.length
+        )
         ctx.fillStyle = colors[colorIndex] || colors[0]
-        
+
         // Draw the character
         ctx.fillText(text, i * fontSize, drops[i] * fontSize)
 
@@ -94,10 +97,10 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
     // Handle window resize
     const handleResize = () => {
       updateCanvasSize()
-      
+
       // Adjust the number of drops based on new width
       const newColumns = Math.floor(window.innerWidth / fontSize)
-      
+
       // Expand if needed
       if (newColumns > drops.length) {
         drops.push(...new Array(newColumns - drops.length).fill(1))
@@ -117,10 +120,10 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
         lastFrameTime = currentTime
       }
     }
-    
+
     // Start the animation
     animationRef.current = requestAnimationFrame(animate)
-    
+
     // Add resize listener
     window.addEventListener("resize", handleResize)
 

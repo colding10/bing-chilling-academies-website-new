@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-import withBundleAnalyzer from '@next/bundle-analyzer';
+import withBundleAnalyzer from "@next/bundle-analyzer"
 
 const nextConfig = {
   reactStrictMode: true,
@@ -17,30 +17,31 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production",
   },
   webpack: (config) => {
-    config.plugins.push(
+    config.plugins
+      .push
       // Any additional plugins would go here
-    );
+      ()
 
     config.module.rules.push({
       test: /\.mdx?$/,
       use: [
         {
-          loader: '@mdx-js/loader',
+          loader: "@mdx-js/loader",
           options: {
             remarkPlugins: [],
             rehypePlugins: [],
           },
         },
       ],
-    });
+    })
 
-    return config;
+    return config
   },
-};
+}
 
 // Enable bundle analyzer in production build
 const withBundleAnalyzerConfig = withBundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
+  enabled: process.env.ANALYZE === "true",
+})
 
-export default withBundleAnalyzerConfig(nextConfig);
+export default withBundleAnalyzerConfig(nextConfig)

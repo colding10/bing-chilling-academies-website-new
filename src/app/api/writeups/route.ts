@@ -11,21 +11,22 @@ let lastCacheTime = 0
 export async function GET() {
   // Disable caching at the Next.js level
   noStore()
-  
+
   try {
     const now = Date.now()
     // Check if we have valid cached data
     if (cachedWriteups && now - lastCacheTime < CACHE_DURATION) {
       return NextResponse.json(cachedWriteups, {
         headers: {
-          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+          "Cache-Control":
+            "public, s-maxage=3600, stale-while-revalidate=86400",
         },
       })
     }
 
     // Get fresh data
     const writeups = await getAllWriteups()
-    
+
     // Update cache
     cachedWriteups = writeups
     lastCacheTime = now

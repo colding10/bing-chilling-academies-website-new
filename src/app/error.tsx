@@ -36,9 +36,7 @@ export default function Error({
           Try Again
         </CyberButton>
         <Link href="/" passHref>
-          <CyberButton className="px-6 py-2">
-            Return Home
-          </CyberButton>
+          <CyberButton className="px-6 py-2">Return Home</CyberButton>
         </Link>
       </div>
     </div>
