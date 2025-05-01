@@ -84,209 +84,188 @@ TableOfContents.displayName = "TableOfContents"
 export default function WriteupPage({ params }: { params: { id: string[] } }) {
   const [writeup, setWriteup] = useState<Writeup | null>(null)
   const [loading, setLoading] = useState(true)
-  const [tocItems, setTocItems] = useState<TOCItem[]>([])
-  const [activeHeading, setActiveHeading] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
+  const [tocItems, setTocItems] = useState<TOCItem[]>([])
+  const [activeHeading, setActiveHeading] = useState("")
   const contentRef = useRef<HTMLDivElement>(null)
 
-  // Cache for writeups to avoid refetching
-  const CACHE_PREFIX = "writeup-data-"
-  const CACHE_EXPIRY = 30 * 60 * 1000 // 30 minutes
-
-  // Use useCallback to prevent recreation of fetch function on each render
-  const fetchWriteup = useCallback(async (path: string) => {
-    // Show loading state
-    setLoading(true)
-
-    // Cache key for this writeup
-    const cacheKey = `${CACHE_PREFIX}${path}`
-
-    // Try cache first (client-side only)
-    if (typeof window !== "undefined") {
-      try {
-        const cachedData = sessionStorage.getItem(cacheKey)
-
-        if (cachedData) {
-          const parsedData = JSON.parse(cachedData)
-
-          // Check if cache is still valid
-          if (
-            parsedData.timestamp &&
-            Date.now() - parsedData.timestamp < CACHE_EXPIRY
-          ) {
-            setWriteup(parsedData.writeup)
-            setLoading(false)
-            return
-          }
-        }
-      } catch (e) {
-        console.error("Error reading from cache:", e)
-        // Continue with fetch if cache read fails
-      }
-    }
+  // Function to generate Table of Contents from content
+  const generateTOC = useCallback(() => {
+    if (!contentRef.current) return
 
     try {
-      const response = await fetch(`/api/writeups/${path}`, {
-        next: { revalidate: 3600 }, // Revalidate once per hour
+      // Find all heading elements in the content
+      const headingElements = contentRef.current.querySelectorAll(
+        ".prose h2, .prose h3, .prose h4"
+      )
+
+      if (headingElements.length === 0) return
+
+      const items: TOCItem[] = []
+
+      headingElements.forEach((element) => {
+        const headingEl = element as HTMLElement
+        if (!headingEl.id) {
+          // Generate an ID if it doesn't exist
+          const id =
+            headingEl.textContent
+              ?.toLowerCase()
+              .replace(/\s+/g, "-")
+              .replace(/[^\w-]/g, "") || ""
+          headingEl.id = id
+        }
+
+        items.push({
+          id: headingEl.id,
+          text: headingEl.textContent || "",
+          level: parseInt(headingEl.tagName.substring(1), 10),
+        })
       })
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch writeup: ${response.status}`)
+      setTocItems(items)
+
+      // Set initial active heading
+      if (items.length > 0) {
+        setActiveHeading(items[0].id)
       }
-
-      const data = await response.json()
-
-      // Cache the result (client-side only)
-      if (typeof window !== "undefined") {
-        try {
-          sessionStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-              writeup: data,
-              timestamp: Date.now(),
-            })
-          )
-        } catch (e) {
-          console.error("Error caching writeup data:", e)
-          // Continue even if caching fails
-        }
-      }
-
-      setWriteup(data)
-      setError(null)
-    } catch (error) {
-      console.error("Error fetching writeup:", error)
-      setError("Failed to load writeup. Please try again later.")
-    } finally {
-      setLoading(false)
+    } catch (e) {
+      console.error("Error generating table of contents:", e)
     }
   }, [])
 
-  // Extract headings after content is loaded
+  // Enhance code blocks with syntax highlighting class if not already applied
+  const enhanceCodeBlocks = useCallback(() => {
+    if (!contentRef.current) return
+
+    try {
+      // Find all code blocks that don't have proper syntax highlighting
+      const codeBlocks = contentRef.current.querySelectorAll("pre > code:not(.language-*)")
+      
+      codeBlocks.forEach((codeBlock) => {
+        if (!codeBlock.className.includes("language-")) {
+          // Add a default language class for proper styling
+          codeBlock.classList.add("language-plaintext")
+        }
+      })
+
+      // Make sure all code blocks have line numbers
+      const allCodeBlocks = contentRef.current.querySelectorAll("pre > code")
+      allCodeBlocks.forEach((block) => {
+        if (!block.innerHTML.includes("line-number-style")) {
+          const lines = block.innerHTML.split("\n")
+          let lineNumberedHTML = ""
+          
+          lines.forEach((line, index) => {
+            if (line.trim()) {
+              lineNumberedHTML += `<span class="line"><span class="line-number-style">${index + 1}</span>${line}</span>\n`
+            } else {
+              lineNumberedHTML += `<span class="line"><span class="line-number-style">${index + 1}</span></span>\n`
+            }
+          })
+          
+          block.innerHTML = lineNumberedHTML
+        }
+      })
+    } catch (e) {
+      console.error("Error enhancing code blocks:", e)
+    }
+  }, [])
+
+  // Fetch writeup data
+  useEffect(() => {
+    const fetchWriteup = async () => {
+      try {
+        setLoading(true)
+        const path = Array.isArray(params.id) ? params.id.join("/") : params.id
+        const response = await fetch(`/api/writeups/${path}`)
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch writeup: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setWriteup(data)
+      } catch (err) {
+        console.error("Error fetching writeup:", err)
+        setError("Failed to load writeup. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchWriteup()
+  }, [params.id])
+
+  // Generate table of contents when content is loaded
   useEffect(() => {
     if (writeup && contentRef.current) {
-      // Give the DOM time to update with the content
-      const timer = setTimeout(() => {
-        if (!contentRef.current) return
-
-        const headingElements = contentRef.current.querySelectorAll(
-          ".prose h2, .prose h3, .prose h4"
-        )
-
-        if (headingElements.length === 0) return
-
-        const items: TOCItem[] = []
-
-        headingElements.forEach((element) => {
-          const headingEl = element as HTMLElement
-          if (!headingEl.id) {
-            // Generate an ID if it doesn't exist
-            const id =
-              headingEl.textContent
-                ?.toLowerCase()
-                .replace(/\s+/g, "-")
-                .replace(/[^\w-]/g, "") || ""
-            headingEl.id = id
-          }
-
-          items.push({
-            id: headingEl.id,
-            text: headingEl.textContent || "",
-            level: parseInt(headingEl.tagName.substring(1), 10),
-          })
-        })
-
-        setTocItems(items)
-
-        // Set initial active heading
-        if (items.length > 0) {
-          setActiveHeading(items[0].id)
-        }
-      }, 300)
-
-      return () => clearTimeout(timer)
+      // Wait for the content to be fully rendered
+      setTimeout(() => {
+        generateTOC()
+        enhanceCodeBlocks()
+      }, 200)
     }
-  }, [writeup])
+  }, [writeup, generateTOC, enhanceCodeBlocks])
 
-  // Handle scroll to update active heading - debounced for performance
+  // Update active heading on scroll
   useEffect(() => {
-    if (tocItems.length === 0) return
-
-    let scrollTimer: NodeJS.Timeout
-
     const handleScroll = () => {
-      clearTimeout(scrollTimer)
-      scrollTimer = setTimeout(() => {
-        const headingElements = document.querySelectorAll(
-          ".prose h2, .prose h3, .prose h4"
-        )
+      if (!contentRef.current || tocItems.length === 0) return
 
-        if (headingElements.length === 0) return
+      // Find the current visible heading
+      const headings = tocItems.map((item) => {
+        const element = document.getElementById(item.id)
+        if (!element) return { id: item.id, top: 0, element: null }
+        const rect = element.getBoundingClientRect()
+        return { id: item.id, top: rect.top, element }
+      })
 
-        // Find the heading that's currently in view
-        // Add offset to account for navbar
-        const scrollPosition = window.scrollY + 120
+      // Find the first heading that's in view or above the viewport
+      const visibleHeadings = headings
+        .filter((h) => h.element && h.top <= 120)
+        .sort((a, b) => b.top - a.top)
 
-        // Find the last heading that's above our scroll position
-        let currentHeadingId = ""
-
-        for (let i = 0; i < headingElements.length; i++) {
-          const element = headingElements[i] as HTMLElement
-          const elementPosition = element.offsetTop
-
-          if (elementPosition <= scrollPosition) {
-            currentHeadingId = element.id
-          } else {
-            break
-          }
-        }
-
-        if (currentHeadingId && currentHeadingId !== activeHeading) {
-          setActiveHeading(currentHeadingId)
-        } else if (!currentHeadingId && headingElements.length > 0) {
-          // Default to first heading if none are in view
-          setActiveHeading((headingElements[0] as HTMLElement).id)
-        }
-      }, 100) // Debounce scroll checks
+      if (visibleHeadings.length > 0) {
+        setActiveHeading(visibleHeadings[0].id)
+      } else if (headings.length > 0) {
+        // If no headings are visible, use the first one
+        setActiveHeading(headings[0].id)
+      }
     }
 
-    window.addEventListener("scroll", handleScroll, { passive: true })
-
-    // Trigger once on initial load
-    handleScroll()
-
+    window.addEventListener("scroll", handleScroll)
     return () => {
       window.removeEventListener("scroll", handleScroll)
-      clearTimeout(scrollTimer)
     }
-  }, [tocItems, activeHeading])
+  }, [tocItems])
 
-  // Fetch writeup when component mounts or params change
+  // Fix any broken or missing images
   useEffect(() => {
-    // Convert params.id to the proper path format
-    const path = Array.isArray(params.id) ? params.id.join("/") : params.id
-    fetchWriteup(path)
-  }, [params, fetchWriteup])
+    if (!contentRef.current) return
 
+    const images = contentRef.current.querySelectorAll('img')
+    images.forEach(img => {
+      img.onerror = () => {
+        // Add a css class to show a placeholder for broken images
+        img.classList.add('broken-image')
+        img.setAttribute('alt', 'Image not found')
+      }
+    })
+  }, [writeup])
+
+  // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <LoadingSpinner />
-        <motion.div
-          className="ml-4 text-custom-blue font-orbitron"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
-          Decrypting writeup data...
-        </motion.div>
+      <div className="flex justify-center items-center h-96">
+        <LoadingSpinner size={48} />
       </div>
     )
   }
 
+  // Error state
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 text-center">
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -311,29 +290,32 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       >
         <h1
           className="text-3xl font-bold text-custom-pink text-glow-pink font-orbitron data-corruption"
-          data-text="Writeup not found"
+          data-text="Writeup Not Found"
         >
-          Writeup not found
+          Writeup Not Found
         </h1>
-        <div className="mt-6 relative">
-          <div className="hologram-lines absolute inset-0 rounded-lg opacity-30"></div>
-          <Link
-            href="/writeups"
-            className="cyber-button inline-flex items-center gap-2 relative z-10"
-          >
-            <FiArrowLeft className="animate-pulse" /> Back to writeups
-          </Link>
-        </div>
+        <p className="text-gray-400 mt-4 mb-6">
+          The writeup you're looking for doesn't exist or has been moved.
+        </p>
+        <Link href="/writeups" className="cyber-button-small">
+          <FiArrowLeft className="mr-2" /> Back to writeups
+        </Link>
       </motion.div>
     )
   }
 
+  // Check if the content seems to be unprocessed markdown
+  const contentMightBeRaw = writeup.content && 
+    (writeup.content.includes('```') || 
+     writeup.content.includes('##') || 
+     !writeup.content.includes('<'));
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="max-w-7xl mx-auto px-4 py-8"
+      className="max-w-6xl mx-auto px-4 py-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
       <div className="flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-64 shrink-0 flex flex-col gap-4">
@@ -382,13 +364,14 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
               >
                 <span className="text-custom-blue">{writeup.ctfName}</span>
               </h1>
-              <h1
-                className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink data-corruption"
-                data-text={writeup.title}
-              >
-                <span className="text-custom-pink">{writeup.title}</span>
-              </h1>
             </div>
+
+            <h1
+              className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink data-corruption"
+              data-text={writeup.title}
+            >
+              <span className="text-custom-pink">{writeup.title}</span>
+            </h1>
 
             <div className="flex flex-wrap gap-4 text-sm text-gray-400 mt-4">
               <div className="flex items-center gap-2">
@@ -407,6 +390,13 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
               ))}
             </div>
           </motion.div>
+
+          {/* Show a warning if content might be unprocessed */}
+          {contentMightBeRaw && (
+            <div className="bg-yellow-900/30 border border-yellow-600/50 rounded p-4 mb-6 text-yellow-200">
+              <p>Note: This content may not be displaying properly. The team has been notified.</p>
+            </div>
+          )}
 
           <motion.div
             ref={contentRef}

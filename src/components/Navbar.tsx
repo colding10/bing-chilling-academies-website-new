@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { useState, useEffect, memo } from "react"
-import { useTheme } from "next-themes"
 import { FiEye, FiEyeOff, FiMenu, FiX } from "react-icons/fi"
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 import { motion, AnimatePresence } from "framer-motion"
@@ -41,7 +40,6 @@ export default function Navbar() {
   const [isMatrixTooltipVisible, setIsMatrixTooltipVisible] = useState(false)
   const { toggleEffectsMode, effectsMode, setMatrixOpacity } =
     useBackgroundEffects()
-  const { theme, setTheme } = useTheme()
 
   // Handle scroll effect
   useEffect(() => {

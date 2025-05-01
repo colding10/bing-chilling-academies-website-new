@@ -43,7 +43,7 @@ after fiddling with baud rate, we extracted this
 
 these are cleary **base64**, but the second one is slightly corrupted (due to unclean filtering), but ChatGPT or AI can help to guess what it should have been, and we get these snippets:
 
-```
+```none
 TAG_00 = VU1BUwo= UMAS
 TAG_01 = U3tmbAo=        S{fl
 TAG_04 = X3Rvdwo=           _tow

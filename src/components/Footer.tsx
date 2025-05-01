@@ -42,7 +42,7 @@ export default memo(function Footer() {
 
           <div className="flex gap-4">
             <a
-              href="https://github.com/codieboomboom/bing-chilling-academies-website-new"
+              href="https://github.com/colding10/bing-chilling-academies-website-new"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-custom-blue transition-colors"

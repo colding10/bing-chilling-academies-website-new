@@ -1,8 +1,19 @@
 import React from "react"
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
+import MatrixRainBackground from "./MatrixRainBackground"
 
-const ScanLinesEffect = ({ enabled }: { enabled: boolean }) => {
-  if (!enabled) return null
+const BackgroundEffects = () => {
+  const { scanLinesEnabled, matrixOpacity } = useBackgroundEffects()
 
+  return (
+    <>
+      <MatrixRainBackground opacity={matrixOpacity} />
+      {scanLinesEnabled && <ScanLinesEffect />}
+    </>
+  )
+}
+
+const ScanLinesEffect = () => {
   return (
     <div
       className="pointer-events-none fixed inset-0 z-50"
@@ -16,4 +27,4 @@ const ScanLinesEffect = ({ enabled }: { enabled: boolean }) => {
   )
 }
 
-export default ScanLinesEffect
+export default BackgroundEffects

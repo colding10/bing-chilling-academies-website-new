@@ -7,18 +7,9 @@ import { ThemeProvider } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { BackgroundEffectsProvider } from "@/contexts/BackgroundEffectsContext"
+import BackgroundEffects from "./backgrounds/BackgroundEffects"
 
-// Dynamically import heavy visual components to improve initial load time
-const MatrixRain = dynamic(() => import("./MatrixRain"), {
-  ssr: false,
-  loading: () => null,
-})
-
-const ParticleField = dynamic(() => import("./ParticleField"), {
-  ssr: false,
-  loading: () => null,
-})
-
+// Dynamically import GlobalEffects component to improve initial load time
 const GlobalEffects = dynamic(() => import("./GlobalEffects"), {
   ssr: false,
   loading: () => null,
@@ -57,8 +48,7 @@ export default memo(function Layout({
           {/* Only render visual effects when client-side mounted */}
           {isMounted && (
             <>
-              <MatrixRain />
-              <ParticleField />
+              <BackgroundEffects />
               <GlobalEffects />
             </>
           )}

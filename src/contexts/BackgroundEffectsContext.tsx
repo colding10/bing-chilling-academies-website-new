@@ -28,11 +28,11 @@ export function BackgroundEffectsProvider({
 }: {
   children: React.ReactNode
 }) {
-  // Initialize with stored state or defaults - start with full to improve visual experience
-  const [effectsMode, setEffectsMode] = useState<EffectsMode>("full")
-  const [matrixOpacity, setMatrixOpacity] = useState<number>(0.4) // Reduced from 0.7
-  const [scanLinesEnabled, setScanLinesEnabled] = useState<boolean>(true)
-  const [particlesEnabled, setParticlesEnabled] = useState<boolean>(true)
+  // Initialize with stored state or defaults - start with none to improve performance
+  const [effectsMode, setEffectsMode] = useState<EffectsMode>("none")
+  const [matrixOpacity, setMatrixOpacity] = useState<number>(0) // Set to 0 when mode is none
+  const [scanLinesEnabled, setScanLinesEnabled] = useState<boolean>(false)
+  const [particlesEnabled, setParticlesEnabled] = useState<boolean>(false)
   const [isLoadingComplete, setIsLoadingComplete] = useState<boolean>(false)
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
 
@@ -114,7 +114,7 @@ export function BackgroundEffectsProvider({
     setEffectsMode(newMode)
 
     // Set appropriate opacity based on the new mode
-    setMatrixOpacity(newMode === "full" ? 0.4 : 0) // Reduced from 0.7
+    setMatrixOpacity(newMode === "full" ? 0.2 : 0) // Reduced from 0.7
 
     // Toggle scan lines based on the mode
     setScanLinesEnabled(newMode !== "none")

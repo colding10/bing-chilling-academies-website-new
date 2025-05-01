@@ -20,7 +20,7 @@ opening the binary in Ghidra, we see a lot of OCaml functions, so its quite hard
 
 here is the dissassembly of the main function
 
-```
+```cpp
 void camlEasy_rev__entry(void)
 
 {
@@ -52,7 +52,7 @@ so, the function `camlStdlib__List__fold_left_521` is hella sus. you probably cl
 
 ## gdb solve script
 
-```
+```cpp
 set pagination off
 break camlStdlib__List__fold_left_521
 commands
