@@ -11,7 +11,6 @@ import { BackgroundEffectsProvider } from "@/contexts/BackgroundEffectsContext"
 // Dynamically import heavy components with loading disabled
 // This improves initial load time by only loading them when needed
 const MatrixRain = dynamic(() => import("./MatrixRain"), { ssr: false })
-const ParticleField = dynamic(() => import("./ParticleField"), { ssr: false })
 const GlobalEffects = dynamic(() => import("./GlobalEffects"), { ssr: false })
 
 // Optimize the Layout component with memoization
@@ -36,7 +35,6 @@ export default memo(function Layout({
           {isMounted && (
             <>
               <MatrixRain />
-              <ParticleField />
               <GlobalEffects />
             </>
           )}

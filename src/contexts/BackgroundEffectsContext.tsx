@@ -8,10 +8,12 @@ interface BackgroundEffectsContextType {
   effectsMode: EffectsMode
   matrixOpacity: number
   scanLinesEnabled: boolean
+  particlesEnabled: boolean
   toggleEffectsMode: () => void
   setEffectsMode: (mode: EffectsMode) => void
   setMatrixOpacity: (opacity: number) => void
   setScanLinesEnabled: (enabled: boolean) => void
+  setParticlesEnabled: (enabled: boolean) => void
   isLoadingComplete: boolean
   setIsLoadingComplete: (complete: boolean) => void
 }
@@ -23,6 +25,7 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
   const [effectsMode, setEffectsMode] = useState<EffectsMode>("reduced")
   const [matrixOpacity, setMatrixOpacity] = useState<number>(0.5)
   const [scanLinesEnabled, setScanLinesEnabled] = useState<boolean>(true)
+  const [particlesEnabled, setParticlesEnabled] = useState<boolean>(true)
   const [isLoadingComplete, setIsLoadingComplete] = useState<boolean>(false)
   
   // Load saved preferences
@@ -32,6 +35,7 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
     const savedMode = localStorage.getItem("effectsMode") as EffectsMode | null
     const savedOpacity = localStorage.getItem("matrixOpacity") 
     const savedScanLines = localStorage.getItem("scanLinesEnabled")
+    const savedParticles = localStorage.getItem("particlesEnabled")
     
     if (savedMode) {
       setEffectsMode(savedMode)
@@ -44,6 +48,10 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
     if (savedScanLines !== null) {
       setScanLinesEnabled(savedScanLines === "true")
     }
+
+    if (savedParticles !== null) {
+      setParticlesEnabled(savedParticles === "true")
+    }
   }, [])
   
   // Save preferences whenever they change
@@ -53,7 +61,8 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
     localStorage.setItem("effectsMode", effectsMode)
     localStorage.setItem("matrixOpacity", matrixOpacity.toString())
     localStorage.setItem("scanLinesEnabled", scanLinesEnabled.toString())
-  }, [effectsMode, matrixOpacity, scanLinesEnabled])
+    localStorage.setItem("particlesEnabled", particlesEnabled.toString())
+  }, [effectsMode, matrixOpacity, scanLinesEnabled, particlesEnabled])
 
   const toggleEffectsMode = () => {
     const modes: EffectsMode[] = ["none", "minimal", "reduced", "full"]
@@ -67,6 +76,9 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
     
     // Toggle scan lines based on the mode
     setScanLinesEnabled(modes[nextIndex] !== "none")
+
+    // Toggle particles based on the mode
+    setParticlesEnabled(modes[nextIndex] === "full")
   }
 
   return (
@@ -75,10 +87,12 @@ export function BackgroundEffectsProvider({ children }: { children: React.ReactN
         effectsMode, 
         matrixOpacity,
         scanLinesEnabled,
+        particlesEnabled,
         toggleEffectsMode, 
         setEffectsMode,
         setMatrixOpacity,
         setScanLinesEnabled,
+        setParticlesEnabled,
         isLoadingComplete,
         setIsLoadingComplete
       }}
