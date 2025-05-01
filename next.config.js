@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
-
-const withBundleAnalyzer = process.env.ANALYZE === 'true'
-  ? // Using dynamic import instead of require for TypeScript linting compliance
-    ((mod) => mod.default || mod)(require('next-bundle-analyzer'))()
-  : (config) => config
+import withBundleAnalyzer from '@next/bundle-analyzer';
 
 const nextConfig = {
   reactStrictMode: true,
@@ -21,14 +17,30 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production",
   },
   webpack: (config) => {
-    // Plugin configuration
     config.plugins.push(
       // Any additional plugins would go here
-    )
-    
-    return config
-  },
-}
+    );
 
-// Export the config with bundle analyzer if enabled
-export default withBundleAnalyzer(nextConfig)
+    config.module.rules.push({
+      test: /\.mdx?$/,
+      use: [
+        {
+          loader: '@mdx-js/loader',
+          options: {
+            remarkPlugins: [],
+            rehypePlugins: [],
+          },
+        },
+      ],
+    });
+
+    return config;
+  },
+};
+
+// Enable bundle analyzer in production build
+const withBundleAnalyzerConfig = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+export default withBundleAnalyzerConfig(nextConfig);

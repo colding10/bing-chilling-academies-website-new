@@ -42,7 +42,7 @@ export default function MatrixRain() {
         const x = i * fontSize
         const y = drops[i] * fontSize
         
-        const colorIntensity = Math.random()
+        // Use random to determine color variation
         const colorVariation = Math.random() > 0.8 ? "#f93283" : "#00fff9"
         
         ctx.fillStyle = colorVariation
