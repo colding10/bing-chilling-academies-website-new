@@ -77,15 +77,9 @@ export default memo(function MatrixRain() {
         // Select a random character from the array
         const text = charArray[Math.floor(Math.random() * charArray.length)]
 
-        // Determine character brightness (head of column is brighter)
-        let colorIndex = Math.floor(Math.random() * colors.length)
-
-        // Make first character brighter
-        if (drops[i] <= 1) {
-          ctx.fillStyle = "rgba(180, 255, 250, 1)" // Bright head character
-        } else {
-          ctx.fillStyle = colors[colorIndex]
-        }
+        // Select a color based on position (creates a subtle effect)
+        const colorIndex = Math.floor((drops[i] / canvas.height) * colors.length)
+        ctx.fillStyle = colors[colorIndex] || colors[0]
 
         // Draw the character
         ctx.fillText(text, i * fontSize, drops[i] * fontSize)

@@ -28,19 +28,27 @@ export default function MatrixRain() {
     const drops: number[] = new Array(columns).fill(1)
 
     function draw() {
+      // Add null checks to prevent TypeScript errors
       if (!ctx || !canvas) return
 
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      ctx.fillStyle = "#0ff"
+      ctx.fillStyle = "#00fff9"
       ctx.font = `${fontSize}px monospace`
 
       for (let i = 0; i < drops.length; i++) {
         const text = charArray[Math.floor(Math.random() * charArray.length)]
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize)
+        const x = i * fontSize
+        const y = drops[i] * fontSize
+        
+        const colorIntensity = Math.random()
+        const colorVariation = Math.random() > 0.8 ? "#f93283" : "#00fff9"
+        
+        ctx.fillStyle = colorVariation
+        ctx.fillText(text, x, y)
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (y > canvas.height && Math.random() > 0.975) {
           drops[i] = 0
         }
 

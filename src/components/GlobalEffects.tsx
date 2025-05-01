@@ -15,9 +15,6 @@ export default memo(function GlobalEffects() {
     // Set loading to true when route changes
     setIsLoading(true)
 
-    // Capture start time for minimum duration
-    const startTime = Date.now()
-
     // Define minimum loading duration to avoid flashing
     const MIN_LOADING_DURATION = 800
 

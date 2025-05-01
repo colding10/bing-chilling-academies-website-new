@@ -160,7 +160,7 @@ export default function WriteupsPage() {
     }
 
     fetchWriteups()
-  }, [])
+  }, [CACHE_EXPIRY])
 
   // Memoize filtered writeups to avoid recomputing on every render
   const filteredWriteups = useMemo(() => {
@@ -208,7 +208,7 @@ export default function WriteupsPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-96">
+      <div className="flex flex-col items-center justify-center h-96 pt-16">
         <LoadingSpinner />
         <motion.div
           className="mt-6 text-xl text-custom-blue font-orbitron"
@@ -224,7 +224,7 @@ export default function WriteupsPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 text-center">
+      <div className="flex flex-col items-center justify-center h-96 text-center pt-20">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

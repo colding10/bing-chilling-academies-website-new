@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, memo } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { FiCalendar, FiUser, FiTag, FiArrowLeft, FiList } from "react-icons/fi"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { Writeup } from "@/lib/writeups"
@@ -258,7 +258,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   // Loading state
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-96">
+      <div className="flex justify-center items-center min-h-[70vh] pt-8">
         <LoadingSpinner size={48} />
       </div>
     )
@@ -267,7 +267,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   // Error state
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+      <div className="max-w-4xl mx-auto px-4 py-8 pt-10 text-center">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -285,7 +285,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   if (!writeup) {
     return (
       <motion.div
-        className="max-w-4xl mx-auto px-4 py-8 text-center"
+        className="max-w-4xl mx-auto px-4 py-8 pt-10 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -297,7 +297,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           Writeup Not Found
         </h1>
         <p className="text-gray-400 mt-4 mb-6">
-          The writeup you're looking for doesn't exist or has been moved.
+          The writeup you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
         <Link href="/writeups" className="cyber-button-small">
           <FiArrowLeft className="mr-2" /> Back to writeups
@@ -412,6 +412,10 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
             transition={{ delay: 0.7, duration: 0.8 }}
             dangerouslySetInnerHTML={{ __html: writeup.content }}
           />
+
+          <p className="text-sm text-gray-400 mb-4">
+            If you can&apos;t see the writeup, it&apos;s likely because it hasn&apos;t been published yet.
+          </p>
 
           {/* Bottom highlight effect */}
           <motion.div

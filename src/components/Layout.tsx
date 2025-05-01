@@ -59,7 +59,7 @@ export default memo(function Layout({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="container mx-auto px-4 py-8"
+              className="container mx-auto px-4 py-8 pt-16"
             >
               {isMounted ? children : <div className="h-screen"></div>}
             </motion.main>

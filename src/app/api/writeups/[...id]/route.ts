@@ -9,6 +9,9 @@ import rehypeRaw from "rehype-raw"
 import rehypePrism from "rehype-prism-plus"
 import rehypeSlug from "rehype-slug"
 import { unstable_noStore as noStore } from "next/cache"
+import type { Plugin } from 'unified'
+import type { Root } from 'remark-parse/lib'
+import type { VFile } from 'vfile'
 
 // In-memory cache to avoid repeated filesystem reads and markdown processing
 const writeupCache = new Map<string, { data: any; timestamp: number }>()
@@ -37,8 +40,8 @@ async function processMarkdown(content: string): Promise<string> {
       .use(remarkGfm)
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)
-      // Fix type error by explicitly typing the rehypePrism options
-      .use(rehypePrism as any, { showLineNumbers: true })
+      // Fix type error by using a proper type assertion for rehypePrism
+      .use(rehypePrism as Plugin<[], Root, Root>, { showLineNumbers: true })
       .use(rehypeSlug)
       .use(rehypeStringify)
       .process(fixedCodeBlocks)

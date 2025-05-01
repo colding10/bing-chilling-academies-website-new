@@ -3,7 +3,7 @@
 import { useEffect, useRef, memo } from "react"
 
 interface MatrixRainBackgroundProps {
-  opacity: number
+  opacity?: number
 }
 
 const MatrixRainBackground = memo(
@@ -11,8 +11,10 @@ const MatrixRainBackground = memo(
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const animationRef = useRef<number | null>(null)
 
-    // Don't render if opacity is 0
-    if (opacity <= 0) return null
+    // Render null if opacity is 0
+    if (opacity <= 0) {
+      return null;
+    }
 
     useEffect(() => {
       const canvas = canvasRef.current
@@ -30,8 +32,7 @@ const MatrixRainBackground = memo(
       updateCanvasSize()
 
       // Character set for matrix rain
-      const chars =
-        "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
+      const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
       const charArray = chars.split("")
       const fontSize = 14
       const columns = Math.floor(window.innerWidth / fontSize)
@@ -39,7 +40,7 @@ const MatrixRainBackground = memo(
 
       // Check for mobile device to optimize performance
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-
+      
       // Frame rate control for better performance
       const frameDelay = isMobile ? 50 : 33 // Fewer frames on mobile
       let lastFrameTime = 0
@@ -65,13 +66,11 @@ const MatrixRainBackground = memo(
         for (let i = 0; i < drops.length; i++) {
           // Select a random character from the array
           const text = charArray[Math.floor(Math.random() * charArray.length)]
-
+          
           // Select a color based on position (creates a subtle effect)
-          const colorIndex = Math.floor(
-            (drops[i] / canvas.height) * colors.length
-          )
+          const colorIndex = Math.floor((drops[i] / canvas.height) * colors.length)
           ctx.fillStyle = colors[colorIndex] || colors[0]
-
+          
           // Draw the character
           ctx.fillText(text, i * fontSize, drops[i] * fontSize)
 
@@ -87,10 +86,10 @@ const MatrixRainBackground = memo(
       // Handle window resize
       const handleResize = () => {
         updateCanvasSize()
-
+        
         // Adjust the number of drops based on new width
         const newColumns = Math.floor(window.innerWidth / fontSize)
-
+        
         // Expand if needed
         if (newColumns > drops.length) {
           drops.push(...new Array(newColumns - drops.length).fill(1))
@@ -110,10 +109,10 @@ const MatrixRainBackground = memo(
           lastFrameTime = currentTime
         }
       }
-
+      
       // Start the animation
       animationRef.current = requestAnimationFrame(animate)
-
+      
       // Add resize listener
       window.addEventListener("resize", handleResize)
 
