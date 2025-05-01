@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, memo } from "react"
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 
 interface Particle {
   x: number
@@ -14,8 +15,12 @@ interface Particle {
 
 export default memo(function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { particlesEnabled } = useBackgroundEffects()
 
   useEffect(() => {
+    // Don't initialize if particles are disabled
+    if (!particlesEnabled) return
+
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -127,7 +132,9 @@ export default memo(function ParticleField() {
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener("resize", handleResize)
     }
-  }, [])
+  }, [particlesEnabled]) // Re-run effect when particlesEnabled changes
+
+  if (!particlesEnabled) return null
 
   return (
     <canvas

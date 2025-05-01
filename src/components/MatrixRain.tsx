@@ -1,11 +1,16 @@
 "use client"
 
 import { useEffect, useRef, memo } from "react"
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 
 export default memo(function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { matrixOpacity } = useBackgroundEffects()
 
   useEffect(() => {
+    // If opacity is 0, don't initialize the canvas
+    if (matrixOpacity === 0) return
+
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -87,13 +92,13 @@ export default memo(function MatrixRain() {
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener("resize", handleResize)
     }
-  }, [])
+  }, [matrixOpacity]) // Dependency on matrixOpacity ensures effect reruns when changed
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none opacity-20"
-      style={{ zIndex: -1 }}
+      className="fixed inset-0 pointer-events-none"
+      style={{ zIndex: -1, opacity: matrixOpacity }}
     />
   )
 })

@@ -3,10 +3,12 @@
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 
 export default function GlobalEffects() {
   const pathname = usePathname()
   const [isLoading, setIsLoading] = useState(true)
+  const { scanLinesEnabled } = useBackgroundEffects()
 
   useEffect(() => {
     setIsLoading(true)
@@ -16,8 +18,8 @@ export default function GlobalEffects() {
 
   return (
     <>
-      {/* Scanlines Overlay */}
-      <div className="scanlines fixed inset-0 pointer-events-none z-50" />
+      {/* Scanlines Overlay - conditional based on settings */}
+      {scanLinesEnabled && <div className="scanlines fixed inset-0 pointer-events-none z-50" />}
 
       {/* Page Transition */}
       <AnimatePresence mode="wait">

@@ -239,31 +239,36 @@ export default function WriteupPage({
       transition={{ duration: 0.6 }}
       className="max-w-7xl mx-auto px-4 py-8"
     >
-      <motion.div
-        initial={{ x: -20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Link
-          href="/writeups"
-          className="cyber-button-small inline-flex items-center gap-2 mb-8 group"
-        >
-          <FiArrowLeft className="group-hover:animate-pulse" />
-          <span>Back to writeups</span>
-        </Link>
-      </motion.div>
-
       <div className="flex flex-col md:flex-row gap-8">
-        {tocItems.length > 0 && (
-          <motion.aside 
-            className="w-full md:w-64 shrink-0"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
+        <div className="w-full md:w-64 shrink-0 flex flex-col gap-4">
+          {/* Fixed "Back to writeups" button at the top */}
+          <motion.div
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="sticky top-4 z-20 mb-4"
           >
-            <TableOfContents items={tocItems} activeId={activeHeading} />
-          </motion.aside>
-        )}
+            <Link
+              href="/writeups"
+              className="cyber-button-small inline-flex items-center gap-2 group w-full justify-center"
+            >
+              <FiArrowLeft className="group-hover:animate-pulse" />
+              <span>Back to writeups</span>
+            </Link>
+          </motion.div>
+
+          {/* Table of Contents */}
+          {tocItems.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+              className="sticky top-20"
+            >
+              <TableOfContents items={tocItems} activeId={activeHeading} />
+            </motion.div>
+          )}
+        </div>
 
         <article className="cyber-card relative overflow-hidden flex-grow">
           <div className="absolute scanline opacity-20 pointer-events-none"></div>

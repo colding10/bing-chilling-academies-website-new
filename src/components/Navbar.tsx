@@ -3,15 +3,37 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
-import { SunIcon, MoonIcon } from "@heroicons/react/24/solid"
+import { FiEye, FiEyeOff, FiMonitor } from "react-icons/fi"
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
+  const { effectsMode, toggleEffectsMode } = useBackgroundEffects()
 
   useEffect(() => setMounted(true), [])
 
   if (!mounted) return null
+
+  // Determine which icon to show based on effects mode
+  const getEffectsIcon = () => {
+    switch (effectsMode) {
+      case 'full': return <FiEye className="h-5 w-5 text-custom-blue" />;
+      case 'reduced': return <FiEye className="h-5 w-5 text-custom-yellow" />;
+      case 'minimal': return <FiEyeOff className="h-5 w-5 text-custom-pink" />;
+      case 'none': return <FiEyeOff className="h-5 w-5 text-gray-500" />;
+    }
+  }
+
+  // Get tooltip text based on current mode
+  const getEffectsTooltip = () => {
+    switch (effectsMode) {
+      case 'full': return 'Effects: Full';
+      case 'reduced': return 'Effects: Reduced';
+      case 'minimal': return 'Effects: Minimal';
+      case 'none': return 'Effects: None';
+    }
+  }
 
   return (
     <nav className="border-b-2 border-custom-blue/30 bg-custom-black/80 backdrop-blur-md">
@@ -46,16 +68,15 @@ export default function Navbar() {
             >
               Writeups
             </Link>
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-lg border border-custom-blue/30 hover:border-custom-blue transition-colors"
-            >
-              {theme === "dark" ? (
-                <SunIcon className="h-5 w-5 text-custom-yellow" />
-              ) : (
-                <MoonIcon className="h-5 w-5 text-custom-blue" />
-              )}
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={toggleEffectsMode}
+                className="p-2 rounded-lg border border-custom-blue/30 hover:border-custom-blue transition-colors cyber-tooltip"
+                data-tooltip={getEffectsTooltip()}
+              >
+                {getEffectsIcon()}
+              </button>
+            </div>
           </div>
         </div>
       </div>
