@@ -139,8 +139,10 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
 
     try {
       // Find all code blocks that don't have proper syntax highlighting
-      const codeBlocks = contentRef.current.querySelectorAll("pre > code:not(.language-*)")
-      
+      const codeBlocks = contentRef.current.querySelectorAll(
+        "pre > code:not(.language-*)"
+      )
+
       codeBlocks.forEach((codeBlock) => {
         if (!codeBlock.className.includes("language-")) {
           // Add a default language class for proper styling
@@ -154,7 +156,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         if (!block.innerHTML.includes("line-number-style")) {
           const lines = block.innerHTML.split("\n")
           let lineNumberedHTML = ""
-          
+
           lines.forEach((line, index) => {
             if (line.trim()) {
               lineNumberedHTML += `<span class="line"><span class="line-number-style">${index + 1}</span>${line}</span>\n`
@@ -162,7 +164,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
               lineNumberedHTML += `<span class="line"><span class="line-number-style">${index + 1}</span></span>\n`
             }
           })
-          
+
           block.innerHTML = lineNumberedHTML
         }
       })
@@ -243,12 +245,12 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   useEffect(() => {
     if (!contentRef.current) return
 
-    const images = contentRef.current.querySelectorAll('img')
-    images.forEach(img => {
+    const images = contentRef.current.querySelectorAll("img")
+    images.forEach((img) => {
       img.onerror = () => {
         // Add a css class to show a placeholder for broken images
-        img.classList.add('broken-image')
-        img.setAttribute('alt', 'Image not found')
+        img.classList.add("broken-image")
+        img.setAttribute("alt", "Image not found")
       }
     })
   }, [writeup])
@@ -305,10 +307,11 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   }
 
   // Check if the content seems to be unprocessed markdown
-  const contentMightBeRaw = writeup.content && 
-    (writeup.content.includes('```') || 
-     writeup.content.includes('##') || 
-     !writeup.content.includes('<'));
+  const contentMightBeRaw =
+    writeup.content &&
+    (writeup.content.includes("```") ||
+      writeup.content.includes("##") ||
+      !writeup.content.includes("<"))
 
   return (
     <motion.div
@@ -394,7 +397,10 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           {/* Show a warning if content might be unprocessed */}
           {contentMightBeRaw && (
             <div className="bg-yellow-900/30 border border-yellow-600/50 rounded p-4 mb-6 text-yellow-200">
-              <p>Note: This content may not be displaying properly. The team has been notified.</p>
+              <p>
+                Note: This content may not be displaying properly. The team has
+                been notified.
+              </p>
             </div>
           )}
 

@@ -19,16 +19,16 @@ async function processMarkdown(content: string): Promise<string> {
   try {
     // Fix any potential Unicode issues or invisible characters
     const sanitizedContent = content
-      .replace(/\u200B/g, '') // Zero-width space
-      .replace(/\uFEFF/g, '') // BOM
-      .replace(/�/g, '') // Replacement character
+      .replace(/\u200B/g, "") // Zero-width space
+      .replace(/\uFEFF/g, "") // BOM
+      .replace(/�/g, "") // Replacement character
 
     // Handle problematic special characters in code blocks
     const fixedCodeBlocks = sanitizedContent.replace(
       /```(.*?)\n([\s\S]*?)```/g,
       (match, language, code) => {
         // Ensure proper code block formatting
-        return `\`\`\`${language || ''}\n${code.trim()}\n\`\`\``
+        return `\`\`\`${language || ""}\n${code.trim()}\n\`\`\``
       }
     )
 
@@ -46,7 +46,7 @@ async function processMarkdown(content: string): Promise<string> {
     return result.toString()
   } catch (error) {
     console.error("Error processing markdown:", error)
-    
+
     // Fallback to simpler processing chain if the full one fails
     try {
       const simpleResult = await remark()
@@ -55,31 +55,31 @@ async function processMarkdown(content: string): Promise<string> {
         .use(rehypeRaw)
         .use(rehypeStringify)
         .process(content)
-      
+
       return simpleResult.toString()
     } catch (fallbackError) {
       console.error("Fallback markdown processing failed:", fallbackError)
-      
+
       // Last resort - convert markdown manually for basic formatting
       try {
         // Convert headers, bold, and code blocks manually
         const manuallyProcessed = content
-          .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
-          .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-          .replace(/```(.*?)\n([\s\S]*?)```/gm, '<pre><code>$2</code></pre>')
-          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/^# (.*$)/gm, "<h1>$1</h1>")
+          .replace(/^## (.*$)/gm, "<h2>$1</h2>")
+          .replace(/^### (.*$)/gm, "<h3>$1</h3>")
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+          .replace(/\*(.*?)\*/g, "<em>$1</em>")
+          .replace(/```(.*?)\n([\s\S]*?)```/gm, "<pre><code>$2</code></pre>")
+          .replace(/`([^`]+)`/g, "<code>$1</code>")
           .replace(/!\[(.*?)\]\((.*?)\)/g, '<img alt="$1" src="$2" />')
           .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
-          .replace(/\n/g, '<br />')
-        
+          .replace(/\n/g, "<br />")
+
         return manuallyProcessed
       } catch (manualError) {
         console.error("Manual markdown processing failed:", manualError)
         // Return the original content wrapped in a pre tag as absolute last resort
-        return `<pre>${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`
+        return `<pre>${content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>`
       }
     }
   }
@@ -91,7 +91,7 @@ export async function GET(
 ) {
   // Prevent caching at the Next.js level for dynamic content
   noStore()
-  
+
   try {
     // Convert the params to a path
     const path = Array.isArray(params.id) ? params.id.join("/") : params.id
@@ -121,17 +121,18 @@ export async function GET(
     }
 
     // Ensure content is a string before processing
-    const contentToProcess = typeof writeup.content === 'string' 
-      ? writeup.content 
-      : String(writeup.content || '')
-    
+    const contentToProcess =
+      typeof writeup.content === "string"
+        ? writeup.content
+        : String(writeup.content || "")
+
     // Process markdown content to HTML
     const processedContent = await processMarkdown(contentToProcess)
-    
+
     // Create a new writeup object with processed content
     const processedWriteup = {
       ...writeup,
-      content: processedContent
+      content: processedContent,
     }
 
     // Update cache
