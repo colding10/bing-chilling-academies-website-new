@@ -173,28 +173,22 @@ export default function WriteupsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Header with hologram effect */}
+        {/* Section header */}
         <div className="text-center mb-12 relative">
-          <div className="hologram-lines absolute inset-0 rounded-lg opacity-30"></div>
           <motion.h1
             className="text-5xl font-bold font-orbitron relative z-10 py-8"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.7 }}
           >
-            <span
-              className="text-custom-blue text-glow-blue data-corruption"
-              data-text="CTF"
-            >
-              CTF
-            </span>{" "}
-            <span
-              className="text-custom-pink text-glow-pink data-corruption"
-              data-text="Writeups"
-            >
-              Writeups
-            </span>
+            <span className="text-custom-blue text-glow-blue">Capture</span>{" "}
+            <span className="text-custom-pink text-glow-pink">The</span>{" "}
+            <span className="text-custom-yellow text-glow-yellow">Writeups</span>
           </motion.h1>
+
+          <p className="text-gray-400 font-play max-w-xl mx-auto mt-4 relative z-10">
+            Our detailed solutions to CTF challenges across various categories.
+          </p>
         </div>
 
         <div className="mb-8 space-y-6">

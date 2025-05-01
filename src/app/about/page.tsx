@@ -117,14 +117,18 @@ export default function About() {
         transition={{ duration: 0.5 }}
         className="space-y-12"
       >
-        {/* Section header with hologram effect */}
-        <div className="text-center relative">
-          <div className="hologram-lines absolute inset-0 rounded-lg opacity-30"></div>
-          <h1 className="text-5xl font-orbitron relative z-10 py-6">
+        {/* Section header */}
+        <div className="text-center mb-12 relative">
+          <motion.h1
+            className="text-5xl font-bold font-orbitron relative z-10 py-8"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.7 }}
+          >
             <span className="text-custom-blue text-glow-blue">Meet</span>{" "}
             <span className="text-custom-pink text-glow-pink">The</span>{" "}
             <span className="text-custom-yellow text-glow-yellow">Team</span>
-          </h1>
+          </motion.h1>
 
           <p className="text-gray-400 font-play max-w-xl mx-auto mt-4 relative z-10">
             a group of high schoolers from the Bing Chilling Academies who like
