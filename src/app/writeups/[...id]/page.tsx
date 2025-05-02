@@ -307,7 +307,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           setActiveHeading(visible[0].target.id)
         }
       },
-      { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+      { rootMargin: "-50% 0px -50% 0px", threshold: 0 }
     )
 
     tocItems.forEach(({ id }) => {
