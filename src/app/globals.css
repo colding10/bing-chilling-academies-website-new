@@ -125,7 +125,7 @@
   }
 
   .writeup-content pre > code {
-    @apply bg-transparent text-gray-300 p-0 block py-4 px-4 w-full;
+    @apply bg-transparent text-gray-300 p-0 block py-4 px-4 w-full text-sm;
   }
 
   /* Line numbers */
@@ -315,7 +315,7 @@
 @layer components {
   .cyber-card {
     @apply relative bg-custom-black/50 backdrop-blur-sm border-2 border-custom-blue 
-    rounded-lg p-6 transition-all duration-300 hover:scale-[1.02] 
+    rounded-lg p-6 transition-all duration-300
     overflow-hidden;
   }
 

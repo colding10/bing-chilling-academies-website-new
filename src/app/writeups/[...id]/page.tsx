@@ -191,16 +191,29 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       // Add copy buttons to code blocks
       const preBlocks = contentRef.current.querySelectorAll("pre")
       preBlocks.forEach(pre => {
+        // Check if button already exists to avoid duplicates
         if (!pre.querySelector('.copy-button')) {
           pre.style.position = 'relative'
           const btn = document.createElement('button')
           btn.innerText = 'Copy'
-          btn.className = 'copy-button absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue text-white rounded'
+          btn.className = 'copy-button absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue/90 text-white rounded z-10 hover:bg-custom-blue transition-colors'
           btn.addEventListener('click', () => {
             const code = pre.querySelector('code')
             if (code) {
-              navigator.clipboard.writeText(code.innerText)
-                .then(() => { btn.innerText = 'Copied'; setTimeout(() => btn.innerText = 'Copy', 2000) })
+              // Strip line numbers when copying
+              const codeText = Array.from(code.querySelectorAll('.line'))
+                .map(line => {
+                  const lineContent = line.textContent || ''
+                  // Remove the line number part
+                  return lineContent.replace(/^\d+\s+/, '')
+                })
+                .join('\n')
+              
+              navigator.clipboard.writeText(codeText)
+                .then(() => { 
+                  btn.innerText = 'Copied!'; 
+                  setTimeout(() => btn.innerText = 'Copy', 2000) 
+                })
             }
           })
           pre.appendChild(btn)
@@ -319,20 +332,30 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
+        // Filter for visible headings
+        const visibleHeadings = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-        if (visible.length > 0) {
-          setActiveHeading(visible[0].target.id)
+          .map((entry) => entry.target.id)
+
+        // If we have visible headings, use the first one
+        if (visibleHeadings.length > 0) {
+          // Find the earliest one in the document order
+          const headingElements = Array.from(document.querySelectorAll('.writeup-heading'));
+          const visibleElements = headingElements.filter(el => visibleHeadings.includes(el.id));
+          
+          if (visibleElements.length > 0) {
+            const firstVisible = visibleElements[0];
+            setActiveHeading(firstVisible.id);
+          }
         }
       },
-      { rootMargin: "-50% 0px -50% 0px", threshold: 0 }
+      // Adjust rootMargin to better detect when headings are in view
+      { rootMargin: "-100px 0px -70% 0px", threshold: 0 }
     )
 
-    tocItems.forEach(({ id }) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
+    // Observe all headings
+    const headings = contentRef.current.querySelectorAll('.writeup-heading');
+    headings.forEach(heading => observer.observe(heading));
 
     // Handle initial hash on load
     if (window.location.hash) {
