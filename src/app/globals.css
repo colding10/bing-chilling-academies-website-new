@@ -121,11 +121,12 @@
 
   /* Code highlighting styling */
   .writeup-content pre {
-    @apply bg-cyber-overlay border border-custom-blue/30 rounded-md my-4 overflow-x-auto max-w-full;
+    @apply bg-cyber-overlay border border-custom-blue/30 rounded-md my-4 overflow-x-auto max-w-full relative;
   }
 
   .writeup-content pre > code {
     @apply bg-transparent text-gray-300 p-0 block py-4 px-4 w-full text-sm;
+    font-size: 0.85rem !important; /* Forcing smaller font size */
   }
 
   /* Line numbers */
@@ -724,4 +725,11 @@ h3:hover {
   66% {
     transform: translate(5px, 0);
   }
+}
+
+/* Make sure copy buttons are visible */
+.copy-button {
+  @apply absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue/90 text-white rounded z-10 
+  hover:bg-custom-blue transition-colors opacity-100 visible;
+  display: block !important;
 }

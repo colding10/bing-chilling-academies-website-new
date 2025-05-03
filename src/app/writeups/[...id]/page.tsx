@@ -63,8 +63,17 @@ const TableOfContents = memo(
               onClick={() => {
                 const element = document.getElementById(item.id)
                 if (element) {
-                  // Smooth scroll and update URL/hash
-                  element.scrollIntoView({ behavior: "smooth", block: "start" })
+                  // Get the offset to adjust for fixed header
+                  const headerOffset = 100;
+                  const elementPosition = element.getBoundingClientRect().top;
+                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                  
+                  // Scroll with offset
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                  });
+                  
                   history.pushState(null, "", `#${item.id}`)
                   onHeadingClick(item.id)
                 }
@@ -326,47 +335,97 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
     }
   }, [writeup, generateTOC, enhanceCodeBlocks, enhanceHeadings])
 
-  // Replace scroll-based TOC update effect with IntersectionObserver
+  // Completely new TOC highlighting approach with better calculation logic
   useEffect(() => {
     if (!contentRef.current || tocItems.length === 0) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Filter for visible headings
-        const visibleHeadings = entries
-          .filter((entry) => entry.isIntersecting)
-          .map((entry) => entry.target.id)
-
-        // If we have visible headings, use the first one
-        if (visibleHeadings.length > 0) {
-          // Find the earliest one in the document order
-          const headingElements = Array.from(document.querySelectorAll('.writeup-heading'));
-          const visibleElements = headingElements.filter(el => visibleHeadings.includes(el.id));
-          
-          if (visibleElements.length > 0) {
-            const firstVisible = visibleElements[0];
-            setActiveHeading(firstVisible.id);
-          }
+    // Function to determine which heading is most visible
+    const determineActiveHeading = () => {
+      const headings = Array.from(
+        contentRef.current?.querySelectorAll('.writeup-heading') || []
+      ) as HTMLElement[];
+      
+      if (headings.length === 0) return;
+      
+      // Get viewport dimensions
+      const viewportHeight = window.innerHeight;
+      const viewportTop = window.scrollY;
+      const viewportBottom = viewportTop + viewportHeight;
+      
+      // Find headings that are in viewport
+      const visibleHeadings = headings.map(heading => {
+        const rect = heading.getBoundingClientRect();
+        const headingTop = rect.top + window.scrollY;
+        
+        // Calculate how much of the heading is visible as a percentage
+        let visiblePercentage = 0;
+        
+        if (headingTop < viewportBottom && headingTop > viewportTop) {
+          // Heading top is in viewport
+          visiblePercentage = 100;
+        } else if (headingTop < viewportTop && headingTop + 200 > viewportTop) {
+          // Heading is partially above viewport
+          visiblePercentage = ((headingTop + 200) - viewportTop) / 200 * 100;
         }
-      },
-      // Adjust rootMargin to better detect when headings are in view
-      { rootMargin: "-100px 0px -70% 0px", threshold: 0 }
-    )
-
-    // Observe all headings
-    const headings = contentRef.current.querySelectorAll('.writeup-heading');
-    headings.forEach(heading => observer.observe(heading));
-
+        
+        return {
+          id: heading.id,
+          visiblePercentage,
+          position: headingTop
+        };
+      });
+      
+      // Filter for headings with some visibility and sort by position
+      const candidateHeadings = visibleHeadings
+        .filter(h => h.visiblePercentage > 0)
+        .sort((a, b) => a.position - b.position);
+      
+      // If we have visible headings, use the first one (topmost)
+      if (candidateHeadings.length > 0) {
+        setActiveHeading(candidateHeadings[0].id);
+      } else if (headings.length > 0) {
+        // If no headings are visible, use the nearest one above the viewport
+        const headingsAbove = headings
+          .filter(heading => {
+            const rect = heading.getBoundingClientRect();
+            return rect.top + window.scrollY < viewportTop;
+          })
+          .sort((a, b) => {
+            const aTop = a.getBoundingClientRect().top + window.scrollY;
+            const bTop = b.getBoundingClientRect().top + window.scrollY;
+            return bTop - aTop; // Sort in descending order (closest to viewport first)
+          });
+        
+        if (headingsAbove.length > 0) {
+          setActiveHeading(headingsAbove[0].id);
+        } else {
+          // If no headings above, use the first heading
+          setActiveHeading(headings[0].id);
+        }
+      }
+    };
+    
+    // Run on scroll
+    const handleScroll = () => {
+      window.requestAnimationFrame(determineActiveHeading);
+    };
+    
+    // Initial check and listen for scroll events
+    determineActiveHeading();
+    window.addEventListener('scroll', handleScroll);
+    
     // Handle initial hash on load
     if (window.location.hash) {
-      const id = window.location.hash.substring(1)
+      const id = window.location.hash.substring(1);
       if (document.getElementById(id)) {
-        setActiveHeading(id)
+        setActiveHeading(id);
       }
     }
-
-    return () => observer.disconnect()
-  }, [tocItems])
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [tocItems]);
 
   // Fix any broken or missing images
   useEffect(() => {
@@ -381,6 +440,79 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       }
     })
   }, [writeup])
+
+  // Enhanced version of the code block button addition functionality
+  useEffect(() => {
+    if (!contentRef.current) return;
+
+    const addCopyButtons = () => {
+      const preBlocks = contentRef.current.querySelectorAll("pre");
+      
+      preBlocks.forEach(pre => {
+        // First, make sure the pre block has relative positioning
+        pre.style.position = 'relative';
+        
+        // Remove any existing buttons to avoid duplicates
+        const existingButtons = pre.querySelectorAll('.copy-button');
+        existingButtons.forEach(button => button.remove());
+        
+        // Create and add the button
+        const btn = document.createElement('button');
+        btn.innerText = 'Copy';
+        btn.className = 'copy-button';
+        btn.style.cssText = `
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          padding: 4px 8px;
+          font-size: 12px;
+          background-color: rgba(32, 141, 214, 0.9);
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          z-index: 100;
+          transition: background-color 0.2s;
+        `;
+        
+        btn.addEventListener('click', () => {
+          const code = pre.querySelector('code');
+          if (code) {
+            // Strip line numbers when copying
+            const codeText = Array.from(code.querySelectorAll('.line'))
+              .map(line => {
+                const lineContent = line.textContent || '';
+                return lineContent.replace(/^\d+\s+/, ''); // Remove line numbers
+              })
+              .join('\n');
+            
+            navigator.clipboard.writeText(codeText)
+              .then(() => {
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = 'Copy', 2000);
+              })
+              .catch(() => {
+                btn.innerText = 'Failed!';
+                setTimeout(() => btn.innerText = 'Copy', 2000);
+              });
+          }
+        });
+        
+        // Make sure the button is added
+        pre.appendChild(btn);
+      });
+    };
+    
+    // Run the function initially
+    addCopyButtons();
+    
+    // Also run it after a short delay to ensure content is fully loaded
+    const timer = setTimeout(() => {
+      addCopyButtons();
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [writeup]);
 
   // Loading state
   if (loading) {
