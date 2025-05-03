@@ -187,10 +187,29 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           block.innerHTML = lineNumberedHTML
         }
       })
+
+      // Add copy buttons to code blocks
+      const preBlocks = contentRef.current.querySelectorAll("pre")
+      preBlocks.forEach(pre => {
+        if (!pre.querySelector('.copy-button')) {
+          pre.style.position = 'relative'
+          const btn = document.createElement('button')
+          btn.innerText = 'Copy'
+          btn.className = 'copy-button absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue text-white rounded'
+          btn.addEventListener('click', () => {
+            const code = pre.querySelector('code')
+            if (code) {
+              navigator.clipboard.writeText(code.innerText)
+                .then(() => { btn.innerText = 'Copied'; setTimeout(() => btn.innerText = 'Copy', 2000) })
+            }
+          })
+          pre.appendChild(btn)
+        }
+      })
     } catch (e) {
       console.error("Error enhancing code blocks:", e)
     }
-  }, [])
+  }, [setTimeout])
 
   // Initialize and enhance headings when the content is loaded
   const enhanceHeadings = useCallback(() => {
@@ -376,8 +395,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         transition={{ duration: 0.5 }}
       >
         <h1
-          className="text-3xl font-bold text-custom-pink text-glow-pink font-orbitron data-corruption"
-          data-text="Writeup Not Found"
+          className="text-3xl font-bold text-custom-pink text-glow-pink font-orbitron"
         >
           Writeup Not Found
         </h1>
@@ -452,16 +470,14 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           >
             <div className="flex items-center gap-4">
               <h1
-                className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue data-corruption"
-                data-text={writeup.ctfName}
+                className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue"
               >
                 <span className="text-custom-blue">{writeup.ctfName}</span>
               </h1>
             </div>
 
             <h1
-              className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink data-corruption"
-              data-text={writeup.title}
+              className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink"
             >
               <span className="text-custom-pink">{writeup.title}</span>
             </h1>
