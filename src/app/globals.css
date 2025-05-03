@@ -1,4 +1,4 @@
-@import 'prismjs/themes/prism-tomorrow.css';
+@import "prismjs/themes/prism-tomorrow.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -333,12 +333,12 @@
   }
 
   /* Improved styling for inline code blocks */
-  .inline-code, 
+  .inline-code,
   .writeup-content p code,
   .writeup-content li code,
   .writeup-content td code {
     @apply bg-black bg-opacity-50 text-custom-blue px-2 py-0.5 rounded border border-custom-blue/20;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: "Share Tech Mono", monospace;
     text-shadow: 0 0 2px rgba(32, 141, 214, 0.4);
     position: relative;
     display: inline-block;
@@ -814,7 +814,7 @@ h3:hover {
 }
 
 /* Make sure TOC links are clickable */
-.table-of-contents a, 
+.table-of-contents a,
 .table-of-contents button {
   @apply block w-full cursor-pointer py-1 px-2;
   pointer-events: auto !important;

@@ -1,16 +1,16 @@
-"use client";
-import Prism from 'prismjs';
-import React, { useEffect } from 'react';
+"use client"
+import Prism from "prismjs"
+import React, { useEffect } from "react"
 // Import prism core and languages - these will be handled by webpack
-import 'prismjs/themes/prism-tomorrow.css';
-import 'prismjs/components/prism-cpp';
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-bash';
+import "prismjs/themes/prism-tomorrow.css"
+import "prismjs/components/prism-cpp"
+import "prismjs/components/prism-python"
+import "prismjs/components/prism-bash"
 
 export default function RootLayout({ children }) {
-  useEffect(() => { 
-    Prism.highlightAll(); 
-  }, []);
+  useEffect(() => {
+    Prism.highlightAll()
+  }, [])
 
   return (
     <html lang="en">
@@ -20,9 +20,7 @@ export default function RootLayout({ children }) {
         <title>Bing Chilling Academies</title>
         {/* Removed manual CSS/script tags since we're importing them via webpack */}
       </head>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
-  );
+  )
 }

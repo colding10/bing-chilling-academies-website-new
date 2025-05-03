@@ -52,7 +52,9 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       })
 
       // Enhance inline code blocks
-      const inlineCodeBlocks = contentRef.current.querySelectorAll("p code, li code, td code")
+      const inlineCodeBlocks = contentRef.current.querySelectorAll(
+        "p code, li code, td code"
+      )
       inlineCodeBlocks.forEach((inlineCode) => {
         // Remove backticks from displayed text
         let codeText = inlineCode.textContent || ""
@@ -60,7 +62,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           codeText = codeText.substring(1, codeText.length - 1)
           inlineCode.textContent = codeText
         }
-        
+
         // Add highlighting class if not already present
         if (!inlineCode.classList.contains("inline-code")) {
           inlineCode.classList.add("inline-code")
@@ -69,58 +71,58 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
 
       // Add copy buttons to code blocks with properly working clipboard functionality
       const preBlocks = contentRef.current.querySelectorAll("pre")
-      preBlocks.forEach(pre => {
+      preBlocks.forEach((pre) => {
         // First, make sure the pre block has relative positioning
-        pre.style.position = 'relative'
-        
+        pre.style.position = "relative"
+
         // Remove any existing buttons to avoid duplicates
-        const existingButtons = pre.querySelectorAll('.copy-button')
-        existingButtons.forEach(button => button.remove())
-        
+        const existingButtons = pre.querySelectorAll(".copy-button")
+        existingButtons.forEach((button) => button.remove())
+
         // Create and add the button
-        const btn = document.createElement('button')
-        btn.innerText = 'Copy'
-        btn.className = 'copy-button'
-        
-        btn.addEventListener('click', () => {
-          const code = pre.querySelector('code')
+        const btn = document.createElement("button")
+        btn.innerText = "Copy"
+        btn.className = "copy-button"
+
+        btn.addEventListener("click", () => {
+          const code = pre.querySelector("code")
           if (code) {
             // Strip line numbers when copying
-            const codeText = Array.from(code.querySelectorAll('.line'))
-              .map(line => {
-                const lineContent = line.textContent || ''
-                return lineContent.replace(/^\d+\s+/, '') // Remove line numbers
+            const codeText = Array.from(code.querySelectorAll(".line"))
+              .map((line) => {
+                const lineContent = line.textContent || ""
+                return lineContent.replace(/^\d+\s+/, "") // Remove line numbers
               })
-              .join('\n')
-            
+              .join("\n")
+
             // Use a textarea for better clipboard support
-            const textarea = document.createElement('textarea')
+            const textarea = document.createElement("textarea")
             textarea.value = codeText
-            textarea.style.position = 'absolute'
-            textarea.style.left = '-9999px'
+            textarea.style.position = "absolute"
+            textarea.style.left = "-9999px"
             document.body.appendChild(textarea)
             textarea.select()
-            
+
             try {
-              document.execCommand('copy')
-              btn.innerText = 'Copied!'
-              btn.classList.add('copied')
+              document.execCommand("copy")
+              btn.innerText = "Copied!"
+              btn.classList.add("copied")
               setTimeout(() => {
-                btn.innerText = 'Copy'
-                btn.classList.remove('copied')
+                btn.innerText = "Copy"
+                btn.classList.remove("copied")
               }, 2000)
             } catch (err) {
-              console.error('Failed to copy', err)
-              btn.innerText = 'Failed!'
+              console.error("Failed to copy", err)
+              btn.innerText = "Failed!"
               setTimeout(() => {
-                btn.innerText = 'Copy'
+                btn.innerText = "Copy"
               }, 2000)
             }
-            
+
             document.body.removeChild(textarea)
           }
         })
-        
+
         // Make sure the button is added
         pre.appendChild(btn)
       })
@@ -213,9 +215,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h1
-          className="text-3xl font-bold text-custom-pink text-glow-pink font-orbitron"
-        >
+        <h1 className="text-3xl font-bold text-custom-pink text-glow-pink font-orbitron">
           Writeup Not Found
         </h1>
         <p className="text-gray-400 mt-4 mb-6">
@@ -270,16 +270,12 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           transition={{ delay: 0.4 }}
         >
           <div className="flex items-center gap-4">
-            <h1
-              className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue"
-            >
+            <h1 className="text-4xl font-bold font-orbitron text-custom-blue text-glow-blue">
               <span className="text-custom-blue">{writeup.ctfName}</span>
             </h1>
           </div>
 
-          <h1
-            className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink"
-          >
+          <h1 className="text-4xl font-bold font-orbitron text-custom-pink text-glow-pink">
             <span className="text-custom-pink">{writeup.title}</span>
           </h1>
 
