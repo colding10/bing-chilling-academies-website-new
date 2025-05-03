@@ -256,6 +256,26 @@
     transition: color 0.3s ease;
   }
 
+  .table-of-contents a {
+    @apply block py-1 px-2 hover:bg-custom-blue/10 rounded transition-colors duration-200;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .table-of-contents a.active {
+    @apply bg-custom-blue/20 text-custom-blue;
+    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
+  }
+
+  .table-of-contents a:hover {
+    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
+  }
+
+  .table-of-contents a:focus {
+    outline: none;
+    background-color: rgba(32, 141, 214, 0.1);
+  }
+
   .table-of-contents a:hover {
     text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
   }
@@ -310,6 +330,54 @@
   .table-of-contents button:focus {
     outline: none;
     background-color: rgba(32, 141, 214, 0.1);
+  }
+
+  /* Improved styling for inline code blocks */
+  .inline-code, 
+  .writeup-content p code,
+  .writeup-content li code,
+  .writeup-content td code {
+    @apply bg-black bg-opacity-50 text-custom-blue px-2 py-0.5 rounded border border-custom-blue/20;
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 2px rgba(32, 141, 214, 0.4);
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Remove backticks from inline code if they somehow remain */
+  .writeup-content p code::before,
+  .writeup-content p code::after,
+  .writeup-content li code::before,
+  .writeup-content li code::after,
+  .writeup-content td code::before,
+  .writeup-content td code::after {
+    content: "" !important;
+    display: none !important;
+  }
+
+  /* Make sure copy buttons are visible and functional */
+  .copy-button {
+    @apply absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue/90 text-white rounded z-10 
+    hover:bg-custom-blue transition-colors;
+    display: block !important;
+    opacity: 0.8;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .copy-button:hover {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .copy-button.copied {
+    @apply bg-green-600;
+  }
+
+  /* Make sure code blocks are properly positioned for copy button */
+  .writeup-content pre {
+    position: relative !important;
+    padding-top: 2.5rem !important;
   }
 }
 
@@ -732,4 +800,28 @@ h3:hover {
   @apply absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue/90 text-white rounded z-10 
   hover:bg-custom-blue transition-colors opacity-100 visible;
   display: block !important;
+}
+
+/* Copy button state styles */
+.copy-button.copied {
+  @apply bg-green-600;
+}
+
+/* Add a class for TOC active items */
+.toc-item-active {
+  @apply bg-custom-blue/20 text-custom-blue !important;
+  text-shadow: 0 0 3px rgba(32, 141, 214, 0.4) !important;
+}
+
+/* Make sure TOC links are clickable */
+.table-of-contents a, 
+.table-of-contents button {
+  @apply block w-full cursor-pointer py-1 px-2;
+  pointer-events: auto !important;
+}
+
+/* Make TOC headings more visible when active */
+.writeup-heading.active {
+  @apply text-custom-blue;
+  text-shadow: 0 0 5px rgba(32, 141, 214, 0.4);
 }
