@@ -10,7 +10,6 @@ import remarkGfm from 'remark-gfm';
 export default function BlogPost({ post }) {
   // ...existing code
   const [copySuccess, setCopySuccess] = useState({});
-  const tocRef = useRef(null);
   const headingsRef = useRef([]);
 
   // Function to copy code to clipboard
@@ -45,18 +44,6 @@ export default function BlogPost({ post }) {
           
           // Add active class to current heading
           heading.classList.add('active-heading', 'active');
-          
-          // Highlight matching TOC item
-          if (tocRef.current) {
-            const tocItems = tocRef.current.querySelectorAll('a');
-            tocItems.forEach(item => {
-              item.classList.remove('active', 'toc-item-active');
-              if (item.getAttribute('href') === `#${heading.id}`) {
-                item.classList.add('active', 'toc-item-active');
-              }
-            });
-          }
-          
           break;
         }
       }
@@ -91,7 +78,7 @@ export default function BlogPost({ post }) {
   // ...existing code
   const renderers = {
     // ...existing renderers
-    code: ({ node, inline, className, children, ...props }) => {
+    code: ({ inline, className, children, ...props }) => {
       const match = /language-(\w+)/.exec(className || '');
       const language = match ? match[1] : '';
       const codeId = `code-${Math.random().toString(36).substr(2, 9)}`;
@@ -125,52 +112,13 @@ export default function BlogPost({ post }) {
   };
 
   // ...existing code
-
-  // Ensure TOC links work properly
-  const handleTocClick = (e, id) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 100,
-        behavior: 'smooth'
-      });
-      // Update URL hash without scrolling
-      history.pushState(null, null, `#${id}`);
-    }
-  };
-
-  // ...existing code
   
   return (
     // ...existing code
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Left sidebar - Table of Contents */}
-        <div className="hidden md:block md:col-span-3 lg:col-span-2">
-          <div className="sticky top-24">
-            <h4 className="text-custom-blue font-bold mb-2 font-orbitron">Contents</h4>
-            <nav className="table-of-contents" ref={tocRef}>
-              <ul className="space-y-1 text-sm">
-                {tableOfContents.map((item) => (
-                  <li key={item.id} className={`pl-${item.level * 2}`}>
-                    <a 
-                      href={`#${item.id}`}
-                      onClick={(e) => handleTocClick(e, item.id)}
-                      className={`block py-1 hover:bg-custom-blue/10 rounded transition-colors duration-200`}
-                    >
-                      {item.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        </div>
-        
+      <div className="grid grid-cols-1 gap-8">
         {/* Main content */}
-        <div className="md:col-span-9 lg:col-span-10">
-          {/* ...existing content... */}
+        <div>
           <div className="prose lg:prose-xl max-w-none writeup-content">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}

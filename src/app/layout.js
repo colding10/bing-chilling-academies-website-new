@@ -1,26 +1,24 @@
 "use client";
 import Prism from 'prismjs';
+import React, { useEffect } from 'react';
+// Import prism core and languages - these will be handled by webpack
 import 'prismjs/themes/prism-tomorrow.css';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-bash';
-import React from 'react';
 
 export default function RootLayout({ children }) {
-  React.useEffect(() => { Prism.highlightAll(); }, []);
+  useEffect(() => { 
+    Prism.highlightAll(); 
+  }, []);
 
   return (
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <link rel="stylesheet" href="styles.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+        <title>Bing Chilling Academies</title>
+        {/* Removed manual CSS/script tags since we're importing them via webpack */}
       </head>
       <body>
         {children}

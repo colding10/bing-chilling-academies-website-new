@@ -243,25 +243,25 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Single column layout that takes up full width */}
+      {/* Back button at the top, outside the card */}
+      <motion.div
+        initial={{ x: -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="mb-6"
+      >
+        <Link
+          href="/writeups"
+          className="cyber-button-small inline-flex items-center gap-2 group"
+        >
+          <FiArrowLeft className="group-hover:animate-pulse" />
+          <span>Back to writeups</span>
+        </Link>
+      </motion.div>
+
+      {/* Article content card */}
       <article className="cyber-card relative overflow-hidden w-full">
         <div className="absolute scanline opacity-20 pointer-events-none"></div>
-
-        {/* Back button at the top */}
-        <motion.div
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mb-6"
-        >
-          <Link
-            href="/writeups"
-            className="cyber-button-small inline-flex items-center gap-2 group"
-          >
-            <FiArrowLeft className="group-hover:animate-pulse" />
-            <span>Back to writeups</span>
-          </Link>
-        </motion.div>
 
         <motion.div
           className="mb-8"
