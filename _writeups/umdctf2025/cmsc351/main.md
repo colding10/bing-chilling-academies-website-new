@@ -52,7 +52,7 @@ __int64 __fastcall main(int a1, char **a2, char **a3)
 
 from this, we can tell that it reads some input (up to len 25), then feeds it into `sub_79F0`. if we get a nonzero return value, we get the flag!
 
-*yay easy to understand!*
+_yay easy to understand!_
 
 ## dissassemble sub_79F0
 
@@ -119,10 +119,10 @@ def brute_force():
         with Pool(cpu_count()) as pool:
             # Generate all possible sequences of current length
             sequences = (''.join(p) for p in itertools.product('st', repeat=length))
-            
+
             # Test sequences in parallel
             results = pool.imap_unordered(test_sequence, sequences, chunksize=1000)
-            
+
             for result in results:
                 if result is not None:
                     print(f"Found valid sequence: {result}")
@@ -172,6 +172,6 @@ and the flag is
 
 ## KISSKIDS
 
-i think this chall could also be solved with **angr**, but I live by the acronym **KISSKIDS* (keep it simple, stupid + kuz i dont know shit)
+i think this chall could also be solved with **angr**, but I live by the acronym \*_KISSKIDS_ (keep it simple, stupid + kuz i dont know shit)
 
 and always go for the simplest and more straightforwards solution :P
