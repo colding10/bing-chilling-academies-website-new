@@ -144,7 +144,7 @@ i was planning to write something up, using some cool bitmaps, blah blah blah, b
 
 this finishes pretty quickly (~1 minute on my i5 Linux machine) and gets us the sequence:
 
-```zsh
+```bash
 time python3 solve.py
 Trying length 1...
 Trying length 2...
@@ -172,6 +172,6 @@ and the flag is
 
 ## KISSKIDS
 
-i think this chall could also be solved with **angr**, but I live by the acronym \*_KISSKIDS_ (keep it simple, stupid + kuz i dont know shit)
+i think this chall could also be solved with **angr**, but I live by the acronym _KISSKIDS_ (keep it simple, stupid + kuz i dont know shit)
 
 and always go for the simplest and more straightforwards solution :P
