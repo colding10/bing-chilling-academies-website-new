@@ -82,7 +82,7 @@ export default function WriteupsPage() {
 
   // Cache key for session storage
   const CACHE_KEY = "writeups-data"
-  const CACHE_EXPIRY = 30 * 60 * 1000 // 30 minutes in milliseconds
+  const CACHE_EXPIRY = 0 // disable session cache to always fetch fresh writeups
 
   useEffect(() => {
     const fetchWriteups = async () => {

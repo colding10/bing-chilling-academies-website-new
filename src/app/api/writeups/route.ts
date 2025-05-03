@@ -18,8 +18,7 @@ export async function GET() {
     if (cachedWriteups && now - lastCacheTime < CACHE_DURATION) {
       return NextResponse.json(cachedWriteups, {
         headers: {
-          "Cache-Control":
-            "public, s-maxage=3600, stale-while-revalidate=86400",
+          "Cache-Control": "no-store",
         },
       })
     }
@@ -33,7 +32,7 @@ export async function GET() {
 
     return NextResponse.json(writeups, {
       headers: {
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        "Cache-Control": "no-store",
       },
     })
   } catch (error) {
