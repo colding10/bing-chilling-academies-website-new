@@ -71,6 +71,10 @@ const WriteupCard = memo(
 
 WriteupCard.displayName = "WriteupCard"
 
+// Cache configuration
+const CACHE_KEY = "writeups-data"
+const CACHE_EXPIRY = 5 * 60 * 1000  // 5 minutes
+
 export default function WriteupsPage() {
   const [writeups, setWriteups] = useState<WriteupMetadata[]>([])
   const [search, setSearch] = useState("")
@@ -80,12 +84,12 @@ export default function WriteupsPage() {
   const [filterOpen, setFilterOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Cache key for session storage
-  const CACHE_KEY = "writeups-data"
-  const CACHE_EXPIRY = 0 // disable session cache to always fetch fresh writeups
-
+  // Custom debounce hook for search input 
+  const debouncedSearch = useDebounce(search, 300);
+  
+  // Fetch writeups with caching and retry logic
   useEffect(() => {
-    const fetchWriteups = async () => {
+    const fetchWriteups = async (retryCount = 2) => {
       // Try to get from sessionStorage first
       if (typeof window !== "undefined") {
         try {
@@ -115,6 +119,9 @@ export default function WriteupsPage() {
         setLoading(true)
         const response = await fetch("/api/writeups", {
           next: { revalidate: 3600 }, // Revalidate every hour
+          headers: {
+            'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+          }
         })
 
         if (!response.ok) {
@@ -126,7 +133,9 @@ export default function WriteupsPage() {
         // Extract all unique tags in one pass for better performance
         const uniqueTags = new Set<string>()
         data.forEach((w: WriteupMetadata) => {
-          w.tags.forEach((tag) => uniqueTags.add(tag))
+          if (Array.isArray(w.tags)) {
+            w.tags.forEach((tag) => uniqueTags.add(tag))
+          }
         })
 
         const tags = Array.from(uniqueTags).sort()
@@ -153,6 +162,14 @@ export default function WriteupsPage() {
         setError(null)
       } catch (error) {
         console.error("Error fetching writeups:", error)
+        
+        // Retry logic with exponential backoff
+        if (retryCount > 0) {
+          console.log(`Retrying fetch after error... (${retryCount} retries left)`)
+          setTimeout(() => fetchWriteups(retryCount - 1), 1000)
+          return
+        }
+        
         setError("Failed to load writeups. Please try again later.")
       } finally {
         setLoading(false)
@@ -160,20 +177,20 @@ export default function WriteupsPage() {
     }
 
     fetchWriteups()
-  }, [CACHE_EXPIRY])
+  }, [])
 
   // Memoize filtered writeups to avoid recomputing on every render
   const filteredWriteups = useMemo(() => {
     return (
       writeups
         .filter((writeup) => {
-          // Search through all relevant fields
+          // Search through all relevant fields with debounced search value
           const matchesSearch =
-            search === "" ||
-            writeup.title.toLowerCase().includes(search.toLowerCase()) ||
-            writeup.ctfName.toLowerCase().includes(search.toLowerCase()) ||
-            writeup.description.toLowerCase().includes(search.toLowerCase()) ||
-            writeup.author.toLowerCase().includes(search.toLowerCase())
+            debouncedSearch === "" ||
+            writeup.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            writeup.ctfName.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            writeup.description.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            writeup.author.toLowerCase().includes(debouncedSearch.toLowerCase())
 
           // Check if writeup has any of the selected tags
           const matchesTags =
@@ -185,7 +202,7 @@ export default function WriteupsPage() {
         // Sort by date (newest first)
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     )
-  }, [writeups, search, selectedTags])
+  }, [writeups, debouncedSearch, selectedTags])
 
   // Use callback for tag toggle handler to prevent recreating on every render
   const handleTagToggle = useCallback((tag: string) => {
@@ -373,7 +390,7 @@ export default function WriteupsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
+                transition={{ delay: Math.min(index * 0.05, 0.5), duration: 0.4 }}
                 layout
               >
                 <WriteupCard writeup={writeup} selectedTags={selectedTags} />
@@ -408,4 +425,21 @@ export default function WriteupsPage() {
       </motion.div>
     </div>
   )
+}
+
+// Custom hook for debouncing search input
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, memo } from "react"
+import { useEffect, useRef, memo, useState, useCallback } from "react"
 
 interface MatrixRainBackgroundProps {
   opacity?: number
@@ -19,123 +19,180 @@ const MatrixRainBackground = memo(
   }
 )
 
+// Configuration for matrix rain
+const MATRIX_CONFIG = {
+  fontSize: 14,
+  charSet: "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
+  colors: [
+    "rgba(0, 255, 249, 0.8)", // Bright teal
+    "rgba(0, 200, 190, 0.8)", // Medium teal
+    "rgba(0, 150, 140, 0.7)", // Dark teal
+  ],
+  mobileFrameDelay: 50, // ms between frames on mobile (20 FPS)
+  desktopFrameDelay: 33, // ms between frames on desktop (30 FPS)
+  mobileFadeOpacity: 0.1,
+  desktopFadeOpacity: 0.05,
+  dropResetProbability: 0.975, // Probability threshold to reset a drop
+  maxColumns: 500, // Prevent excessive columns on very wide screens
+}
+
 // Separate component that always uses hooks
 const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationRef = useRef<number | null>(null)
-
-  useEffect(() => {
+  const dropsRef = useRef<number[]>([])
+  const [isMounted, setIsMounted] = useState(false)
+  
+  // Detect mobile once on mount
+  const isMobile = useRef(
+    typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+  )
+  
+  // Create memoized draw function to prevent recreating on each render
+  const createDrawFunction = useCallback(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    // Set initial canvas size
-    const updateCanvasSize = () => {
-      if (!canvas) return
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-    updateCanvasSize()
-
-    // Character set for matrix rain
-    const chars =
-      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
-    const charArray = chars.split("")
-    const fontSize = 14
-    const columns = Math.floor(window.innerWidth / fontSize)
-    const drops: number[] = new Array(columns).fill(1)
-
-    // Check for mobile device to optimize performance
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-
-    // Frame rate control for better performance
-    const frameDelay = isMobile ? 50 : 33 // Fewer frames on mobile
-    let lastFrameTime = 0
-
-    // Draw frame with performance optimizations
-    function draw() {
-      if (!ctx || !canvas) return
-
+    if (!canvas) return () => {}
+    
+    const ctx = canvas.getContext('2d', { alpha: true })
+    if (!ctx) return () => {}
+    
+    const { fontSize, colors } = MATRIX_CONFIG
+    const charArray = MATRIX_CONFIG.charSet.split('')
+    const fadeOpacity = isMobile.current ? MATRIX_CONFIG.mobileFadeOpacity : MATRIX_CONFIG.desktopFadeOpacity
+    
+    // Pre-allocate variables outside the draw loop
+    let text: string
+    let colorIndex: number
+    const drops = dropsRef.current
+    
+    return function draw() {
       // Semi-transparent black to create fade effect
-      ctx.fillStyle = `rgba(0, 0, 0, ${isMobile ? 0.1 : 0.05})`
+      ctx.fillStyle = `rgba(0, 0, 0, ${fadeOpacity})`
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       // Set text properties once outside the loop
       ctx.font = `${fontSize}px monospace`
-
-      // Use fewer colors for better performance
-      const colors = [
-        "rgba(0, 255, 249, 0.8)", // Bright teal
-        "rgba(0, 200, 190, 0.8)", // Medium teal
-        "rgba(0, 150, 140, 0.7)", // Dark teal
-      ]
-
+      
       for (let i = 0; i < drops.length; i++) {
         // Select a random character from the array
-        const text = charArray[Math.floor(Math.random() * charArray.length)]
+        text = charArray[Math.floor(Math.random() * charArray.length)]
 
-        // Select a color based on position (creates a subtle effect)
-        const colorIndex = Math.floor(
-          (drops[i] / canvas.height) * colors.length
-        )
+        // Select a color based on position
+        colorIndex = Math.floor((drops[i] / canvas.height) * colors.length)
         ctx.fillStyle = colors[colorIndex] || colors[0]
 
         // Draw the character
         ctx.fillText(text, i * fontSize, drops[i] * fontSize)
 
         // Reset when a column reaches the bottom with some randomness
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (drops[i] * fontSize > canvas.height && Math.random() > MATRIX_CONFIG.dropResetProbability) {
           drops[i] = 0
         }
 
         drops[i]++
       }
     }
+  }, [])
 
-    // Handle window resize
-    const handleResize = () => {
-      updateCanvasSize()
-
-      // Adjust the number of drops based on new width
-      const newColumns = Math.floor(window.innerWidth / fontSize)
-
-      // Expand if needed
-      if (newColumns > drops.length) {
-        drops.push(...new Array(newColumns - drops.length).fill(1))
-      } else {
-        // Truncate the array
-        drops.length = newColumns
-      }
+  // Resize handler is separate and memoized
+  const handleResize = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    
+    const { fontSize, maxColumns } = MATRIX_CONFIG
+    
+    // Update canvas size with devicePixelRatio for sharper rendering on high-DPI screens
+    const dpr = window.devicePixelRatio || 1
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
+    
+    // Scale the canvas back down with CSS
+    canvas.style.width = `${window.innerWidth}px`
+    canvas.style.height = `${window.innerHeight}px`
+    
+    // Scale the context to match
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      ctx.scale(dpr, dpr)
     }
+    
+    // Calculate columns based on visible width
+    const newColumns = Math.min(
+      Math.floor(window.innerWidth / fontSize),
+      maxColumns
+    )
+    
+    // Get the current drops array
+    const drops = dropsRef.current
+    
+    // Resize the drops array efficiently
+    if (newColumns > drops.length) {
+      // Add new drops
+      const newDrops = new Array(newColumns - drops.length).fill(1)
+      dropsRef.current = [...drops, ...newDrops]
+    } else if (newColumns < drops.length) {
+      // Remove extra drops
+      dropsRef.current = drops.slice(0, newColumns)
+    }
+  }, [])
 
-    // Animation loop with frame rate limiting for better performance
-    function animate(currentTime: number) {
+  // Setup animation loop with proper timing controls
+  useEffect(() => {
+    if (!canvasRef.current) return
+    
+    setIsMounted(true)
+    const frameDelay = isMobile.current 
+      ? MATRIX_CONFIG.mobileFrameDelay 
+      : MATRIX_CONFIG.desktopFrameDelay
+    
+    // Initialize drops array if empty
+    if (dropsRef.current.length === 0) {
+      const { fontSize, maxColumns } = MATRIX_CONFIG
+      const columns = Math.min(
+        Math.floor(window.innerWidth / fontSize),
+        maxColumns
+      )
+      dropsRef.current = new Array(columns).fill(1)
+    }
+    
+    // Create the draw function
+    const draw = createDrawFunction()
+    let lastFrameTime = 0
+    
+    // Animation loop with efficient frame timing
+    const animate = (currentTime: number) => {
+      if (!isMounted) return
+      
       animationRef.current = requestAnimationFrame(animate)
-
+      
       // Only draw if enough time has passed since the last frame
       if (currentTime - lastFrameTime >= frameDelay) {
         draw()
         lastFrameTime = currentTime
       }
     }
-
+    
+    // Handle initial resize
+    handleResize()
+    
     // Start the animation
     animationRef.current = requestAnimationFrame(animate)
-
-    // Add resize listener
-    window.addEventListener("resize", handleResize)
-
+    
+    // Add resize listener with passive flag for better performance
+    window.addEventListener("resize", handleResize, { passive: true })
+    
     // Cleanup function to prevent memory leaks
     return () => {
+      setIsMounted(false)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
         animationRef.current = null
       }
       window.removeEventListener("resize", handleResize)
+      // Clear references to free memory
+      dropsRef.current = []
     }
-  }, [opacity])
+  }, [createDrawFunction, handleResize, isMounted])
 
   return (
     <canvas

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { FiCalendar, FiUser, FiTag, FiArrowLeft } from "react-icons/fi"
@@ -14,6 +14,11 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const contentRef = useRef<HTMLDivElement>(null)
+  
+  // Convert path once
+  const writeupPath = useMemo(() => 
+    Array.isArray(params.id) ? params.id.join("/") : params.id
+  , [params.id])
 
   // Enhance code blocks with syntax highlighting and fix copy functionality
   const enhanceCodeBlocks = useCallback(() => {
@@ -131,13 +136,19 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
     }
   }, [])
 
-  // Fetch writeup data
+  // Fetch writeup data with proper error handling and retries
   useEffect(() => {
-    const fetchWriteup = async () => {
+    const fetchWriteup = async (retries = 3) => {
       try {
         setLoading(true)
-        const path = Array.isArray(params.id) ? params.id.join("/") : params.id
-        const response = await fetch(`/api/writeups/${path}`)
+        
+        // Use caching headers to leverage browser cache
+        const response = await fetch(`/api/writeups/${writeupPath}`, {
+          cache: 'force-cache',
+          headers: {
+            'Cache-Control': 'max-age=3600',
+          }
+        })
 
         if (!response.ok) {
           throw new Error(`Failed to fetch writeup: ${response.status}`)
@@ -145,28 +156,39 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
 
         const data = await response.json()
         setWriteup(data)
+        setError(null)
       } catch (err) {
         console.error("Error fetching writeup:", err)
-        setError("Failed to load writeup. Please try again later.")
+        
+        // Retry logic with exponential backoff
+        if (retries > 0) {
+          const delay = 1000 * (3 - retries);
+          console.log(`Retrying fetch in ${delay}ms, ${retries} retries left`);
+          setTimeout(() => fetchWriteup(retries - 1), delay);
+        } else {
+          setError("Failed to load writeup. Please try again later.")
+        }
       } finally {
         setLoading(false)
       }
     }
 
     fetchWriteup()
-  }, [params.id])
+  }, [writeupPath])
 
-  // Enhance code blocks when content is loaded
+  // Enhance code blocks when content is loaded with debounce
   useEffect(() => {
     if (writeup && contentRef.current) {
-      // Wait for the content to be fully rendered
-      setTimeout(() => {
+      // Debounce to ensure content is fully rendered
+      const timerId = setTimeout(() => {
         enhanceCodeBlocks()
       }, 200)
+      
+      return () => clearTimeout(timerId)
     }
   }, [writeup, enhanceCodeBlocks])
 
-  // Fix any broken or missing images
+  // Fix any broken or missing images with proper error handling
   useEffect(() => {
     if (!contentRef.current) return
 
@@ -178,9 +200,40 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         img.setAttribute("alt", "Image not found")
       }
     })
+
+    // Create the IntersectionObserver for lazy loading if browser supports it
+    if ('IntersectionObserver' in window) {
+      const lazyImages = contentRef.current.querySelectorAll('img:not([loading="lazy"])')
+      
+      const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const image = entry.target as HTMLImageElement
+            
+            // Set loading attribute and original src
+            if (image.dataset.src) {
+              image.src = image.dataset.src
+              delete image.dataset.src
+            }
+            
+            // Stop observing after loading
+            imageObserver.unobserve(image)
+          }
+        })
+      })
+      
+      lazyImages.forEach((img) => {
+        if (!img.hasAttribute('loading')) {
+          img.setAttribute('loading', 'lazy')
+          imageObserver.observe(img)
+        }
+      })
+      
+      return () => imageObserver.disconnect()
+    }
   }, [writeup])
 
-  // Loading state
+  // Loading state with better animation
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[70vh] pt-8">
