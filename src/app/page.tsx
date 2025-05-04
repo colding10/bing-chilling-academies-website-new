@@ -26,7 +26,7 @@ interface StatCardProps {
 const StatCard = memo(
   ({ label, value, color, icon: Icon, href }: StatCardProps) => {
     const card = (
-      <HologramCard className="hover:scale-[1.03] transition-all duration-300 h-full">
+      <HologramCard className="hover:scale-[1.03] transition-all duration-300 h-full bg-custom-black/70">
         <div className="flex items-center justify-between mb-6">
           <Icon className={`w-10 h-10 ${color}`} />
           <span className={`text-3xl font-orbitron ${color}`}>{value}</span>

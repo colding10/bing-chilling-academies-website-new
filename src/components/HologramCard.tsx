@@ -34,7 +34,7 @@ export default memo(function HologramCard({
 
   return (
     <motion.div
-      className={`relative overflow-hidden bg-custom-black/30 border border-custom-blue/30 
+      className={`relative overflow-hidden bg-custom-black/60 border border-custom-blue/30 
       rounded-lg backdrop-blur-sm ${className}`}
       onMouseMove={handleMouseMove}
       style={gradientStyle}

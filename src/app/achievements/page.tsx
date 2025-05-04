@@ -23,7 +23,7 @@ const StatCard = memo(({ label, value, color, icon: Icon }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-custom-black/30 border border-custom-blue/20 rounded-lg p-6 hover:border-custom-blue/60 transition-all"
+    className="bg-custom-black/60 border border-custom-blue/20 rounded-lg p-6 hover:border-custom-blue/60 transition-all relative z-10"
   >
     <div className="flex items-center justify-between mb-4">
       <Icon className={`w-8 h-8 ${color}`} />
@@ -375,15 +375,15 @@ export default function Achievements() {
           {/* Search Bar */}
           <div className="w-full max-w-md">
             <div className="relative">
-              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-custom-blue/50" />
+              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-custom-blue/60" />
               <input
                 type="text"
                 placeholder="Search events..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-black/20 border border-custom-blue/30 
+                className="w-full pl-10 pr-4 py-2 bg-black/60 border border-custom-blue/60 
                   rounded-lg focus:border-custom-blue/60 focus:outline-none text-white
-                  placeholder:text-custom-blue/50 transition-colors font-play"
+                  placeholder:text-custom-blue/60 transition-colors font-play"
               />
             </div>
           </div>
@@ -396,8 +396,8 @@ export default function Achievements() {
                 onClick={() => setSelectedYear(year)}
                 className={`px-4 py-2 rounded-lg transition-all ${
                   selectedYear === year
-                    ? "bg-custom-blue text-black font-medium"
-                    : "border border-custom-blue/50 text-custom-blue hover:border-custom-blue"
+                    ? "bg-custom-blue/60 text-black font-medium opacity-60"
+                    : "border border-custom-blue/60 text-custom-blue hover:border-custom-blue bg-black/60"
                 }`}
               >
                 {year === "all" ? "All Years" : year}
@@ -429,7 +429,7 @@ export default function Achievements() {
         <div className="overflow-x-auto rounded-lg border border-custom-blue/20">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="text-left border-b-2 border-custom-blue/30 bg-custom-black/30">
+              <tr className="text-left border-b-2 border-custom-blue/30 bg-custom-black/70">
                 <th
                   onClick={() => handleSort("event")}
                   className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink transition-colors"
@@ -467,9 +467,10 @@ export default function Achievements() {
                 <motion.tr
                   key={achievement.event}
                   initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  animate={{ opacity: 0.7, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="border-b border-custom-blue/10 hover:bg-custom-blue/5 transition-colors"
+                  className="border-b border-custom-blue/10 hover:bg-custom-blue/5 transition-colors bg-custom-black/60"
+                  style={{ opacity: 0.7 }}
                 >
                   <td className="py-4 px-6 font-play">
                     <a
