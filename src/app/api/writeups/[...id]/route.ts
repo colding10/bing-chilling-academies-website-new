@@ -12,20 +12,20 @@ import { unstable_noStore as noStore } from "next/cache"
 
 // Properly typed cache for better type safety
 interface CacheEntry {
-  data: Record<string, unknown>;
-  timestamp: number;
+  data: Record<string, unknown>
+  timestamp: number
 }
 
 // In-memory cache to avoid repeated filesystem reads and markdown processing
-const writeupCache = new Map<string, CacheEntry>();
+const writeupCache = new Map<string, CacheEntry>()
 const CACHE_DURATION = 1000 * 60 * 30 // 30 minutes
 
 // Process markdown to HTML with syntax highlighting
 async function processMarkdown(content: string): Promise<string> {
   // Return empty string for empty content to avoid processing errors
-  if (!content || content.trim() === '') {
-    console.warn("Received empty content for markdown processing");
-    return '';
+  if (!content || content.trim() === "") {
+    console.warn("Received empty content for markdown processing")
+    return ""
   }
 
   try {
@@ -33,17 +33,17 @@ async function processMarkdown(content: string): Promise<string> {
     const sanitizedContent = content
       .replace(/\u200B/g, "") // Zero-width space
       .replace(/\uFEFF/g, "") // BOM
-      .replace(/�/g, "");     // Replacement character
+      .replace(/�/g, "") // Replacement character
 
     // Handle problematic special characters in code blocks with better regex
     const fixedCodeBlocks = sanitizedContent.replace(
       /```(.*?)(?:\r?\n)([\s\S]*?)```/g,
       (match, language, code) => {
         // Normalize line endings and trim trailing whitespace
-        const normalizedCode = code.trim().replace(/\r\n/g, '\n');
-        return `\`\`\`${language || ""}\n${normalizedCode}\n\`\`\``;
+        const normalizedCode = code.trim().replace(/\r\n/g, "\n")
+        return `\`\`\`${language || ""}\n${normalizedCode}\n\`\`\``
       }
-    );
+    )
 
     // Primary processing pipeline with unified/remark ecosystem
     const result = await remark()
@@ -54,11 +54,11 @@ async function processMarkdown(content: string): Promise<string> {
       .use(rehypePrism)
       .use(rehypeSlug)
       .use(rehypeStringify)
-      .process(fixedCodeBlocks);
+      .process(fixedCodeBlocks)
 
-    return result.toString();
+    return result.toString()
   } catch (error) {
-    console.error("Error in primary markdown processing:", error);
+    console.error("Error in primary markdown processing:", error)
 
     // Fallback to simpler processing chain if the full one fails
     try {
@@ -67,11 +67,11 @@ async function processMarkdown(content: string): Promise<string> {
         .use(remarkRehype, { allowDangerousHtml: true })
         .use(rehypeRaw)
         .use(rehypeStringify)
-        .process(content);
+        .process(content)
 
-      return simpleResult.toString();
+      return simpleResult.toString()
     } catch (fallbackError) {
-      console.error("Fallback markdown processing failed:", fallbackError);
+      console.error("Fallback markdown processing failed:", fallbackError)
 
       // Last resort - convert markdown manually for basic formatting
       try {
@@ -92,13 +92,13 @@ async function processMarkdown(content: string): Promise<string> {
           .replace(/!\[(.*?)\]\((.*?)\)/g, '<img alt="$1" src="$2" />')
           .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
           // Line breaks - only convert actual line breaks, not within code blocks
-          .replace(/\n(?!<\/code>)/g, "<br />");
+          .replace(/\n(?!<\/code>)/g, "<br />")
 
-        return manuallyProcessed;
+        return manuallyProcessed
       } catch (manualError) {
-        console.error("Manual markdown processing failed:", manualError);
+        console.error("Manual markdown processing failed:", manualError)
         // Return the original content wrapped in a pre tag as absolute last resort
-        return `<pre>${content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>`;
+        return `<pre>${content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>`
       }
     }
   }
@@ -109,63 +109,60 @@ export async function GET(
   { params }: { params: { id: string[] } }
 ) {
   // Prevent caching at the Next.js level for dynamic content
-  noStore();
+  noStore()
 
   try {
     // Convert the params to a path with proper validation
     if (!params.id || !Array.isArray(params.id) || params.id.length === 0) {
-      return NextResponse.json(
-        { error: "Invalid writeup ID" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid writeup ID" }, { status: 400 })
     }
-    
-    const path = params.id.join("/");
+
+    const path = params.id.join("/")
 
     // Check cache first
-    const now = Date.now();
-    const cachedData = writeupCache.get(path);
-    const isCacheValid = cachedData && (now - cachedData.timestamp < CACHE_DURATION);
+    const now = Date.now()
+    const cachedData = writeupCache.get(path)
+    const isCacheValid =
+      cachedData && now - cachedData.timestamp < CACHE_DURATION
 
     if (isCacheValid) {
       // Return cached data with proper headers
       return NextResponse.json(cachedData.data, {
         headers: {
-          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+          "Cache-Control":
+            "public, s-maxage=3600, stale-while-revalidate=86400",
           "Content-Type": "application/json",
         },
-      });
+      })
     }
 
     // Fetch fresh data
-    const writeup = await getWriteupData(path);
+    const writeup = await getWriteupData(path)
 
     if (!writeup) {
-      return NextResponse.json(
-        { error: "Writeup not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Writeup not found" }, { status: 404 })
     }
 
     // Ensure content is a string before processing
-    const contentToProcess = typeof writeup.content === "string"
-      ? writeup.content
-      : String(writeup.content || "");
+    const contentToProcess =
+      typeof writeup.content === "string"
+        ? writeup.content
+        : String(writeup.content || "")
 
     // Process markdown content to HTML
-    const processedContent = await processMarkdown(contentToProcess);
+    const processedContent = await processMarkdown(contentToProcess)
 
     // Create a new writeup object with processed content
     const processedWriteup = {
       ...writeup,
       content: processedContent,
-    };
+    }
 
     // Update cache
     writeupCache.set(path, {
       data: processedWriteup,
-      timestamp: now
-    });
+      timestamp: now,
+    })
 
     // Return the writeup with caching headers
     return NextResponse.json(processedWriteup, {
@@ -173,21 +170,21 @@ export async function GET(
         "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
         "Content-Type": "application/json",
       },
-    });
+    })
   } catch (error) {
-    console.error("Error processing writeup:", error);
+    console.error("Error processing writeup:", error)
     return NextResponse.json(
-      { 
-        error: "Failed to process writeup", 
-        details: (error as Error).message 
+      {
+        error: "Failed to process writeup",
+        details: (error as Error).message,
       },
-      { 
+      {
         status: 500,
         headers: {
           "Cache-Control": "no-store",
-          "Content-Type": "application/json" 
-        }
+          "Content-Type": "application/json",
+        },
       }
-    );
+    )
   }
 }

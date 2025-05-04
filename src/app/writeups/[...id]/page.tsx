@@ -14,11 +14,12 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  
+
   // Convert path once
-  const writeupPath = useMemo(() => 
-    Array.isArray(params.id) ? params.id.join("/") : params.id
-  , [params.id])
+  const writeupPath = useMemo(
+    () => (Array.isArray(params.id) ? params.id.join("/") : params.id),
+    [params.id]
+  )
 
   // Enhance code blocks with syntax highlighting and fix copy functionality
   const enhanceCodeBlocks = useCallback(() => {
@@ -141,13 +142,13 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
     const fetchWriteup = async (retries = 3) => {
       try {
         setLoading(true)
-        
+
         // Use caching headers to leverage browser cache
         const response = await fetch(`/api/writeups/${writeupPath}`, {
-          cache: 'force-cache',
+          cache: "force-cache",
           headers: {
-            'Cache-Control': 'max-age=3600',
-          }
+            "Cache-Control": "max-age=3600",
+          },
         })
 
         if (!response.ok) {
@@ -159,12 +160,12 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         setError(null)
       } catch (err) {
         console.error("Error fetching writeup:", err)
-        
+
         // Retry logic with exponential backoff
         if (retries > 0) {
-          const delay = 1000 * (3 - retries);
-          console.log(`Retrying fetch in ${delay}ms, ${retries} retries left`);
-          setTimeout(() => fetchWriteup(retries - 1), delay);
+          const delay = 1000 * (3 - retries)
+          console.log(`Retrying fetch in ${delay}ms, ${retries} retries left`)
+          setTimeout(() => fetchWriteup(retries - 1), delay)
         } else {
           setError("Failed to load writeup. Please try again later.")
         }
@@ -183,7 +184,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       const timerId = setTimeout(() => {
         enhanceCodeBlocks()
       }, 200)
-      
+
       return () => clearTimeout(timerId)
     }
   }, [writeup, enhanceCodeBlocks])
@@ -202,33 +203,35 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
     })
 
     // Create the IntersectionObserver for lazy loading if browser supports it
-    if ('IntersectionObserver' in window) {
-      const lazyImages = contentRef.current.querySelectorAll('img:not([loading="lazy"])')
-      
+    if ("IntersectionObserver" in window) {
+      const lazyImages = contentRef.current.querySelectorAll(
+        'img:not([loading="lazy"])'
+      )
+
       const imageObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const image = entry.target as HTMLImageElement
-            
+
             // Set loading attribute and original src
             if (image.dataset.src) {
               image.src = image.dataset.src
               delete image.dataset.src
             }
-            
+
             // Stop observing after loading
             imageObserver.unobserve(image)
           }
         })
       })
-      
+
       lazyImages.forEach((img) => {
-        if (!img.hasAttribute('loading')) {
-          img.setAttribute('loading', 'lazy')
+        if (!img.hasAttribute("loading")) {
+          img.setAttribute("loading", "lazy")
           imageObserver.observe(img)
         }
       })
-      
+
       return () => imageObserver.disconnect()
     }
   }, [writeup])

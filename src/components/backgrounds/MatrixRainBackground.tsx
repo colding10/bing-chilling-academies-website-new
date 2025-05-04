@@ -22,7 +22,8 @@ const MatrixRainBackground = memo(
 // Configuration for matrix rain
 const MATRIX_CONFIG = {
   fontSize: 14,
-  charSet: "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
+  charSet:
+    "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
   colors: [
     "rgba(0, 255, 249, 0.8)", // Bright teal
     "rgba(0, 200, 190, 0.8)", // Medium teal
@@ -42,29 +43,32 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
   const animationRef = useRef<number | null>(null)
   const dropsRef = useRef<number[]>([])
   const [isMounted, setIsMounted] = useState(false)
-  
+
   // Detect mobile once on mount
   const isMobile = useRef(
-    typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    typeof navigator !== "undefined" &&
+      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
   )
-  
+
   // Create memoized draw function to prevent recreating on each render
   const createDrawFunction = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return () => {}
-    
-    const ctx = canvas.getContext('2d', { alpha: true })
+
+    const ctx = canvas.getContext("2d", { alpha: true })
     if (!ctx) return () => {}
-    
+
     const { fontSize, colors } = MATRIX_CONFIG
-    const charArray = MATRIX_CONFIG.charSet.split('')
-    const fadeOpacity = isMobile.current ? MATRIX_CONFIG.mobileFadeOpacity : MATRIX_CONFIG.desktopFadeOpacity
-    
+    const charArray = MATRIX_CONFIG.charSet.split("")
+    const fadeOpacity = isMobile.current
+      ? MATRIX_CONFIG.mobileFadeOpacity
+      : MATRIX_CONFIG.desktopFadeOpacity
+
     // Pre-allocate variables outside the draw loop
     let text: string
     let colorIndex: number
     const drops = dropsRef.current
-    
+
     return function draw() {
       // Semi-transparent black to create fade effect
       ctx.fillStyle = `rgba(0, 0, 0, ${fadeOpacity})`
@@ -72,7 +76,7 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
 
       // Set text properties once outside the loop
       ctx.font = `${fontSize}px monospace`
-      
+
       for (let i = 0; i < drops.length; i++) {
         // Select a random character from the array
         text = charArray[Math.floor(Math.random() * charArray.length)]
@@ -85,7 +89,10 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
         ctx.fillText(text, i * fontSize, drops[i] * fontSize)
 
         // Reset when a column reaches the bottom with some randomness
-        if (drops[i] * fontSize > canvas.height && Math.random() > MATRIX_CONFIG.dropResetProbability) {
+        if (
+          drops[i] * fontSize > canvas.height &&
+          Math.random() > MATRIX_CONFIG.dropResetProbability
+        ) {
           drops[i] = 0
         }
 
@@ -98,33 +105,33 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    
+
     const { fontSize, maxColumns } = MATRIX_CONFIG
-    
+
     // Update canvas size with devicePixelRatio for sharper rendering on high-DPI screens
     const dpr = window.devicePixelRatio || 1
     canvas.width = window.innerWidth * dpr
     canvas.height = window.innerHeight * dpr
-    
+
     // Scale the canvas back down with CSS
     canvas.style.width = `${window.innerWidth}px`
     canvas.style.height = `${window.innerHeight}px`
-    
+
     // Scale the context to match
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext("2d")
     if (ctx) {
       ctx.scale(dpr, dpr)
     }
-    
+
     // Calculate columns based on visible width
     const newColumns = Math.min(
       Math.floor(window.innerWidth / fontSize),
       maxColumns
     )
-    
+
     // Get the current drops array
     const drops = dropsRef.current
-    
+
     // Resize the drops array efficiently
     if (newColumns > drops.length) {
       // Add new drops
@@ -139,12 +146,12 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
   // Setup animation loop with proper timing controls
   useEffect(() => {
     if (!canvasRef.current) return
-    
+
     setIsMounted(true)
-    const frameDelay = isMobile.current 
-      ? MATRIX_CONFIG.mobileFrameDelay 
+    const frameDelay = isMobile.current
+      ? MATRIX_CONFIG.mobileFrameDelay
       : MATRIX_CONFIG.desktopFrameDelay
-    
+
     // Initialize drops array if empty
     if (dropsRef.current.length === 0) {
       const { fontSize, maxColumns } = MATRIX_CONFIG
@@ -154,33 +161,33 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
       )
       dropsRef.current = new Array(columns).fill(1)
     }
-    
+
     // Create the draw function
     const draw = createDrawFunction()
     let lastFrameTime = 0
-    
+
     // Animation loop with efficient frame timing
     const animate = (currentTime: number) => {
       if (!isMounted) return
-      
+
       animationRef.current = requestAnimationFrame(animate)
-      
+
       // Only draw if enough time has passed since the last frame
       if (currentTime - lastFrameTime >= frameDelay) {
         draw()
         lastFrameTime = currentTime
       }
     }
-    
+
     // Handle initial resize
     handleResize()
-    
+
     // Start the animation
     animationRef.current = requestAnimationFrame(animate)
-    
+
     // Add resize listener with passive flag for better performance
     window.addEventListener("resize", handleResize, { passive: true })
-    
+
     // Cleanup function to prevent memory leaks
     return () => {
       setIsMounted(false)

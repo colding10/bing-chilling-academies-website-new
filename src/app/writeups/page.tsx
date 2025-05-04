@@ -73,7 +73,7 @@ WriteupCard.displayName = "WriteupCard"
 
 // Cache configuration
 const CACHE_KEY = "writeups-data"
-const CACHE_EXPIRY = 5 * 60 * 1000  // 5 minutes
+const CACHE_EXPIRY = 5 * 60 * 1000 // 5 minutes
 
 export default function WriteupsPage() {
   const [writeups, setWriteups] = useState<WriteupMetadata[]>([])
@@ -84,9 +84,9 @@ export default function WriteupsPage() {
   const [filterOpen, setFilterOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Custom debounce hook for search input 
-  const debouncedSearch = useDebounce(search, 300);
-  
+  // Custom debounce hook for search input
+  const debouncedSearch = useDebounce(search, 300)
+
   // Fetch writeups with caching and retry logic
   useEffect(() => {
     const fetchWriteups = async (retryCount = 2) => {
@@ -120,8 +120,9 @@ export default function WriteupsPage() {
         const response = await fetch("/api/writeups", {
           next: { revalidate: 3600 }, // Revalidate every hour
           headers: {
-            'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-          }
+            "Cache-Control":
+              "public, max-age=3600, stale-while-revalidate=86400",
+          },
         })
 
         if (!response.ok) {
@@ -162,14 +163,16 @@ export default function WriteupsPage() {
         setError(null)
       } catch (error) {
         console.error("Error fetching writeups:", error)
-        
+
         // Retry logic with exponential backoff
         if (retryCount > 0) {
-          console.log(`Retrying fetch after error... (${retryCount} retries left)`)
+          console.log(
+            `Retrying fetch after error... (${retryCount} retries left)`
+          )
           setTimeout(() => fetchWriteups(retryCount - 1), 1000)
           return
         }
-        
+
         setError("Failed to load writeups. Please try again later.")
       } finally {
         setLoading(false)
@@ -187,9 +190,15 @@ export default function WriteupsPage() {
           // Search through all relevant fields with debounced search value
           const matchesSearch =
             debouncedSearch === "" ||
-            writeup.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-            writeup.ctfName.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-            writeup.description.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            writeup.title
+              .toLowerCase()
+              .includes(debouncedSearch.toLowerCase()) ||
+            writeup.ctfName
+              .toLowerCase()
+              .includes(debouncedSearch.toLowerCase()) ||
+            writeup.description
+              .toLowerCase()
+              .includes(debouncedSearch.toLowerCase()) ||
             writeup.author.toLowerCase().includes(debouncedSearch.toLowerCase())
 
           // Check if writeup has any of the selected tags
@@ -390,7 +399,10 @@ export default function WriteupsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: Math.min(index * 0.05, 0.5), duration: 0.4 }}
+                transition={{
+                  delay: Math.min(index * 0.05, 0.5),
+                  duration: 0.4,
+                }}
                 layout
               >
                 <WriteupCard writeup={writeup} selectedTags={selectedTags} />
@@ -429,17 +441,17 @@ export default function WriteupsPage() {
 
 // Custom hook for debouncing search input
 function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+      setDebouncedValue(value)
+    }, delay)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
+      clearTimeout(timer)
+    }
+  }, [value, delay])
 
-  return debouncedValue;
+  return debouncedValue
 }
