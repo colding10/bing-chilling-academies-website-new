@@ -2,7 +2,7 @@
 title: "cmsc351"
 ctfName: "UMDCTF CTF 2025"
 date: "2025-04-27"
-tags: ["rev"]
+tags: ["reverse"]
 description: "reverse engineering state machine -> just brute force"
 author: "cold"
 ---
