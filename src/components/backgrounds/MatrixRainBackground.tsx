@@ -142,7 +142,7 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
       style={{
-        zIndex: 10,
+        zIndex: 0,
         opacity,
         position: "fixed",
         top: 0,
