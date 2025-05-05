@@ -27,7 +27,9 @@ const StatCard = memo(({ label, value, color, icon: Icon }: StatCardProps) => (
   >
     <div className="flex items-center justify-between mb-4">
       <Icon className={`w-8 h-8 ${color}`} />
-      <span className={`text-2xl font-orbitron ${color} font-bold`}>{value}</span>
+      <span className={`text-2xl font-orbitron ${color} font-bold`}>
+        {value}
+      </span>
     </div>
     <p className="text-gray-300 font-play">{label}</p>
   </motion.div>

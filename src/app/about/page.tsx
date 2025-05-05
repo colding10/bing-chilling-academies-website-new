@@ -152,15 +152,21 @@ export default function About() {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <p className="text-custom-blue text-4xl font-orbitron font-bold text-glow-blue">6</p>
+              <p className="text-custom-blue text-4xl font-orbitron font-bold text-glow-blue">
+                6
+              </p>
               <p className="text-white font-play">Members</p>
             </div>
             <div>
-              <p className="text-custom-pink text-4xl font-orbitron font-bold text-glow-pink">7</p>
+              <p className="text-custom-pink text-4xl font-orbitron font-bold text-glow-pink">
+                7
+              </p>
               <p className="text-white font-play">Specialties</p>
             </div>
             <div>
-              <p className="text-custom-yellow text-4xl font-orbitron font-bold text-glow-yellow">24</p>
+              <p className="text-custom-yellow text-4xl font-orbitron font-bold text-glow-yellow">
+                24
+              </p>
               <p className="text-white font-play">CTFs</p>
             </div>
             <div>
