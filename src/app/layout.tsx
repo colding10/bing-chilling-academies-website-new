@@ -53,7 +53,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Add proper font-face definition for Japanese characters */}
-        <style dangerouslySetInnerHTML={{__html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           @font-face {
             font-family: 'MS Gothic';
             src: url('/fonts/MS-Gothic.woff2') format('woff2');
@@ -61,8 +63,10 @@ export default function RootLayout({
             font-style: normal;
             font-display: swap;
           }
-        `}} />
-        
+        `,
+          }}
+        />
+
         {/* Preload fonts for Japanese characters */}
         <link
           rel="preload"
@@ -71,7 +75,7 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        
+
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
