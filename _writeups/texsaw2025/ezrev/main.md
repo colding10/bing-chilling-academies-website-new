@@ -9,7 +9,7 @@ author: "cold"
 
 ## Challenge Description
 
-easy-rev: functional edition (with all new (old) list module!)
+> easy-rev: functional edition (with all new (old) list module!)
 
 _wow so helpful_
 [download binary here](/api/writeup-assets/texsaw2025/ezrev/easy_rev)

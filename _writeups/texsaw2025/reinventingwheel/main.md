@@ -9,19 +9,19 @@ author: "GSBCA"
 
 ## Challenge description
 
-Flag Format: texsaw{1,2,3,4,...}
-
-What is the Balkan Wheel? Your flag is the set of commands in alphabetical order and correct notation including non-geographic locational and temporal data. (do not include spaces and type only in uppercase), that sets up the conditions for the Balkan Wheel as early as possible, there is no need to include a command that creates the Balkan Wheel. Additionally, the subjects of the commands are all A type.
-
-Where appropriate in the commands, use -> instead of something else include leading zeroes when referencing time.
-
-Hints:
-
-    The next time commands are given after the ones referenced by the flag, all command issuants will have doubled their status
-    The Balkan Wheel first occured on November 8th 2024, its effects were able to be seen until December 30th 2024
-    The Balkan Wheel was planned by 7 human participants
-    The Balkan Wheel may have its most public mention via audio.
-    The Balkan Wheel was planned in a secret channel, now public if you know where to look.
+> Flag Format: texsaw{1,2,3,4,...}
+>
+> What is the Balkan Wheel? Your flag is the set of commands in alphabetical order and correct notation including non-geographic locational and temporal data. (do not include spaces and type only in uppercase), that sets up the conditions for the Balkan Wheel as early as possible, there is no need to include a command that creates the Balkan Wheel. Additionally, the subjects of the commands are all A type.
+>
+> Where appropriate in the commands, use -> instead of something else include leading zeroes when referencing time.
+>
+> Hints:
+>
+>     The next time commands are given after the ones referenced by the flag, all command issuants will have doubled their status
+>     The Balkan Wheel first occured on November 8th 2024, its effects were able to be seen until December 30th 2024
+>     The Balkan Wheel was planned by 7 human participants
+>     The Balkan Wheel may have its most public mention via audio.
+>     The Balkan Wheel was planned in a secret channel, now public if you know where to look.
 
 ## Solvepath
 

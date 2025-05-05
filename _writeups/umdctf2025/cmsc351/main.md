@@ -9,9 +9,9 @@ author: "cold"
 
 ## Challenge Description
 
-Most unorganized class I have taken. It took him over a month to release a syllabus which was not even accurate. In his lectures he just rants instead of actually teaching. You go the entire semester having to guess if you will pass and with what grade because he takes forever to grade things and the average grade was in the 50s.
-
-Rate My Professor
+> Most unorganized class I have taken. It took him over a month to release a syllabus which was not even accurate. In his lectures he just rants instead of actually teaching. You go the entire semester having to guess if you will pass and with what grade because he takes forever to grade things and the average grade was in the 50s.
+>
+> Rate My Professor
 
 [provided binary here](/api/writeup-assets/umdctf2025/cmsc351/cmsc351)
 

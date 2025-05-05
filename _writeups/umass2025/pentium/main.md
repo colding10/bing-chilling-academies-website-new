@@ -9,9 +9,9 @@ author: "tien"
 
 ## Challenge Description
 
-![alt_text](/api/writeup-assets/umass2025/pentium/image1.png)
-
-download the file [here](/api/writeup-assets/umass2025/pentium/image.jpeg)
+> ![alt_text](/api/writeup-assets/umass2025/pentium/image1.png)
+>
+> download the file [here](/api/writeup-assets/umass2025/pentium/image.jpeg)
 
 ### Part 0: Note
 

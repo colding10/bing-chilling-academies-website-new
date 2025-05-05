@@ -9,11 +9,11 @@ author: "cold"
 
 ## Challenge Description
 
-My friend is such a Joker, he has been sending me packets of data like the one attached, I can't decrypt it! can you?
-
-flag format: texsaw{}
-
-[packet.txt](/api/writeup-assets/texsaw2025/brainstorming/packet.txt)
+> My friend is such a Joker, he has been sending me packets of data like the one attached, I can't decrypt it! can you?
+>
+> flag format: texsaw{}
+>
+> [packet.txt](/api/writeup-assets/texsaw2025/brainstorming/packet.txt)
 
 ## solvepath
 
@@ -21,7 +21,7 @@ we open the **packet.txt** to see that it is in binary. trivially using cyberche
 
 This gives me the message
 
-```none
+```clike
 secp256k1;Jkr:SmiFc,S&B,HChd,Trib,Photo;4OAK-L1;AS,KC,9D,10H;KH-PC-MULT-RS,KH-PC-MULT-RS,KH-PC-MULT-RS,KH-PC-MULT-RS;Vou:;Cons:;TG:;
 
 Public Key: 03f3e48a2f1cc1862009fc9870abb15ce8c518cec484bd3c13324d1ce8b1a44188

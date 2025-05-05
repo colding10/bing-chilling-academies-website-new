@@ -9,11 +9,11 @@ author: "cold & appllo & tien"
 
 ## Challenge Description
 
-A glitched tower is still transmitting bursts of scrambled config data through its last known soundtrack. The signal isn’t digital — it’s modulated. Different baud rates. One forgotten directive.
-
-Files:
-
-[last_output.wav](/api/writeup-assets/umass2025/towersignal/last_output.wav)
+> A glitched tower is still transmitting bursts of scrambled config data through its last known soundtrack. The signal isn’t digital — it’s modulated. Different baud rates. One forgotten directive.
+>
+> Files:
+>
+> [last_output.wav](/api/writeup-assets/umass2025/towersignal/last_output.wav)
 
 ## Solvepath
 

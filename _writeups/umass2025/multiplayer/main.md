@@ -9,12 +9,12 @@ author: "tien"
 
 ## Challenge Description
 
-![alt_text](/api/writeup-assets/umass2025/multiplayer/image1.png "image_tooltip")
-
-download files here:
-
-- [multiplayer1.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer1.jpeg)
-- [multiplayer2.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer2.jpeg)
+> ![alt_text](/api/writeup-assets/umass2025/multiplayer/image1.png "image_tooltip")
+>
+> download files here:
+>
+> - [multiplayer1.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer1.jpeg)
+> - [multiplayer2.jpeg](/api/writeup-assets/umass2025/multiplayer/multiplayer2.jpeg)
 
 ### Part 0
 

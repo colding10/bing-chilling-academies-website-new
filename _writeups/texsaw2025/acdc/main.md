@@ -9,7 +9,7 @@ author: "cold"
 
 ## Challenge description
 
-My friend is flying a spaceship, and is having a problem, he is getting the attached differences in telemetry. Your flag is texsaw{the instructions on what he should do to fix the problem} the instructions are less than 6 words and might not be words in the english dictionary neccesarily. Put them all in lower case with spaces between them.
+> My friend is flying a spaceship, and is having a problem, he is getting the attached differences in telemetry. Your flag is texsaw{the instructions on what he should do to fix the problem} the instructions are less than 6 words and might not be words in the english dictionary neccesarily. Put them all in lower case with spaces between them.
 
 ## Solvepath
 

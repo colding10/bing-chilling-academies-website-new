@@ -9,7 +9,7 @@ author: "cold"
 
 ## Challenge Description
 
-Think you got what it takes to crack this disk image that has been carefully crafted with layers of obfuscation, designed to mislead even the most seasoned player?
+> Think you got what it takes to crack this disk image that has been carefully crafted with layers of obfuscation, designed to mislead even the most seasoned player?
 
 _not including file cuz that chall was not that good_
 
