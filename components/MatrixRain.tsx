@@ -20,7 +20,7 @@ export default function MatrixRain() {
     }
     updateCanvasSize()
 
-    // Use confirmed katakana characters that render well
+    // Use half-width katakana for better rendering
     const chars = "0123456789ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ"
     const charArray = chars.split("")
     const fontSize = 14
@@ -34,8 +34,9 @@ export default function MatrixRain() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Set font with appropriate fallbacks for Japanese characters
-      ctx.font = `${fontSize}px "MS Gothic", "Osaka", monospace`
+      // Set font with web font format that's been preloaded
+      ctx.font = `${fontSize}px "MS Gothic", monospace`
+      ctx.textBaseline = "top"
 
       for (let i = 0; i < drops.length; i++) {
         const text = charArray[Math.floor(Math.random() * charArray.length)]

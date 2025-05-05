@@ -6,8 +6,8 @@ import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext"
 // Matrix rain performance configuration
 const CONFIG = {
   fontSize: 14,
-  charSet:
-    "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
+  // Use half-width katakana for better rendering
+  charSet: "01ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ",
   colors: [
     "rgba(0, 255, 249, 0.8)", // Bright cyan
     "rgba(0, 200, 190, 0.7)", // Medium cyan
@@ -65,8 +65,9 @@ export default memo(function MatrixRain() {
       ctx.fillStyle = `rgba(0, 0, 0, ${fadeOpacity})`
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Set text properties once outside the loop
-      ctx.font = `${fontSize}px monospace`
+      // Set text properties once outside the loop with simpler font stack
+      ctx.font = `${fontSize}px "MS Gothic", monospace`
+      ctx.textBaseline = "top"
 
       for (let i = 0; i < drops.length; i++) {
         // Get random character from the array

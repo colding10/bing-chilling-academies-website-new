@@ -22,8 +22,8 @@ const MatrixRainBackground = memo(
 // Configuration for matrix rain
 const MATRIX_CONFIG = {
   fontSize: 14,
-  charSet:
-    "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
+  // Use half-width katakana for better rendering
+  charSet: "01ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ",
   colors: [
     "rgba(0, 255, 249, 0.8)", // Bright teal
     "rgba(0, 200, 190, 0.8)", // Medium teal
@@ -74,8 +74,9 @@ const MatrixRainEffect = ({ opacity }: { opacity: number }) => {
       ctx.fillStyle = `rgba(0, 0, 0, ${fadeOpacity})`
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Set text properties once outside the loop
-      ctx.font = `${fontSize}px monospace`
+      // Set text properties once outside the loop with simplified font reference
+      ctx.font = `${fontSize}px "MS Gothic", monospace`
+      ctx.textBaseline = "top"
 
       for (let i = 0; i < drops.length; i++) {
         // Select a random character from the array

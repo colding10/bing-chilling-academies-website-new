@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    apple: "/icons/apple-touch-icon.png",
   },
 }
 
@@ -52,23 +52,33 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Preload critical fonts */}
+        {/* Add proper font-face definition for Japanese characters */}
+        <style dangerouslySetInnerHTML={{__html: `
+          @font-face {
+            font-family: 'MS Gothic';
+            src: url('/fonts/MS-Gothic.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+          }
+        `}} />
+        
+        {/* Preload fonts for Japanese characters */}
         <link
           rel="preload"
-          href="/fonts/Orbitron-SemiBold.woff2"
+          href="/fonts/MS-Gothic.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <link
-          rel="preload"
-          href="/fonts/ShareTechMono-Regular.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href="https://ctftime.org" />
       </head>
       <body
