@@ -31,33 +31,33 @@ const specialtyIcons = {
 const teamMembers: TeamMember[] = [
   {
     handle: "appllo",
-    specialties: ["web", "crypto", "misc"],
-    bio: "very orz at Web and crypto",
+    specialties: ["web", "crypto", "OSINT"],
+    bio: "orz at web and crypto, but is js here for the japanese osint",
   },
   {
     handle: "bo421",
-    specialties: ["pwn", "forensics", "misc"],
-    bio: "THE pwner of Bing Chilling",
+    specialties: ["pwn", "forensics", "OSINT"],
+    bio: "they say he's our only pwner, and he is. bro's soloing pwn",
   },
   {
     handle: "cold",
     specialties: ["rev", "forensics", "pwn"],
-    bio: "rev and bad at pwn",
+    bio: "professional rev gooner. loves to goon to ida and gdb",
   },
   {
     handle: "Snippet",
     specialties: ["crypto", "forensics"],
-    bio: "crypto goat and foren god",
+    bio: "crypto goat and foren god. only those who know him know",
   },
   {
     handle: "tien",
     specialties: ["OSINT", "misc", "forensics"],
-    bio: "chatgpt goat - uses it for osint and everything else",
+    bio: "chatgpt goat. global t5 osint and mains every category",
   },
   {
     handle: "UncleEddie",
     specialties: ["OSINT", "misc"],
-    bio: "does this guy even do ctf?? pro stalker/osinter ig",
+    bio: "one of a kind vibe ctfer? pro stalker/osinter ig",
   },
 ]
 
@@ -70,7 +70,7 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
       {/* Member handle with glitch effect */}
       <div className="mb-4">
         <h3
-          className="text-xl font-orbitron text-custom-pink data-corruption"
+          className="text-xl font-orbitron font-bold text-custom-pink data-corruption"
           data-text={member.handle}
         >
           {member.handle}

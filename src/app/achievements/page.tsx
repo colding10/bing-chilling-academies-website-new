@@ -23,13 +23,13 @@ const StatCard = memo(({ label, value, color, icon: Icon }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-custom-black/60 border border-custom-blue/20 rounded-lg p-6 hover:border-custom-blue/60 transition-all relative z-10"
+    className="bg-custom-black/80 border-2 border-custom-blue/30 rounded-lg p-6 hover:border-custom-blue/70 transition-all relative z-10 backdrop-blur-sm shadow-lg hover:shadow-custom-blue/20"
   >
     <div className="flex items-center justify-between mb-4">
       <Icon className={`w-8 h-8 ${color}`} />
-      <span className={`text-2xl font-orbitron ${color}`}>{value}</span>
+      <span className={`text-2xl font-orbitron ${color} font-bold`}>{value}</span>
     </div>
-    <p className="text-gray-400 font-play">{label}</p>
+    <p className="text-gray-300 font-play">{label}</p>
   </motion.div>
 ))
 
@@ -371,33 +371,33 @@ export default function Achievements() {
         </div>
 
         {/* Search and Filter Controls */}
-        <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 bg-custom-black/70 p-6 rounded-lg border-2 border-custom-blue/30 backdrop-blur-sm shadow-lg">
           {/* Search Bar */}
           <div className="w-full max-w-md">
             <div className="relative">
-              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-custom-blue/60" />
+              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-custom-blue" />
               <input
                 type="text"
                 placeholder="Search events..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-black/60 border border-custom-blue/60 
-                  rounded-lg focus:border-custom-blue/60 focus:outline-none text-white
-                  placeholder:text-custom-blue/60 transition-colors font-play"
+                className="w-full pl-10 pr-4 py-3 bg-black/80 border-2 border-custom-blue/40 
+                  rounded-lg focus:border-custom-blue focus:outline-none text-white
+                  placeholder:text-gray-400 transition-colors font-play shadow-inner"
               />
             </div>
           </div>
 
           {/* Year Filter */}
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center space-x-3">
             {years.map((year) => (
               <button
                 key={year}
                 onClick={() => setSelectedYear(year)}
-                className={`px-4 py-2 rounded-lg transition-all ${
+                className={`px-4 py-2 rounded-lg transition-all duration-300 border-2 ${
                   selectedYear === year
-                    ? "bg-custom-blue/60 text-black font-medium opacity-60"
-                    : "border border-custom-blue/60 text-custom-blue hover:border-custom-blue bg-black/60"
+                    ? "bg-custom-blue text-black font-medium shadow-md shadow-custom-blue/30"
+                    : "border-custom-blue/40 text-custom-blue hover:border-custom-blue hover:bg-custom-blue/10 bg-black/60"
                 }`}
               >
                 {year === "all" ? "All Years" : year}
@@ -426,10 +426,10 @@ export default function Achievements() {
         </div>
       ) : (
         /* Achievements Table */
-        <div className="overflow-x-auto rounded-lg border border-custom-blue/20">
+        <div className="overflow-x-auto rounded-lg border-2 border-custom-blue/30 shadow-lg backdrop-blur-sm">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="text-left border-b-2 border-custom-blue/30 bg-custom-black/70">
+              <tr className="text-left border-b-2 border-custom-blue/40 bg-custom-black/90">
                 <th
                   onClick={() => handleSort("event")}
                   className="py-4 px-6 font-orbitron text-custom-blue cursor-pointer hover:text-custom-pink transition-colors"
@@ -467,33 +467,32 @@ export default function Achievements() {
                 <motion.tr
                   key={achievement.event}
                   initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 0.7, x: 0 }}
+                  animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="border-b border-custom-blue/10 hover:bg-custom-blue/5 transition-colors bg-custom-black/60"
-                  style={{ opacity: 0.7 }}
+                  className="border-b border-custom-blue/20 hover:bg-custom-blue/10 transition-colors bg-custom-black/80"
                 >
                   <td className="py-4 px-6 font-play">
                     <a
                       href={achievement.eventUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-2 hover:text-custom-pink transition-colors"
+                      className="flex items-center space-x-2 hover:text-custom-pink transition-colors text-white"
                     >
                       <FiAward className="text-custom-yellow" />
                       <span>{achievement.event}</span>
-                      <FiExternalLink className="w-4 h-4 opacity-50" />
+                      <FiExternalLink className="w-4 h-4 opacity-70" />
                     </a>
                   </td>
-                  <td className="py-4 px-6 font-share-tech text-gray-400">
+                  <td className="py-4 px-6 font-share-tech text-gray-300">
                     {achievement.year}
                   </td>
                   <td className="py-4 px-6 font-orbitron text-custom-pink">
                     #{achievement.placement}
                   </td>
-                  <td className="py-4 px-6 font-share-tech">
+                  <td className="py-4 px-6 font-share-tech text-white">
                     {achievement.ctfPoints.toLocaleString()}
                   </td>
-                  <td className="py-4 px-6 font-share-tech text-green-500">
+                  <td className="py-4 px-6 font-share-tech text-green-500 font-medium">
                     {achievement.ratingPoints.toFixed(3)}
                   </td>
                 </motion.tr>
