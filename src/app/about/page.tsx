@@ -148,24 +148,26 @@ export default function About() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-custom-black/30 border border-custom-blue/20 rounded-lg p-6"
+          className="bg-custom-black/80 border-2 border-custom-blue/30 rounded-lg p-6 backdrop-blur-sm shadow-lg"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <p className="text-custom-blue text-4xl font-orbitron">6</p>
-              <p className="text-gray-400 font-play">Members</p>
+              <p className="text-custom-blue text-4xl font-orbitron font-bold text-glow-blue">6</p>
+              <p className="text-white font-play">Members</p>
             </div>
             <div>
-              <p className="text-custom-pink text-4xl font-orbitron">7</p>
-              <p className="text-gray-400 font-play">Specialties</p>
+              <p className="text-custom-pink text-4xl font-orbitron font-bold text-glow-pink">7</p>
+              <p className="text-white font-play">Specialties</p>
             </div>
             <div>
-              <p className="text-custom-yellow text-4xl font-orbitron">19</p>
-              <p className="text-gray-400 font-play">CTFs</p>
+              <p className="text-custom-yellow text-4xl font-orbitron font-bold text-glow-yellow">24</p>
+              <p className="text-white font-play">CTFs</p>
             </div>
             <div>
-              <p className="text-green-500 text-4xl font-orbitron">#172</p>
-              <p className="text-gray-400 font-play">Global Ranking</p>
+              <p className="text-green-500 text-4xl font-orbitron font-bold">
+                <span className="text-glow-hover">#105</span>
+              </p>
+              <p className="text-white font-play">Global Ranking</p>
             </div>
           </div>
         </motion.div>

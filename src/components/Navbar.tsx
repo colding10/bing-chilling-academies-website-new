@@ -127,11 +127,11 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 5 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute left-1/2 transform -translate-x-1/2 mt-2 top-full z-50 bg-background/90 border border-custom-blue/30 rounded-md py-1 px-2 text-xs whitespace-nowrap shadow-lg"
+                      className="absolute right-0 top-full mt-2 z-50 bg-background/90 border border-custom-blue/30 rounded-md py-1 px-2 text-xs whitespace-nowrap shadow-lg backdrop-blur-sm"
                     >
                       {effectsMode !== "none"
-                        ? "Disable Matrix Rain"
-                        : "Enable Matrix Rain"}
+                        ? "Disable Matrix Effects"
+                        : "Enable Matrix Effects"}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -222,12 +222,12 @@ export default function Navbar() {
                 {effectsMode !== "none" ? (
                   <>
                     <FiEye className="h-5 w-5" />
-                    <span>Disable Matrix Rain</span>
+                    <span>Disable Matrix Effects</span>
                   </>
                 ) : (
                   <>
                     <FiEyeOff className="h-5 w-5" />
-                    <span>Enable Matrix Rain</span>
+                    <span>Enable Matrix Effects</span>
                   </>
                 )}
               </button>
