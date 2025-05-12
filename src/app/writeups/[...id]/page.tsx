@@ -104,11 +104,14 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       try {
         setLoading(true)
 
-        // Use caching headers to leverage browser cache
+        // Use no-store to prevent caching and always get fresh content
         const response = await fetch(`/api/writeups/${writeupPath}`, {
-          cache: "force-cache",
+          cache: "no-store",
+          next: { revalidate: 0 }, // Force revalidation on each request
           headers: {
-            "Cache-Control": "max-age=3600",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0"
           },
         })
 
