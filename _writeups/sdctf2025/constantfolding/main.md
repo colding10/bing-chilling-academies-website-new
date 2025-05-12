@@ -29,92 +29,162 @@ encrypt(input) == "bypkrpihayqo"
 ### Dissassembly
 
 ```cpp
-000017c5  int32_t main(int32_t argc, char** argv, char** envp)
-000017f1      int64_t var_70 = 0xc
-00001808      int64_t rax_1 = 0x1c
-00001810      int64_t rdx = 0
-0000181c      void* buf = &var_78 - divu.dp.q(rdx:rax_1, 0x10) * 0x10
-00001835      printf(format: "Enter your secret: ", argv, modu.dp.q(rdx:rax_1, 0x10), 0x10)
-00001852      fgets(buf, n: 0xd, fp: __TMC_END__)
-0000186c      int64_t var_60 = 0x54
-000018b6      void* rsp = buf - divu.dp.q(0:0x64, 0x10) * 0x10
-000018c7      gen_padding(rsp)
-000018da      int64_t var_50 = 0x60
-00001905      void* rsp_1 = rsp - divu.dp.q(0:0x70, 0x10) * 0x10
-0000191d      strcpy(rsp_1, buf)
-00001930      strcat(rsp_1, rsp)
-00001943      int64_t var_40 = 0x60
-0000196e      void* rsp_2 = rsp_1 - divu.dp.q(0:0x70, 0x10) * 0x10
-00001986      shuffle(rsp_1, rsp_2)
-00001999      int64_t var_30 = 0xc
-000019c4      void* rsp_3 = rsp_2 - divu.dp.q(0:0x1c, 0x10) * 0x10
-000019dc      fold(rsp_2, rsp_3)
-000019f7      printf(format: "Your processed secret: %s\n", rsp_3)
+int __fastcall main(int argc,
+    const char ** argv,
+        const char ** envp) {
+    void * v3; // rsp
+    void * v4; // rsp
+    void * v5; // rsp
+    void * v6; // rsp
+    void * v7; // rsp
+    char v10[8]; // [rsp+0h] [rbp-70h] BYREF
+    __int64 v11; // [rsp+8h] [rbp-68h]
+    char * s; // [rsp+10h] [rbp-60h]
+    __int64 v13; // [rsp+18h] [rbp-58h]
+    char * src; // [rsp+20h] [rbp-50h]
+    __int64 v15; // [rsp+28h] [rbp-48h]
+    char * dest; // [rsp+30h] [rbp-40h]
+    __int64 v17; // [rsp+38h] [rbp-38h]
+    char * v18; // [rsp+40h] [rbp-30h]
+    __int64 v19; // [rsp+48h] [rbp-28h]
+    char * v20; // [rsp+50h] [rbp-20h]
+    unsigned __int64 v21; // [rsp+58h] [rbp-18h]
 
-00001189  int64_t gen_padding(int64_t arg1)
+    v21 = __readfsqword(0x28 u);
+    v11 = 12;
+    v3 = alloca(16);
+    s = v10;
+    printf("Enter your secret: ");
+    fgets(s, 13, _bss_start);
+    v13 = 84;
+    v4 = alloca(96);
+    src = v10;
+    gen_padding(v10, 13, 4);
+    v15 = 96;
+    v5 = alloca(112);
+    dest = v10;
+    strcpy(v10, s);
+    strcat(dest, src);
+    v17 = 96;
+    v6 = alloca(112);
+    v18 = v10;
+    shuffle(dest, v10);
+    v19 = 12;
+    v7 = alloca(16);
+    v20 = v10;
+    fold(v18, v10);
+    printf("Your processed secret: %s\n", v20);
+    return v21 - __readfsqword(0x28 u);
+}
+unsigned __int64 __fastcall gen_padding(__int64 a1) {
+    int i; // [rsp+1Ch] [rbp-24h]
+    int j; // [rsp+20h] [rbp-20h]
+    char v4[13]; // [rsp+2Bh] [rbp-15h] BYREF
+    unsigned __int64 v5; // [rsp+38h] [rbp-8h]
 
-00001195      void* fsbase
-00001195      int64_t rax = *(fsbase + 0x28)
-000011ae      int64_t var_1d
-000011ae      __builtin_strcpy(dest: &var_1d, src: "jvucsiwfaebq")
-000011ae
-00001255      for (int32_t i = 0; i s<= 6; i += 1)
-0000124b          for (int32_t j = 0; j s< 0xc; j += 1)
-0000123d              *(sx.q(j + 0xc * i) + arg1) = ((sx.d(*(&var_1d + sx.q(j))) - 0x61) * j * (i + 3) s% 0x1a).b + 0x61
+    v5 = __readfsqword(0x28 u);
+    strcpy(v4, "jvucsiwfaebq");
+    for (i = 0; i <= 6; ++i) {
+        for (j = 0; j < 12; ++j)
+            *
+            (_BYTE * )(a1 + 12 * i + j) = (i + 3) * j * (v4[j] - 97) % 26 + 97;
+    }
+    return v5 - __readfsqword(0x28 u);
+}
 
-00001272  char* shuffle(void* arg1, void* arg2)
-0000127e      int32_t var_c = 0
-0000127e
-000012ca      for (int32_t i = 0; i s< 0x60; i += 1)
-000012bc          *(arg2 + sx.q(i)) = *(arg1 + sx.q(mods.dp.d(sx.q(i * 0x11), 0x60)))
-000012bc
-000012db      *(arg2 + 0x60) = 0
-000012e0      return arg2 + 0x60
+__int64 __fastcall shuffle(__int64 a1, __int64 a2) {
+    __int64 result; // rax
+    int i; // [rsp+18h] [rbp-8h]
 
+    for (i = 0; i < 96; ++i)
+        *
+        (_BYTE * )(i + a2) = * (_BYTE * )(17 * i % 96 + a1);
+    result = a2 + 96;
+    *(_BYTE * )(a2 + 96) = 0;
+    return result;
+}
 
-000012e1  int64_t fold(char* arg1, void* arg2)
-000012fb      int64_t rax = *(fsbase + 0x28)
-0000131e      int32_t var_ac = 0x30
-00001333      int32_t var_a8 = 0x18
-00001348      int32_t var_a4 = 0xc
-0000135b      int64_t var_a0 = 0x2f
-00001381      void* rsp = &var_c8 - divu.dp.q(0:0x3f, 0x10) * 0x10
-0000139b      int64_t var_90 = 0x2f
-000013c1      void* rsp_1 = rsp - divu.dp.q(0:0x3f, 0x10) * 0x10
-000013d8      int64_t var_80 = 0x2f
-000013fb      void* rsp_2 = rsp_1 - divu.dp.q(0:0x3f, 0x10) * 0x10
-00001422      strncpy(rsp, arg1, 0x30)
-0000144d      strncpy(rsp_1, &arg1[sx.q(var_ac)], sx.q(var_ac))
-0000144d
-000014d7      for (int32_t i = 0; i s< var_ac; i += 1)
-000014c1          *(rsp_2 + sx.q(i)) = ((sx.d(*(rsp_1 + sx.q(i))) - 0x61 + sx.d(*(rsp + sx.q(i))) - 0x61) s% 0x1a).b + 0x61
-000014c1
-000014e6      int64_t var_70 = sx.q(var_a8) - 1
-00001509      void* rsp_3 = rsp_2 - divu.dp.q(0:(sx.q(var_a8) + 0xf), 0x10) * 0x10
-00001520      int64_t var_60 = sx.q(var_a8) - 1
-00001543      void* rsp_4 = rsp_3 - divu.dp.q(0:(sx.q(var_a8) + 0xf), 0x10) * 0x10
-00001549      char* var_58 = rsp_4
-0000155a      int64_t var_50 = sx.q(var_a8) - 1
-0000157d      void* rsp_5 = rsp_4 - divu.dp.q(0:(sx.q(var_a8) + 0xf), 0x10) * 0x10
-0000159e      strncpy(rsp_3, rsp_2, sx.q(var_a8))
-000015c6      strncpy(var_58, sx.q(var_a8) + rsp_2, sx.q(var_a8))
-000015c6
-0000164d      for (int32_t i_1 = 0; i_1 s< var_a8; i_1 += 1)
-00001637          *(rsp_5 + sx.q(i_1)) = ((sx.d(var_58[sx.q(i_1)]) - 0x61 + sx.d(*(rsp_3 + sx.q(i_1))) - 0x61) s% 0x1a).b + 0x61
-00001637
-0000165c      int64_t var_40 = sx.q(var_a4) - 1
-0000167f      void* rsp_6 = rsp_5 - divu.dp.q(0:(sx.q(var_a4) + 0xf), 0x10) * 0x10
-00001696      int64_t var_30 = sx.q(var_a4) - 1
-000016bf      char* var_28 = rsp_6 - divu.dp.q(0:(sx.q(var_a4) + 0xf), 0x10) * 0x10
-000016da      strncpy(rsp_6, rsp_5, sx.q(var_a4))
-00001702      strncpy(var_28, sx.q(var_a4) + rsp_5, sx.q(var_a4))
-00001702
-0000178f      for (int32_t i_2 = 0; i_2 s< var_a4; i_2 += 1)
-0000177a          *(var_c8 + sx.q(i_2)) = ((sx.d(var_28[sx.q(i_2)]) - 0x61 + sx.d(*(rsp_6 + sx.q(i_2))) - 0x61) s% 0x1a).b + 0x61
-0000177a
-000017a4      *(var_c8 + sx.q(var_a4)) = 0
-000017ba      __stack_chk_fail()
-000017ba      noreturn
+unsigned __int64 __fastcall fold(char * a1, __int64 a2) {
+    void * v2; // rsp
+    void * v3; // rsp
+    void * v4; // rsp
+    void * v5; // rsp
+    void * v6; // rsp
+    void * v7; // rsp
+    void * v8; // rsp
+    void * v9; // rsp
+    __int64 v11; // [rsp+0h] [rbp-C0h] BYREF
+    char * src; // [rsp+8h] [rbp-B8h]
+    int i; // [rsp+10h] [rbp-B0h]
+    int j; // [rsp+14h] [rbp-ACh]
+    int k; // [rsp+18h] [rbp-A8h]
+    int v16; // [rsp+1Ch] [rbp-A4h]
+    int v17; // [rsp+20h] [rbp-A0h]
+    int v18; // [rsp+24h] [rbp-9Ch]
+    __int64 v19; // [rsp+28h] [rbp-98h]
+    char * dest; // [rsp+30h] [rbp-90h]
+    __int64 v21; // [rsp+38h] [rbp-88h]
+    char * v22; // [rsp+40h] [rbp-80h]
+    __int64 v23; // [rsp+48h] [rbp-78h]
+    char * v24; // [rsp+50h] [rbp-70h]
+    __int64 v25; // [rsp+58h] [rbp-68h]
+    char * v26; // [rsp+60h] [rbp-60h]
+    __int64 v27; // [rsp+68h] [rbp-58h]
+    char * v28; // [rsp+70h] [rbp-50h]
+    __int64 v29; // [rsp+78h] [rbp-48h]
+    char * v30; // [rsp+80h] [rbp-40h]
+    __int64 v31; // [rsp+88h] [rbp-38h]
+    char * v32; // [rsp+90h] [rbp-30h]
+    __int64 v33; // [rsp+98h] [rbp-28h]
+    char * v34; // [rsp+A0h] [rbp-20h]
+    unsigned __int64 v35; // [rsp+A8h] [rbp-18h]
+
+    src = a1;
+    v11 = a2;
+    v35 = __readfsqword(0x28 u);
+    v16 = 48;
+    v17 = 24;
+    v18 = 12;
+    v19 = 47;
+    v2 = alloca(48);
+    dest = (char * ) & v11;
+    v21 = 47;
+    v3 = alloca(48);
+    v22 = (char * ) & v11;
+    v23 = 47;
+    v4 = alloca(48);
+    v24 = (char * ) & v11;
+    strncpy((char * ) & v11, a1, 0x30 u);
+    strncpy(v22, & src[v16], v16);
+    for (i = 0; i < v16; ++i)
+        v24[i] = (dest[i] - 97 + v22[i] - 97) % 26 + 97;
+    v25 = v17 - 1 LL;
+    v5 = alloca(16 * ((v17 + 15 LL) / 0x10 uLL));
+    v26 = (char * ) & v11;
+    v27 = v25;
+    v6 = alloca(16 * ((v17 + 15 LL) / 0x10 uLL));
+    v28 = (char * ) & v11;
+    v29 = v25;
+    v7 = alloca(16 * ((v17 + 15 LL) / 0x10 uLL));
+    v30 = (char * ) & v11;
+    strncpy((char * ) & v11, v24, v17);
+    strncpy(v28, & v24[v17], v17);
+    for (j = 0; j < v17; ++j)
+        v30[j] = (v26[j] - 97 + v28[j] - 97) % 26 + 97;
+    v31 = v18 - 1 LL;
+    v8 = alloca(16 * ((v18 + 15 LL) / 0x10 uLL));
+    v32 = (char * ) & v11;
+    v33 = v31;
+    v9 = alloca(16 * ((v18 + 15 LL) / 0x10 uLL));
+    v34 = (char * ) & v11;
+    strncpy((char * ) & v11, v30, v18);
+    strncpy(v34, & v30[v18], v18);
+    for (k = 0; k < v18; ++k)
+        *
+        (_BYTE * )(k + v11) = (v32[k] - 97 + v34[k] - 97) % 26 + 97;
+    *(_BYTE * )(v18 + v11) = 0;
+    return v35 - __readfsqword(0x28 u);
+}
 ```
 
 The binary contains a few key functions:

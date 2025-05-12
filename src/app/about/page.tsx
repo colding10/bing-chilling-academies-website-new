@@ -37,7 +37,7 @@ const teamMembers: TeamMember[] = [
   {
     handle: "bo421",
     specialties: ["pwn", "forensics", "OSINT"],
-    bio: "they say he's our only pwner, and he is. bro's soloing pwn",
+    bio: "pwner and is also really good at osint lol",
   },
   {
     handle: "cold",
@@ -55,9 +55,9 @@ const teamMembers: TeamMember[] = [
     bio: "chatgpt goat. global t5 osint and mains every category",
   },
   {
-    handle: "UncleEddie",
-    specialties: ["OSINT", "misc"],
-    bio: "one of a kind vibe ctfer? pro stalker/osinter ig",
+    handle: "堇姬Naup",
+    specialties: ["pwn", "web", "crypto"],
+    bio: "giving him this slot cuz hes the best at pwn. check him out https://naupjjin.github.io/",
   },
 ]
 
