@@ -1,0 +1,58 @@
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(80, 80, 80, 0.5);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.copy-button:hover {
+  background: rgba(100, 100, 100, 0.7);
+}
+
+.copy-button.copied {
+  background: rgba(50, 150, 50, 0.7);
+}
+
+pre {
+  position: relative;
+  padding-top: 2.5rem !important;
+}
+
+pre > code {
+  font-family: monospace;
+  counter-reset: line;
+}
+
+pre > code .line {
+  display: block;
+  line-height: 1.5rem;
+}
+
+pre > code .line-number-style {
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.inline-code {
+  background: rgba(40, 40, 40, 0.2);
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
+  font-family: monospace;
+  font-size: 85%;
+}
+
+/* Ensure code blocks can still be scrolled horizontally */
+pre {
+  overflow-x: auto;
+}

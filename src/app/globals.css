@@ -122,36 +122,13 @@
   /* Code highlighting styling */
   .writeup-content pre {
     @apply bg-cyber-overlay border border-custom-blue/30 rounded-md my-4 overflow-x-auto max-w-full relative;
-  }
-
-  /* Line numbers */
-  .writeup-content .line-number-style {
-    @apply text-gray-500 mr-4 inline-block w-8 text-right pr-2 select-none;
+    padding-top: 1rem !important;
   }
 
   /* Smooth scrolling for anchor links */
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 120px;
-  }
-
-  /* Add a sticky header with inset shadow on the table of contents */
-  .table-of-contents {
-    @apply sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--custom-blue) transparent;
-  }
-
-  .table-of-contents::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  .table-of-contents::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-
-  .table-of-contents::-webkit-scrollbar-thumb {
-    @apply bg-custom-blue/40 rounded-full;
   }
 
   /* Syntax highlighting colors - adjust to match your theme */
@@ -251,34 +228,6 @@
     transition: color 0.3s ease;
   }
 
-  .table-of-contents a {
-    @apply block py-1 px-2 hover:bg-custom-blue/10 rounded transition-colors duration-200;
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .table-of-contents a.active {
-    @apply bg-custom-blue/20 text-custom-blue;
-    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
-  }
-
-  .table-of-contents a:hover {
-    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
-  }
-
-  .table-of-contents a:focus {
-    outline: none;
-    background-color: rgba(32, 141, 214, 0.1);
-  }
-
-  .table-of-contents a:hover {
-    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
-  }
-
-  .table-of-contents a:focus {
-    outline: none;
-    background-color: rgba(32, 141, 214, 0.1);
-  }
 
   /* Fix anchor positioning with sticky header */
   h1,
@@ -288,43 +237,6 @@
   h5,
   h6 {
     scroll-margin-top: 120px;
-  }
-
-  /* Fix table of contents scrolling */
-  .table-of-contents {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(32, 141, 214, 0.3) transparent;
-  }
-
-  .table-of-contents::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .table-of-contents::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .table-of-contents::-webkit-scrollbar-thumb {
-    background-color: rgba(32, 141, 214, 0.3);
-    border-radius: 20px;
-  }
-
-  .table-of-contents button {
-    text-align: left;
-    width: 100%;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .table-of-contents button:hover {
-    text-shadow: 0 0 3px rgba(32, 141, 214, 0.4);
-  }
-
-  .table-of-contents button:focus {
-    outline: none;
-    background-color: rgba(32, 141, 214, 0.1);
   }
 
   /* Improved styling for inline code blocks */
@@ -373,6 +285,113 @@
   .writeup-content pre {
     position: relative !important;
     padding-top: 2.5rem !important;
+  }
+
+  /* Add styles for code blocks and syntax highlighting */
+  pre {
+    position: relative;
+    border-radius: 4px;
+    margin-bottom: 20px !important;
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(30, 30, 30, 0.5);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .copy-button:hover {
+    background: rgba(60, 60, 60, 0.7);
+  }
+
+  .copy-button.copied {
+    background: rgba(0, 128, 0, 0.7);
+  }
+
+  pre > code {
+    display: block;
+    padding: 16px !important;
+    overflow-x: auto;
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    line-height: 1.5;
+  }
+
+  pre > code .line {
+    display: block;
+  }
+
+  pre > code .line-number-style {
+    display: inline-block;
+    width: 2em;
+    text-align: right;
+    margin-right: 1em;
+    user-select: none;
+    opacity: 0.5;
+  }
+
+  .inline-code {
+    background: rgba(40, 40, 40, 0.2);
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    font-size: 0.9em;
+  }
+
+  /* Adjust copy button positioning to overlay on code without adding whitespace */
+  .prose pre {
+    position: relative;
+    margin: 1rem 0;
+    padding: 1rem;
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(30, 30, 30, 0.7);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .copy-button:hover {
+    opacity: 1;
+    background: rgba(60, 60, 60, 0.9);
+  }
+
+  .copy-button.copied {
+    background: rgba(0, 128, 0, 0.7);
+  }
+
+  /* Make code blocks more compact */
+  pre > code {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  pre > code .line {
+    display: block;
+    line-height: 1.5;
+    padding: 0;
+  }
+
+  /* Remove any extra spacing at the top of code blocks */
+  .writeup-content pre {
+    padding-top: 1rem !important;
   }
 }
 
