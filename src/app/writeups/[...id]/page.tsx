@@ -110,8 +110,8 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
           next: { revalidate: 0 }, // Force revalidation on each request
           headers: {
             "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0"
+            Pragma: "no-cache",
+            Expires: "0",
           },
         })
 
