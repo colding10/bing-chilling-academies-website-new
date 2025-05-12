@@ -42,7 +42,10 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       const allCodeBlocks = contentRef.current.querySelectorAll("pre > code")
       allCodeBlocks.forEach((block) => {
         if (!block.innerHTML.includes("line-number-style")) {
-          const lines = block.innerHTML.split("\n")
+          const rawHTML = block.innerHTML.replace(/^\n/, "")
+          const lines = rawHTML.split("\n")
+          // Remove extra blank first line
+          lines.shift();
           let lineNumberedHTML = ""
 
           lines.forEach((line, index) => {
