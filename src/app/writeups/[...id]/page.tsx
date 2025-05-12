@@ -40,56 +40,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         }
       })
 
-      // Make sure all code blocks have line numbers
-      const allCodeBlocks = contentRef.current.querySelectorAll("pre > code")
-      allCodeBlocks.forEach((block) => {
-        if (!block.innerHTML.includes("line-number-style")) {
-          // First, normalize the HTML by removing leading/trailing whitespace
-          let rawHTML = block.innerHTML
-
-          // Process content by directly fixing common issues with fenced code blocks
-          // Special handling for empty first line which is a common issue
-          rawHTML = rawHTML.replace(/^\n/, "") // First specifically handle a single newline at the start
-          rawHTML = rawHTML.replace(/^\s+/, "") // Then remove any remaining leading whitespace
-          rawHTML = rawHTML.trim() // Trim trailing whitespace too
-
-          // Split by newlines and process each line
-          const lines = rawHTML.split("\n")
-
-          // Remove any blank lines at the beginning
-          while (lines.length > 0 && lines[0].trim() === "") {
-            lines.shift()
-          }
-
-          let lineNumberedHTML = ""
-
-          lines.forEach((line) => {
-            lineNumberedHTML += `<span class="line">${line}</span>`
-          })
-
-          block.innerHTML = lineNumberedHTML
-        }
-      })
-
-      // Enhance inline code blocks
-      const inlineCodeBlocks = contentRef.current.querySelectorAll(
-        "p code, li code, td code"
-      )
-      inlineCodeBlocks.forEach((inlineCode) => {
-        // Remove backticks from displayed text
-        let codeText = inlineCode.textContent || ""
-        if (codeText.startsWith("`") && codeText.endsWith("`")) {
-          codeText = codeText.substring(1, codeText.length - 1)
-          inlineCode.textContent = codeText
-        }
-
-        // Add highlighting class if not already present
-        if (!inlineCode.classList.contains("inline-code")) {
-          inlineCode.classList.add("inline-code")
-        }
-      })
-
-      // Add copy buttons to code blocks with properly working clipboard functionality
+      // Add copy buttons to code blocks
       const preBlocks = contentRef.current.querySelectorAll("pre")
       preBlocks.forEach((pre) => {
         // First, make sure the pre block has relative positioning
@@ -108,13 +59,8 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         btn.addEventListener("click", () => {
           const code = pre.querySelector("code")
           if (code) {
-            // Strip line numbers when copying
-            const codeText = Array.from(code.querySelectorAll(".line"))
-              .map((line) => {
-                const lineContent = line.textContent || ""
-                return lineContent.replace(/^\d+\s+/, "") // Remove line numbers
-              })
-              .join("\n")
+            // Simply get the raw text content
+            const codeText = code.textContent || ""
 
             // Use a textarea for better clipboard support
             const textarea = document.createElement("textarea")
