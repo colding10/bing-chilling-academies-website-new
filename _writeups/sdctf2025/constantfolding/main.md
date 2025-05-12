@@ -29,9 +29,7 @@ encrypt(input) == "bypkrpihayqo"
 ### Dissassembly
 
 ```cpp
-int __fastcall main(int argc,
-    const char ** argv,
-        const char ** envp) {
+int __fastcall main(int argc, const char ** argv, const char ** envp) {
     void * v3; // rsp
     void * v4; // rsp
     void * v5; // rsp
