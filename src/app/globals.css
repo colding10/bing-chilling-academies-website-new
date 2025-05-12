@@ -228,7 +228,6 @@
     transition: color 0.3s ease;
   }
 
-
   /* Fix anchor positioning with sticky header */
   h1,
   h2,
@@ -298,7 +297,7 @@
     display: block;
     padding: 16px !important;
     overflow-x: auto;
-    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    font-family: Consolas, Monaco, "Andale Mono", monospace;
     line-height: 1.5;
   }
 
@@ -319,7 +318,7 @@
     background: rgba(40, 40, 40, 0.2);
     border-radius: 3px;
     padding: 2px 4px;
-    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    font-family: Consolas, Monaco, "Andale Mono", monospace;
     font-size: 0.9em;
   }
 
@@ -342,7 +341,7 @@
     font-size: 12px;
     cursor: pointer;
     z-index: 10;
-    opacity: 0.;
+    opacity: 0;
     transition: opacity 0.2s;
   }
 
@@ -402,7 +401,8 @@
   }
 
   /* Ensure pre elements have proper positioning for the button */
-  .prose pre, .writeup-content pre {
+  .prose pre,
+  .writeup-content pre {
     position: relative;
     padding: 16px !important;
     padding-top: 16px !important;

@@ -14,7 +14,7 @@ author: "cold"
 > Output of the program: bypkrpihayqo
 >
 > Note: put the input to the program inside sdctf{} before submitting
-[provided binary here](/api/writeup-assets/sdctf2025/constantfolding/constant_folding)
+> [provided binary here](/api/writeup-assets/sdctf2025/constantfolding/constant_folding)
 
 ## Solvepath
 
@@ -57,17 +57,17 @@ encrypt(input) == "bypkrpihayqo"
 00001195      int64_t rax = *(fsbase + 0x28)
 000011ae      int64_t var_1d
 000011ae      __builtin_strcpy(dest: &var_1d, src: "jvucsiwfaebq")
-000011ae      
+000011ae
 00001255      for (int32_t i = 0; i s<= 6; i += 1)
 0000124b          for (int32_t j = 0; j s< 0xc; j += 1)
 0000123d              *(sx.q(j + 0xc * i) + arg1) = ((sx.d(*(&var_1d + sx.q(j))) - 0x61) * j * (i + 3) s% 0x1a).b + 0x61
 
 00001272  char* shuffle(void* arg1, void* arg2)
 0000127e      int32_t var_c = 0
-0000127e      
+0000127e
 000012ca      for (int32_t i = 0; i s< 0x60; i += 1)
 000012bc          *(arg2 + sx.q(i)) = *(arg1 + sx.q(mods.dp.d(sx.q(i * 0x11), 0x60)))
-000012bc      
+000012bc
 000012db      *(arg2 + 0x60) = 0
 000012e0      return arg2 + 0x60
 
@@ -85,10 +85,10 @@ encrypt(input) == "bypkrpihayqo"
 000013fb      void* rsp_2 = rsp_1 - divu.dp.q(0:0x3f, 0x10) * 0x10
 00001422      strncpy(rsp, arg1, 0x30)
 0000144d      strncpy(rsp_1, &arg1[sx.q(var_ac)], sx.q(var_ac))
-0000144d      
+0000144d
 000014d7      for (int32_t i = 0; i s< var_ac; i += 1)
 000014c1          *(rsp_2 + sx.q(i)) = ((sx.d(*(rsp_1 + sx.q(i))) - 0x61 + sx.d(*(rsp + sx.q(i))) - 0x61) s% 0x1a).b + 0x61
-000014c1      
+000014c1
 000014e6      int64_t var_70 = sx.q(var_a8) - 1
 00001509      void* rsp_3 = rsp_2 - divu.dp.q(0:(sx.q(var_a8) + 0xf), 0x10) * 0x10
 00001520      int64_t var_60 = sx.q(var_a8) - 1
@@ -98,20 +98,20 @@ encrypt(input) == "bypkrpihayqo"
 0000157d      void* rsp_5 = rsp_4 - divu.dp.q(0:(sx.q(var_a8) + 0xf), 0x10) * 0x10
 0000159e      strncpy(rsp_3, rsp_2, sx.q(var_a8))
 000015c6      strncpy(var_58, sx.q(var_a8) + rsp_2, sx.q(var_a8))
-000015c6      
+000015c6
 0000164d      for (int32_t i_1 = 0; i_1 s< var_a8; i_1 += 1)
 00001637          *(rsp_5 + sx.q(i_1)) = ((sx.d(var_58[sx.q(i_1)]) - 0x61 + sx.d(*(rsp_3 + sx.q(i_1))) - 0x61) s% 0x1a).b + 0x61
-00001637      
+00001637
 0000165c      int64_t var_40 = sx.q(var_a4) - 1
 0000167f      void* rsp_6 = rsp_5 - divu.dp.q(0:(sx.q(var_a4) + 0xf), 0x10) * 0x10
 00001696      int64_t var_30 = sx.q(var_a4) - 1
 000016bf      char* var_28 = rsp_6 - divu.dp.q(0:(sx.q(var_a4) + 0xf), 0x10) * 0x10
 000016da      strncpy(rsp_6, rsp_5, sx.q(var_a4))
 00001702      strncpy(var_28, sx.q(var_a4) + rsp_5, sx.q(var_a4))
-00001702      
+00001702
 0000178f      for (int32_t i_2 = 0; i_2 s< var_a4; i_2 += 1)
 0000177a          *(var_c8 + sx.q(i_2)) = ((sx.d(var_28[sx.q(i_2)]) - 0x61 + sx.d(*(rsp_6 + sx.q(i_2))) - 0x61) s% 0x1a).b + 0x61
-0000177a      
+0000177a
 000017a4      *(var_c8 + sx.q(var_a4)) = 0
 000017ba      __stack_chk_fail()
 000017ba      noreturn
@@ -138,7 +138,7 @@ reverse_shuffle[i] = j # where SHUFFLE_INDICES[j] = i
 reverse_shuffle[SHUFFLE_INDICES[i]] = i
 ```
 
-More compactly, since 17 * 17 ≡ 1 mod 96, the modular inverse of 17 mod 96 is 17. So to reverse:
+More compactly, since 17 \* 17 ≡ 1 mod 96, the modular inverse of 17 mod 96 is 17. So to reverse:
 
 ```python
 original[j] = shuffled[(j * 17) % 96]
@@ -151,11 +151,11 @@ This lets us reconstruct the original input+padding buffer from a shuffled one.
 Folding is a 3-step reduction:
 
 1. Fold 96 → 48:
-    `folded[i] = (ord(S[i]) + ord(S[i+48]) - 194) % 26 + 97`
+   `folded[i] = (ord(S[i]) + ord(S[i+48]) - 194) % 26 + 97`
 2. Fold 48 → 24:
-    same pattern on result
+   same pattern on result
 3. Fold 24 → 12:
-    same again to produce final string
+   same again to produce final string
 
 Each final output character is a linear combination of 8 shuffled characters:
 
@@ -173,6 +173,7 @@ This allows us to express each fold3[i] (i.e., target character) as a linear sum
 ## Solution Strategy
 
 1. For each i in 0..11 (target character):
+
    - Identify the 8 contributing positions in the shuffled buffer: i, i+12, ..., i+84
    - For each, map SHUFFLE_INDICES[pos]
    - If SHUFFLE_INDICES[pos] < 12 → input[SHUFFLE_INDICES[pos]] is unknown
@@ -205,7 +206,7 @@ SHUFFLE_INDICES = [(i * 17) % 96 for i in range(96)]
 def compute_input_vars(target):
     input_chars = [None] * 12
     target_nums = [ord(c) - ord('a') for c in target]
-    
+
     for m in range(12):
         sum_padding = 0
         input_idx = None
@@ -221,7 +222,7 @@ def compute_input_vars(target):
             raise Exception("No input variable found")
         input_val = (target_nums[m] - sum_padding) % 26
         input_chars[input_idx] = chr(input_val + ord('a'))
-    
+
     return ''.join(input_chars)
 
 TARGET = "bypkrpihayqo"
@@ -233,7 +234,7 @@ print("Secret:", secret)
 
 Running the above returns the 12-character secret input that produces the encrypted target "brassicarulz".
 
-*it's sure a hell of a lot faster than the probably 500 years needed to brute-force LMAO*
+_it's sure a hell of a lot faster than the probably 500 years needed to brute-force LMAO_
 ![image](/api/writeup-assets/sdctf2025/constantfolding/ss.png)
 
 No brute-force required; we reverse-engineered the constant-folded structure mathematically.
