@@ -294,28 +294,6 @@
     margin-bottom: 20px !important;
   }
 
-  .copy-button {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: rgba(30, 30, 30, 0.5);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-size: 12px;
-    cursor: pointer;
-    z-index: 10;
-  }
-
-  .copy-button:hover {
-    background: rgba(60, 60, 60, 0.7);
-  }
-
-  .copy-button.copied {
-    background: rgba(0, 128, 0, 0.7);
-  }
-
   pre > code {
     display: block;
     padding: 16px !important;
@@ -364,7 +342,7 @@
     font-size: 12px;
     cursor: pointer;
     z-index: 10;
-    opacity: 0.8;
+    opacity: 0.;
     transition: opacity 0.2s;
   }
 
@@ -392,6 +370,44 @@
   /* Remove any extra spacing at the top of code blocks */
   .writeup-content pre {
     padding-top: 1rem !important;
+  }
+
+  /* Style the copy button to be semi-transparent to avoid blocking content */
+  .copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(20, 20, 20, 0.4);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+  }
+
+  .copy-button:hover {
+    opacity: 1;
+    background: rgba(40, 40, 40, 0.7);
+    color: white;
+  }
+
+  .copy-button.copied {
+    background: rgba(0, 128, 0, 0.5);
+    color: white;
+    opacity: 0.9;
+  }
+
+  /* Ensure pre elements have proper positioning for the button */
+  .prose pre, .writeup-content pre {
+    position: relative;
+    padding: 16px !important;
+    padding-top: 16px !important;
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
   }
 }
 
@@ -811,7 +827,7 @@ h3:hover {
 
 /* Make sure copy buttons are visible */
 .copy-button {
-  @apply absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue/90 text-white rounded z-10 
+  @apply absolute top-2 right-2 px-2 py-1 text-xs bg-custom-blue/20 text-white rounded z-10 
   hover:bg-custom-blue transition-colors opacity-100 visible;
   display: block !important;
 }

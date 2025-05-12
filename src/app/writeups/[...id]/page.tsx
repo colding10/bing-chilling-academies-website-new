@@ -27,13 +27,11 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       console.error("ContentRef is null, cannot enhance code blocks")
       return
     }
-    
+
     try {
       // Find all code blocks that don't have proper syntax highlighting
-      const codeBlocks = contentRef.current.querySelectorAll(
-        "pre > code"
-      )
-      
+      const codeBlocks = contentRef.current.querySelectorAll("pre > code")
+
       // Process code blocks quietly without excessive logging
       codeBlocks.forEach((codeBlock) => {
         if (!codeBlock.className.includes("language-")) {
@@ -46,32 +44,27 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       const allCodeBlocks = contentRef.current.querySelectorAll("pre > code")
       allCodeBlocks.forEach((block) => {
         if (!block.innerHTML.includes("line-number-style")) {
-          
           // First, normalize the HTML by removing leading/trailing whitespace
           let rawHTML = block.innerHTML
 
           // Process content by directly fixing common issues with fenced code blocks
           // Special handling for empty first line which is a common issue
-          rawHTML = rawHTML.replace(/^\n/, ''); // First specifically handle a single newline at the start
-          rawHTML = rawHTML.replace(/^\s+/, ''); // Then remove any remaining leading whitespace
-          rawHTML = rawHTML.trim(); // Trim trailing whitespace too
-          
+          rawHTML = rawHTML.replace(/^\n/, "") // First specifically handle a single newline at the start
+          rawHTML = rawHTML.replace(/^\s+/, "") // Then remove any remaining leading whitespace
+          rawHTML = rawHTML.trim() // Trim trailing whitespace too
+
           // Split by newlines and process each line
           const lines = rawHTML.split("\n")
-          
+
           // Remove any blank lines at the beginning
-          while (lines.length > 0 && lines[0].trim() === '') {
+          while (lines.length > 0 && lines[0].trim() === "") {
             lines.shift()
           }
-          
+
           let lineNumberedHTML = ""
-          
+
           lines.forEach((line) => {
-            if (line.trim()) {
-              lineNumberedHTML += `<span class="line">${line}</span>`
-            } else {
-              lineNumberedHTML += `<span class="line"></span>`
-            }
+            lineNumberedHTML += `<span class="line">${line}</span>`
           })
 
           block.innerHTML = lineNumberedHTML
@@ -110,7 +103,7 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
         const btn = document.createElement("button")
         btn.innerText = "Copy"
         btn.className = "copy-button"
-        pre.insertAdjacentElement('afterbegin', btn)
+        pre.insertAdjacentElement("afterbegin", btn)
 
         btn.addEventListener("click", () => {
           const code = pre.querySelector("code")
@@ -205,14 +198,14 @@ export default function WriteupPage({ params }: { params: { id: string[] } }) {
       // Call with a significant delay to avoid extension conflicts
       setTimeout(() => {
         try {
-          enhanceCodeBlocks();
+          enhanceCodeBlocks()
         } catch (err) {
-          console.error("Failed to enhance code blocks:", err);
+          console.error("Failed to enhance code blocks:", err)
         }
-      }, 500);
-      
+      }, 500)
+
       // No MutationObserver to reduce extension interference
-      return () => {};
+      return () => {}
     }
   }, [writeup, enhanceCodeBlocks])
 
