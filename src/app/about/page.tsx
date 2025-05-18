@@ -47,7 +47,7 @@ const teamMembers: TeamMember[] = [
     handle: "cold",
     avatarUrl: "/images/team/cold.jpg",
     specialties: ["rev", "forensics", "pwn"],
-    bio: "professional rev gooner. at least he is under 400 years old",
+    bio: "professional rev(al) gooner. at least he is under 400 years old",
   },
   {
     handle: "SnippetCat",
@@ -59,7 +59,7 @@ const teamMembers: TeamMember[] = [
     handle: "tien",
     avatarUrl: "/images/team/tien.png",
     specialties: ["OSINT", "misc", "forensics"],
-    bio: "\"gLoBAl tOP 5 OSINT\" - no one ever. at least isn't AI or a furry",
+    bio: "\"t5 osint global\" - literally everyone. at least isn't AI or a furry",
   },
   {
     handle: "堇姬Naup",
