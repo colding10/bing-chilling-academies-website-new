@@ -33,7 +33,7 @@ while true; do
     # Check if input is empty
     [[ -z "$user_input" ]] && continue
 
-    case "$user_input" in 
+    case "$user_input" in
         *">"*|*"<"*|*"/"*|*";"*|*"&"*|*"$"*|*"("*|*"\`"*) echo "No special characters, those are unsafe!" && continue;;
     esac
 
