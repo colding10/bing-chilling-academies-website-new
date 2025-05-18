@@ -59,7 +59,7 @@ const teamMembers: TeamMember[] = [
     handle: "tien",
     avatarUrl: "/images/team/tien.png",
     specialties: ["OSINT", "misc", "forensics"],
-    bio: "\"t5 osint global\" - literally everyone. at least isn't AI or a furry",
+    bio: "\"t5 osint global\" - the huzz. at least isn't AI or a furry",
   },
   {
     handle: "堇姬Naup",
