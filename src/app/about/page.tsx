@@ -10,6 +10,7 @@ import {
   FiDatabase,
 } from "react-icons/fi"
 import Image from "next/image"
+import TerminalText from "@/components/TerminalText"
 
 interface TeamMember {
   handle: string
@@ -109,9 +110,9 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
       </div>
 
       {/* Bio */}
-      <p className="text-gray-300 text-sm font-share-tech bg-black/20 p-4 rounded-lg max-w-xs">
-        {member.bio}
-      </p>
+      <div className="text-gray-300 text-sm font-share-tech bg-black/20 p-4 rounded-lg max-w-xs">
+        <TerminalText text={member.bio} speed={30} />
+      </div>
     </motion.div>
   )
 }
