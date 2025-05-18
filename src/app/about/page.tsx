@@ -9,12 +9,13 @@ import {
   FiSearch,
   FiDatabase,
 } from "react-icons/fi"
-import TerminalText from "@/components/TerminalText"
+import Image from 'next/image'
 
 interface TeamMember {
   handle: string
   specialties: string[]
   bio: string
+  avatarUrl?: string
 }
 
 // Map specialties to icons
@@ -31,31 +32,37 @@ const specialtyIcons = {
 const teamMembers: TeamMember[] = [
   {
     handle: "appllo",
+    avatarUrl: "/images/team/appllo.png",
     specialties: ["web", "crypto", "OSINT"],
     bio: "orz at web and crypto, but is js here for the japanese osint",
   },
   {
     handle: "bo421",
+    avatarUrl: "/images/team/bo.png",
     specialties: ["pwn", "forensics", "OSINT"],
     bio: "pwner and is also really good at osint lol",
   },
   {
     handle: "cold",
+    avatarUrl: "/images/team/cold.jpg",
     specialties: ["rev", "forensics", "pwn"],
     bio: "professional rev gooner. loves to goon to ida and gdb",
   },
   {
-    handle: "Snippet",
+    handle: "SnippetCat",
+    avatarUrl: "/images/team/snippetcat.png",
     specialties: ["crypto", "forensics"],
     bio: "crypto goat and foren god. only those who know him know",
   },
   {
     handle: "tien",
+    avatarUrl: "/images/team/tien.png",
     specialties: ["OSINT", "misc", "forensics"],
     bio: "chatgpt goat. global t5 osint and mains every category",
   },
   {
     handle: "堇姬Naup",
+    avatarUrl: "/images/team/naup.png",
     specialties: ["pwn", "web", "crypto"],
     bio: "giving him this slot cuz hes the best at pwn. check him out https://naupjjin.github.io/",
   },
@@ -65,20 +72,26 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="relative cyber-card overflow-hidden group"
+      className="cyber-card flex flex-col items-center p-6 space-y-4 text-center"
     >
-      {/* Member handle with glitch effect */}
-      <div className="mb-4">
-        <h3
-          className="text-xl font-orbitron font-bold text-custom-pink data-corruption"
-          data-text={member.handle}
-        >
-          {member.handle}
-        </h3>
-      </div>
+      {/* Profile picture */}
+      {member.avatarUrl && (
+        <Image
+          src={member.avatarUrl}
+          alt={member.handle}
+          width={80}
+          height={80}
+          className="rounded-full object-cover"
+        />
+      )}
+
+      {/* Member handle */}
+      <h3 className="text-xl font-orbitron font-bold text-custom-pink">
+        {member.handle}
+      </h3>
 
       {/* Specialties with icons */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 justify-center">
         {member.specialties.map((specialty) => {
           const Icon =
             specialtyIcons[specialty as keyof typeof specialtyIcons] ||
@@ -86,24 +99,19 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
           return (
             <span
               key={specialty}
-              className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 
-                rounded-full text-sm text-custom-blue flex items-center gap-1"
+              className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 rounded-full text-sm text-custom-blue flex items-center gap-1"
             >
-              <Icon className="w-3 h-3" />
+              <Icon className="w-4 h-4" />
               {specialty}
             </span>
           )
         })}
       </div>
 
-      {/* Bio with terminal text effect */}
-      <div className="text-gray-300 text-sm font-share-tech bg-black/20 p-3 rounded">
-        <TerminalText text={member.bio} speed={30} />
-      </div>
-
-      {/* Background effects */}
-      <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-custom-blue via-custom-pink to-custom-yellow opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      {/* Bio */}
+      <p className="text-gray-300 text-sm font-share-tech bg-black/20 p-4 rounded-lg max-w-xs">
+        {member.bio}
+      </p>
     </motion.div>
   )
 }
