@@ -35,37 +35,37 @@ const teamMembers: TeamMember[] = [
     handle: "appllo",
     avatarUrl: "/images/team/appllo.png",
     specialties: ["web", "crypto", "OSINT"],
-    bio: "orz at web and crypto, but is js here for the japanese osint",
+    bio: "cracked at web and crypto. this guy might be 200% japanese",
   },
   {
     handle: "bo421",
     avatarUrl: "/images/team/bo.png",
     specialties: ["pwn", "forensics", "OSINT"],
-    bio: "pwner and is also really good at osint lol",
+    bio: "plays pwn and osint. i am relatively sure that he has hair",
   },
   {
     handle: "cold",
     avatarUrl: "/images/team/cold.jpg",
     specialties: ["rev", "forensics", "pwn"],
-    bio: "professional rev gooner. loves to goon to ida and gdb",
+    bio: "professional rev gooner. at least he is under 400 years old",
   },
   {
     handle: "SnippetCat",
     avatarUrl: "/images/team/snippetcat.png",
     specialties: ["crypto", "forensics"],
-    bio: "crypto goat and foren god. only those who know him know",
+    bio: "crypto goat and foren god. pretty sure he is a person as well",
   },
   {
     handle: "tien",
     avatarUrl: "/images/team/tien.png",
     specialties: ["OSINT", "misc", "forensics"],
-    bio: "chatgpt goat. global t5 osint and mains every category",
+    bio: "\"gLoBAl tOP 5 OSINT\" - no one ever. at least isn't AI or a furry",
   },
   {
     handle: "堇姬Naup",
     avatarUrl: "/images/team/naup.png",
     specialties: ["pwn", "web", "crypto"],
-    bio: "giving him this slot cuz hes the best at pwn. check him out https://naupjjin.github.io/",
+    bio: "god of pwn. check him out https://naupjjin.github.io/. 400 years old.",
   },
 ]
 
