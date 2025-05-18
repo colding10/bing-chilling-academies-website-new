@@ -65,7 +65,7 @@ const teamMembers: TeamMember[] = [
     handle: "堇姬Naup",
     avatarUrl: "/images/team/naup.png",
     specialties: ["pwn", "web", "crypto"],
-    bio: "god of pwn. check him out https://naupjjin.github.io/. 400 years old.",
+    bio: "god of pwn. check him out https://naupjjin.github.io/.",
   },
 ]
 
