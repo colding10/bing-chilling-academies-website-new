@@ -9,7 +9,7 @@ import {
   FiSearch,
   FiDatabase,
 } from "react-icons/fi"
-import Image from 'next/image'
+import Image from "next/image"
 
 interface TeamMember {
   handle: string
