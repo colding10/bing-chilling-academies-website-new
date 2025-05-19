@@ -55,7 +55,7 @@ const achievements: Achievement[] = [
     ratingPoints: 28.858,
     year: 2025,
     eventUrl: "https://ctftime.org/event/2715",
-  }
+  },
   {
     event: "San Diego CTF 2025",
     placement: 9,
