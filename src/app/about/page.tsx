@@ -47,7 +47,7 @@ const teamMembers: TeamMember[] = [
     handle: "cold",
     avatarUrl: "/images/team/cold.jpg",
     specialties: ["rev", "forensics", "pwn"],
-    bio: "professional rev(al) gooner. at least he is under 400 years old",
+    bio: "professional ida & al gooner. ida lowk kinda fine fr ngl",
   },
   {
     handle: "SnippetCat",
