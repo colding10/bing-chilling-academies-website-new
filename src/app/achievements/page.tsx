@@ -49,6 +49,14 @@ interface Achievement {
 const achievements: Achievement[] = [
   // 2025
   {
+    event: "BYUCTF 2025",
+    placement: 17,
+    ctfPoints: 8634.0000,
+    ratingPoints: 28.858,
+    year: 2025,
+    eventUrl: "https://ctftime.org/event/2715",
+  }
+  {
     event: "San Diego CTF 2025",
     placement: 9,
     ctfPoints: 1625.0,
