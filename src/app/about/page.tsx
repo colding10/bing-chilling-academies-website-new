@@ -188,7 +188,7 @@ export default function About() {
             </div>
             <div>
               <p className="text-green-500 text-4xl font-orbitron font-bold">
-                <span className="text-glow-hover">#105</span>
+                <span className="text-glow-hover">#83</span>
               </p>
               <p className="text-white font-play">Global Ranking</p>
             </div>
