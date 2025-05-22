@@ -79,21 +79,21 @@ export default function Home() {
     () => [
       {
         label: "Global Ranking",
-        value: "#83",
+        value: "#104",
         icon: FiTarget,
         color: "text-custom-blue",
         href: "/achievements",
       },
       {
         label: "USA Ranking",
-        value: "#14",
+        value: "#16",
         icon: FiZap,
         color: "text-custom-pink",
         href: "/achievements",
       },
       {
         label: "Flags Captured",
-        value: "304",
+        value: "273",
         icon: FiFlag,
         color: "text-custom-yellow",
         href: "/achievements",
