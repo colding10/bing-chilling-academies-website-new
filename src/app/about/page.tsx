@@ -62,12 +62,6 @@ const teamMembers: TeamMember[] = [
     bio: '"t5 osint global" - the huzz. at least isn\'t AI or a furry',
   },
   {
-    handle: "UncleEddie",
-    avatarUrl: "/images/team/uncleeddie.png",
-    specialties: ["OSINT", "misc"],
-    bio: 'eddie shu shu shi wo de GOAT. UncleEddie is OTL orz orz!!',
-  },
-  {
     handle: "堇姬Naup",
     avatarUrl: "/images/team/naup.png",
     specialties: ["pwn", "web", "crypto"],
@@ -79,31 +73,26 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="cyber-card flex flex-row items-start p-4 gap-4"
+      className="cyber-card flex flex-col items-center p-6 space-y-4 text-center"
     >
-      {/* Left: Avatar & Name */}
-      <div className="flex flex-col items-center w-24">
-        {member.avatarUrl && (
-          <Image
-            src={member.avatarUrl}
-            alt={member.handle}
-            width={64}
-            height={64}
-            className="rounded-full object-cover mb-2"
-          />
-        )}
-        <h3 className="text-lg font-orbitron font-bold text-custom-pink">
-          {member.handle}
-        </h3>
-      </div>
+      {/* Profile picture */}
+      {member.avatarUrl && (
+        <Image
+          src={member.avatarUrl}
+          alt={member.handle}
+          width={80}
+          height={80}
+          className="rounded-full object-cover"
+        />
+      )}
 
-      {/* Middle: Bio */}
-      <div className="flex-auto text-gray-300 text-sm font-share-tech">
-        <TerminalText text={member.bio} speed={30} />
-      </div>
+      {/* Member handle */}
+      <h3 className="text-xl font-orbitron font-bold text-custom-pink">
+        {member.handle}
+      </h3>
 
-      {/* Right: Specialties */}
-      <div className="flex flex-wrap gap-2 justify-end w-48">
+      {/* Specialties with icons */}
+      <div className="flex flex-wrap gap-2 justify-center">
         {member.specialties.map((specialty) => {
           const Icon =
             specialtyIcons[specialty as keyof typeof specialtyIcons] ||
@@ -111,13 +100,18 @@ const MemberCard = ({ member }: { member: TeamMember }) => {
           return (
             <span
               key={specialty}
-              className="px-2 py-1 bg-custom-blue/10 border border-custom-blue/30 rounded-full text-xs text-custom-blue flex items-center gap-1"
+              className="px-3 py-1 bg-custom-blue/10 border border-custom-blue/30 rounded-full text-sm text-custom-blue flex items-center gap-1"
             >
               <Icon className="w-4 h-4" />
               {specialty}
             </span>
           )
         })}
+      </div>
+
+      {/* Bio */}
+      <div className="text-gray-300 text-sm font-share-tech bg-black/20 p-4 rounded-lg max-w-xs">
+        <TerminalText text={member.bio} speed={30} />
       </div>
     </motion.div>
   )
@@ -151,14 +145,12 @@ export default function About() {
           </p>
         </div>
 
-        {/* Team list */}
-        <ul className="divide-y divide-custom-blue/30 space-y-4">
+        {/* Team grid with terminal-like cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member) => (
-            <li key={member.handle}>
-              <MemberCard member={member} />
-            </li>
+            <MemberCard key={member.handle} member={member} />
           ))}
-        </ul>
+        </div>
 
         {/* Team stats */}
         <motion.div
@@ -170,7 +162,7 @@ export default function About() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <p className="text-custom-blue text-4xl font-orbitron font-bold text-glow-blue">
-                6.5
+                6
               </p>
               <p className="text-white font-play">Members</p>
             </div>
