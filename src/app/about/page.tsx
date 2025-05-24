@@ -34,39 +34,51 @@ const teamMembers: TeamMember[] = [
   {
     handle: "appllo",
     avatarUrl: "/images/team/appllo.png",
-    specialties: ["web", "crypto", "OSINT"],
+    specialties: ["web", "OSINT"],
     bio: "cracked at web and crypto. this guy might be 200% japanese",
   },
   {
     handle: "bo421",
     avatarUrl: "/images/team/bo.png",
-    specialties: ["pwn", "forensics", "OSINT"],
+    specialties: ["pwn", "OSINT"],
     bio: "plays pwn and osint. i am relatively sure that he has hair",
   },
   {
     handle: "cold",
     avatarUrl: "/images/team/cold.jpg",
-    specialties: ["rev", "forensics", "pwn"],
+    specialties: ["rev", "forensics"],
     bio: "professional ida & al gooner. ida lowk kinda fine fr ngl",
   },
   {
     handle: "SnippetCat",
     avatarUrl: "/images/team/snippetcat.png",
     specialties: ["crypto", "forensics"],
-    bio: "crypto goat and foren god. pretty sure he is a person as well",
+    bio: "crypto goat and foren god. pretty sure he is a person too",
   },
   {
     handle: "tien",
     avatarUrl: "/images/team/tien.png",
-    specialties: ["OSINT", "misc", "forensics"],
+    specialties: ["OSINT", "misc"],
     bio: '"t5 osint global" - the huzz. at least isn\'t AI or a furry',
+  },
+  {
+    handle: "UncleEddie",
+    avatarUrl: "/images/team/uncleeddie.png",
+    specialties: ["OSINT", "misc"],
+    bio: "uncle eddie please forgive me for i have sinned. orz orz orz"
   },
   {
     handle: "堇姬Naup",
     avatarUrl: "/images/team/naup.png",
-    specialties: ["pwn", "web", "crypto"],
+    specialties: ["pwn", "crypto"],
     bio: "god of pwn. check him out https://naupjjin.github.io/.",
   },
+  {
+    handle: "GS",
+    avatarUrl: "/images/team/gs.png",
+    specialties: ["OSINT", "misc"],
+    bio: "smart guy who is good at everything but coding"
+  }
 ]
 
 const MemberCard = ({ member }: { member: TeamMember }) => {
@@ -146,7 +158,7 @@ export default function About() {
         </div>
 
         {/* Team grid with terminal-like cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {teamMembers.map((member) => (
             <MemberCard key={member.handle} member={member} />
           ))}
