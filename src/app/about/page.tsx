@@ -65,7 +65,7 @@ const teamMembers: TeamMember[] = [
     handle: "UncleEddie",
     avatarUrl: "/images/team/uncleeddie.png",
     specialties: ["OSINT", "misc"],
-    bio: "uncle eddie please forgive me for i have sinned. orz orz orz"
+    bio: "uncle eddie please forgive me for i have sinned. orz orz orz",
   },
   {
     handle: "堇姬Naup",
@@ -77,8 +77,8 @@ const teamMembers: TeamMember[] = [
     handle: "GS",
     avatarUrl: "/images/team/gs.png",
     specialties: ["OSINT", "misc"],
-    bio: "smart guy who is good at everything but coding"
-  }
+    bio: "smart guy who is good at everything but coding",
+  },
 ]
 
 const MemberCard = ({ member }: { member: TeamMember }) => {

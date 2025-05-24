@@ -51,7 +51,7 @@ const achievements: Achievement[] = [
   {
     event: "BYUCTF 2025",
     placement: 17,
-    ctfPoints: 8634.0000,
+    ctfPoints: 8634.0,
     ratingPoints: 28.858,
     year: 2025,
     eventUrl: "https://ctftime.org/event/2715",
